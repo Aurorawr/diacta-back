@@ -1,6 +1,6 @@
-const {User} = require("../models");
+const User = require("../models/user.model");
 const jwt = require("jsonwebtoken");
-const config = require("../config/auth.config.js");
+const {secret} = require("../config/auth.config.js");
 
 verifyToken = (req, res, next) => {
   let token = req.headers["x-access-token"];
@@ -11,7 +11,7 @@ verifyToken = (req, res, next) => {
     });
   }
 
-  jwt.verify(token, config.secret, (err, decoded) => {
+  jwt.verify(token, secret, (err, decoded) => {
     if (err) {
       return res.status(401).send({
         message: "No está autorizado para realizar esta acción"
@@ -23,23 +23,31 @@ verifyToken = (req, res, next) => {
 };
 
 isAdmin = (req, res, next) => {
-  User.findByPk(req.userId).then(user => {
-    user.getUserType().then(type => {
-      const {
-          name
-      } = type;
-
-      if (name == 'Administrador') {
-        next();
-        return;
-      }
-
-      res.status(403).send({
-        message: "No posee el rol correspondiente para realizar esta acción"
+  const {
+    userId
+  } = req;
+  User.findById(userId, (err, user) => {
+    if (err) {
+      return res.status(500).send({
+        message: "Hubo un problema al validar su usuario"
       });
+    }
+
+    if (!user) {
+      return res.status(403).send({
+        message: "El usuario no existe"
+      });
+    }
+
+    if (user.isAdmin) {
+      next();
       return;
+    }
+
+    return res.status(403).send({
+      message: "No posee el rol correspondiente para realizar esta acción"
     });
-  });
+  })
 };
 
 const authJwt = {

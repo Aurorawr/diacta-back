@@ -1,3 +1,3 @@
 module.exports = {
-    secret: 'VacaTiernaComePan'
+    secret: process.env.JWT_SECRET
 }

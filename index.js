@@ -5,13 +5,32 @@ if (process.env.NODE_ENV !== 'production') {
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const {sequelize, UserType} = require('./src/models');
+const db = require('./src/db/connection')
+
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 const app = express();
 
 var corsOptions = {
   origin: "http://localhost:4200"
 };
+
+/*const adminData = {
+  name: 'Admin',
+  lastname: 'Bdt',
+  email: 'admin_bdt@mail.com',
+  password: bcrypt.hashSync('AdminBDT<3', 8),
+  isAdmin: true
+}
+
+const testAdmin = new User(adminData);
+
+testAdmin.save(err => {
+  if (err) console.log('Error al crear :C');
+
+  console.log('guardado!');
+  console.log(testAdmin.toJSON());
+})*/
 
 app.use(cors(corsOptions));
 
@@ -20,13 +39,6 @@ app.use(bodyParser.json());
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
-
-
-sequelize.sync().then(() => {
-  console.log('DB sync!');
-}).catch(err => {
-  console.error(err);
-});
 
 // simple route
 app.get("/", (req, res) => {

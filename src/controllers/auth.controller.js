@@ -1,34 +1,8 @@
-const {User} = require('../models');
+const User = require('../models/user.model');
 const {secret} = require('../config/auth.config');
 
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
-
-exports.signUp = (req, res) => {
-    const {
-        body: {
-            name,
-            lastname,
-            email,
-            password
-        }
-    } = req;
-    User.create({
-        name,
-        lastname,
-        email,
-        password: bcrypt.hashSync(password, 8),
-        userTypeId: 2
-    }).then(user => {
-        remove
-        res.send({
-            message: 'Usuario registrado con éxito',
-            user: user.toJSON()
-        });
-    }).catch(err => {
-        res.status(500).send({ message: err.message });
-    });
-}
 
 exports.signIn = (req, res) => {
     const {
@@ -38,9 +12,13 @@ exports.signIn = (req, res) => {
         }
     } = req;
 
-    User.findOne({where: {email}}).then(user => {
+    User.findOne({email}, (err, user) => {
+        if (err) {
+            return res.status(500).send({ message: err.message });
+        }
+
         if (!user) {
-            res.status(404).send({message: 'No existe un usuario con el email indicado'});
+            return res.status(404).send({message: 'No existe un usuario con el email indicado'});
         }
 
         const {
@@ -50,13 +28,11 @@ exports.signIn = (req, res) => {
 
         const passwordIsValid = bcrypt.compareSync(password, dbPasword);
         if (!passwordIsValid) {
-            res.status(401).send({message: "Contraseña incorrecta"});
+            return res.status(401).send({message: "Contraseña incorrecta"});
         }
 
         const token = jwt.sign({id}, secret, {expiresIn: 86400 });
 
-        res.send({message: 'Ha iniciado sesión exitosamente', user: user.toJSON(), token});
-    }).catch(err => {
-        res.status(500).send({ message: err.message });
-    });
+        return res.send({message: 'Ha iniciado sesión exitosamente', user: user.toJSON(), token});
+    })
 }

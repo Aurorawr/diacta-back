@@ -15,15 +15,6 @@ module.exports = (app) => {
     });
     
     app.post(
-        "/api/auth/signup",
-        body('name').isLength({min: 1}).withMessage('El nombre del usuario es obligatorio'),
-        body('email').isEmail().withMessage('El email del usuario es obligatorio'),
-        body('password').isStrongPassword(),
-        [validateRequest],
-        signUp
-    );
-    
-    app.post(
         "/api/auth/signin",
         body('email').isEmail().withMessage('El email del usuario es obligatorio'),
         body('password').isStrongPassword(),

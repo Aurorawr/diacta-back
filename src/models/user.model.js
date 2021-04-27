@@ -1,47 +1,43 @@
-module.exports = (sequelize, Sequelize) => {
-    const User = sequelize.define("User", {
-      name: {
-        type: Sequelize.STRING(64),
-        allowNull: false,
-        validate: {
-          notNull: {
-            msg: "El nombre del usuario no puede ser nulo"
-          },
-          notEmpty: {
-            msg: "El nombre del usuario no puede estar vacío"
-          }
-        }
-      },
-      lastname: {
-        type: Sequelize.STRING(64)
-      },
-      email: {
-        type: Sequelize.STRING(128),
-        allowNull: false,
-        unique: true,
-        validate: {
-          isEmail: {
-            msg: "Ya existe una cuenta con el mismo email"
-          },
-          notNull: {
-            msg: "El correo del usuario no puede ser nulo"
-          },
-          notEmpty: {
-            msg: "El correo del usuario no puede estar vacío"
-          }
-        }
-      },
-      password: {
-        type: Sequelize.STRING,
-        allowNull: false
-      }
-    }, {
-      scopes: {
-        withoutPassword: {
-          attributes: { exclude: ['password'] }
-        }
-      }
-    });
-  
-    return User;
-  };
+const { Schema, model } = require('mongoose');
+
+const userSchema = new Schema({
+  name: {
+    type: String,
+    required: [true, "El nombre del usuario es requerido"],
+  },
+  lastname: {
+    type: String,
+  },
+  email: {
+    type: String,
+    required: [true, "El email del usuario es requerido"],
+    unique: true
+  },
+  password: {
+    type: String,
+    required: [true, "La contraseña del usuario es requerida"],
+  },
+  isAdmin: {
+    type: Boolean,
+    default: false
+  }
+},{
+  timestamps: true,
+});
+
+userSchema.statics.findByEmail = function(email) {
+  return this.find({email});
+}
+
+userSchema.method('toJSON', function() {
+  const user = this.toObject();
+  delete user.password;
+  delete user.createdAt;
+  delete user.updatedAt;
+  delete user._id;
+  delete user.__v;
+
+  return user;
+})
+
+module.exports = model('User', userSchema);
