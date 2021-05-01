@@ -15,23 +15,6 @@ var corsOptions = {
   origin: "http://localhost:4200"
 };
 
-/*const adminData = {
-  name: 'Admin',
-  lastname: 'Bdt',
-  email: 'admin_bdt@mail.com',
-  password: bcrypt.hashSync('AdminBDT<3', 8),
-  isAdmin: true
-}
-
-const testAdmin = new User(adminData);
-
-testAdmin.save(err => {
-  if (err) console.log('Error al crear :C');
-
-  console.log('guardado!');
-  console.log(testAdmin.toJSON());
-})*/
-
 app.use(cors(corsOptions));
 
 // parse requests of content-type - application/json
