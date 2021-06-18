@@ -29,6 +29,7 @@ app.get("/", (req, res) => {
 });
 
 require('./src/routes/auth.routes') (app);
+require('./src/routes/user.routes') (app);
 
 const server = require('http').createServer(app);
 const io = require('socket.io')(server)
