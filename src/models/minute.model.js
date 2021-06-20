@@ -31,6 +31,28 @@ const annexSchema = new Schema({
     url: {
         type: String,
         required: [true, "El link de un anexo es obligatorio"],
+        ref: 'User'
+    },
+    name: {
+        type: String,
+        required: [true, "El nombre de un anexo es obligatorio"],
+    }
+},{
+    timestamps: true,
+});
+
+const participantSchema = new Schema({
+    participant: {
+        type: Schema.Types.ObjectId,
+        required: [true, "Un participante es obligatorio"],
+    },
+    confirmedAssistance: {
+        type: Boolean,
+        default: false,
+    },
+    assistance: {
+        type: Boolean,
+        default: false,
     }
 },{
     timestamps: true,
@@ -46,6 +68,7 @@ const topicSchema = new Schema({
         type: String,
         required: [true, "El nombre de un tema en una acta es obligatorio"],
     },
+    participants: [participantSchema],
     description: String,
     dialogueElements: [dialogueElementSchema],
     notes: [noteSchema]

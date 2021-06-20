@@ -1,7 +1,8 @@
 const { validateRequest } = require('../middleware')
 const { body } = require('express-validator');
 const {
-    createUser
+    createUser,
+    getAllUsers
 } =  require('../controllers/user.controller');
 
 module.exports = (app) => {
@@ -14,11 +15,16 @@ module.exports = (app) => {
     });
     
     app.post(
-        "/api/users/create",
+        "/api/users",
         body('name').not().isEmpty().withMessage('El nombre del usuario es obligatorio'),
         body('email').isEmail().withMessage('El email del usuario es obligatorio'),
         body('password').isStrongPassword(),
         [validateRequest],
         createUser
+    );
+
+    app.get(
+        "/api/users",
+        getAllUsers
     );
 }
