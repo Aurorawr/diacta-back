@@ -42,9 +42,10 @@ const annexSchema = new Schema({
 });
 
 const participantSchema = new Schema({
-    participant: {
+    user: {
         type: Schema.Types.ObjectId,
         required: [true, "Un participante es obligatorio"],
+        ref: 'User'
     },
     confirmedAssistance: {
         type: Boolean,
@@ -68,7 +69,6 @@ const topicSchema = new Schema({
         type: String,
         required: [true, "El nombre de un tema en una acta es obligatorio"],
     },
-    participants: [participantSchema],
     description: String,
     dialogueElements: [dialogueElementSchema],
     notes: [noteSchema]
@@ -83,6 +83,7 @@ const minuteSchema = new Schema({
         unique: [true, "Ya existe un acta con este numerador"]
     },
     description: String,
+    participants: [participantSchema],
     place: String,
     date: Date,
     startTime: String,
