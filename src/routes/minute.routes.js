@@ -2,7 +2,10 @@ const { validateRequest } = require('../middleware')
 const { body } = require('express-validator');
 const {
     createPreMinute,
-    getPreMinute
+    getPreMinute,
+    addDialogueElement,
+    addNote,
+    addTopic
 } =  require('../controllers/minute.controller');
 
 module.exports = (app) => {
@@ -28,5 +31,29 @@ module.exports = (app) => {
         //body('password').isStrongPassword(),
         //[validateRequest],
         getPreMinute
+    );
+
+    app.post(
+        "/api/minutes/:minuteId/topics",
+        //body('email').isEmail().withMessage('El email del usuario es obligatorio'),
+        //body('password').isStrongPassword(),
+        //[validateRequest],
+        addTopic
+    );
+
+    app.post(
+        "/api/minutes/:minuteId/topics/:topicId/dialogueElement",
+        //body('email').isEmail().withMessage('El email del usuario es obligatorio'),
+        //body('password').isStrongPassword(),
+        //[validateRequest],
+        addDialogueElement
+    );
+
+    app.post(
+        "/api/minutes/:minuteId/topics/:topicId/note",
+        //body('email').isEmail().withMessage('El email del usuario es obligatorio'),
+        //body('password').isStrongPassword(),
+        //[validateRequest],
+        addNote
     );
 }
