@@ -1,23 +1,5 @@
 const { Schema, model } = require('mongoose');
 
-const dialogueElementSchema = new Schema({
-    elementType: {
-        type: String,
-        enum: ['Duda', 'Compromiso', 'Acuerdo', 'Desacuerdo'],
-        required: [true, "El tipo de un elemento del diálogo es obligatorio"],
-    },
-    enum: {
-        type: Number,
-        required: [true, "El enumerador de un elemento del diálogo es obligatorio"],
-    },
-    content: {
-        type: String,
-        required: [true, "El contenido de un elemento del diálogo es obligatorio"],
-    }
-},{
-    timestamps: true,
-});
-
 const noteSchema = new Schema({
     content: {
         type: String,
@@ -70,7 +52,7 @@ const topicSchema = new Schema({
         required: [true, "El nombre de un tema en una acta es obligatorio"],
     },
     description: String,
-    dialogueElements: [dialogueElementSchema],
+    dialogueElements: [{ type: Schema.Types.ObjectId, ref: 'DialogueElement' }],
     notes: [noteSchema]
 },{
     timestamps: true,
@@ -84,6 +66,7 @@ const minuteSchema = new Schema({
     },
     description: String,
     participants: [participantSchema],
+    previuosCompromises: [{ type: Schema.Types.ObjectId, ref: 'DialogueElement' }],
     place: String,
     date: Date,
     startTime: String,
