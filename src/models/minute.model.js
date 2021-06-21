@@ -44,8 +44,7 @@ const participantSchema = new Schema({
 const topicSchema = new Schema({
     enum: {
         type: Number,
-        required: [true, "El enumerador de la acta es obligatorio"],
-        unique: [true, "Ya existe un acta con este numerador"]
+        required: [true, "El enumerador de la acta es obligatorio"]
     },
     name: {
         type: String,
