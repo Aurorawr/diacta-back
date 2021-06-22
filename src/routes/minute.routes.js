@@ -5,7 +5,9 @@ const {
     getPreMinute,
     addDialogueElement,
     addNote,
-    addTopic
+    addTopic,
+    updateMinuteData,
+    addAnnexe
 } =  require('../controllers/minute.controller');
 
 module.exports = (app) => {
@@ -33,12 +35,28 @@ module.exports = (app) => {
         getPreMinute
     );
 
+    app.put(
+        "/api/minutes/:minuteId",
+        //body('email').isEmail().withMessage('El email del usuario es obligatorio'),
+        //body('password').isStrongPassword(),
+        //[validateRequest],
+        updateMinuteData
+    );
+
     app.post(
         "/api/minutes/:minuteId/topics",
         //body('email').isEmail().withMessage('El email del usuario es obligatorio'),
         //body('password').isStrongPassword(),
         //[validateRequest],
         addTopic
+    );
+
+    app.post(
+        "/api/minutes/:minuteId/annexes",
+        //body('email').isEmail().withMessage('El email del usuario es obligatorio'),
+        //body('password').isStrongPassword(),
+        //[validateRequest],
+        addAnnexe
     );
 
     app.post(

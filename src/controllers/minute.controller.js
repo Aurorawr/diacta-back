@@ -29,6 +29,24 @@ exports.createPreMinute = async (req, res) => {
     });
 }
 
+exports.updateMinuteData = async (req, res) => {
+    const {
+        params: {
+            minuteId
+        },
+        body: minuteData
+    } = req;
+    
+    
+    Minute.findByIdAndUpdate(minuteId, minuteData, function(err, minute) {
+        if (err) {
+            return res.status(500).send({ message: err.message });
+        }
+
+        return res.send({ message: 'Acta obtenida', minute });
+    });
+}
+
 exports.getPreMinute = async (req, res) => {
     const {
         params: {
@@ -89,6 +107,28 @@ exports.addTopic = async (req, res) => {
         }
 
         return res.send({ message: 'Tema del acta agregado', topic: minute.topics[topicsQuantity] });
+    });
+}
+
+exports.addAnnexe = async (req, res) => {
+    const {
+        params: {
+            minuteId
+        },
+        body : annexeData
+    } = req;
+    
+    
+    const minute = await Minute.findById(minuteId).exec();
+
+    const annexesQuantity = minute.annexes.push(annexeData);
+
+    minute.save(function(err) {
+        if (err) {
+            return res.status(500).send({ message: err.message });
+        }
+
+        return res.send({ message: 'Tema del acta agregado', annexe: minute.annexes[annexesQuantity - 1] });
     });
 }
 
