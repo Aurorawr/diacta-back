@@ -3,6 +3,7 @@ const { body } = require('express-validator');
 const {
     createPreMinute,
     getPreMinute,
+    getMinutesList,
     addDialogueElement,
     addNote,
     addTopic,
@@ -33,6 +34,14 @@ module.exports = (app) => {
         //body('password').isStrongPassword(),
         //[validateRequest],
         getPreMinute
+    );
+
+    app.get(
+        "/api/minutes",
+        //body('email').isEmail().withMessage('El email del usuario es obligatorio'),
+        //body('password').isStrongPassword(),
+        //[validateRequest],
+        getMinutesList
     );
 
     app.put(

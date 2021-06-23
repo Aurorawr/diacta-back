@@ -84,6 +84,17 @@ exports.getPreMinute = async (req, res) => {
     });
 }
 
+exports.getMinutesList = async (req, res) => {
+    
+    Minute.find({}).select('_id enum date').exec(function(err, minutes) {
+        if (err) {
+            return res.status(500).send({ message: err.message });
+        }
+
+        return res.send({ message: 'Actas obtenidas', minutes });
+    });
+}
+
 exports.addTopic = async (req, res) => {
     const {
         params: {
