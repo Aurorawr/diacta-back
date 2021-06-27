@@ -1,0 +1,31 @@
+<div class='padding-2r'>
+    <div>
+      <mat-form-field>
+        <input matInput placeholder="Buscar">
+      </mat-form-field>
+      <button mat-raised-button color="primary">
+        Buscar
+        <mat-icon>search</mat-icon>
+      </button>
+    </div>
+    <div fxLayout='col'>
+      <div fxFlex='20'>
+        <button class='full-width' mat-raised-button color="primary">
+          Empezar acta
+          <mat-icon>note_add</mat-icon>
+        </button>
+        <mat-list>
+          <mat-list-item *ngFor="let minute of minutes">
+            <mat-icon mat-list-icon>text_snippet</mat-icon>
+            <h3 matLine>Reunión {{minute.enum}}</h3>
+            <p matLine>14/03/2018</p>
+          </mat-list-item>
+        </mat-list>
+      </div>
+      <div fxFlex class="minute-div">
+        <p>Seleccione una acta para ver detalles o inicie un acta nueva</p>
+        <app-minute></app-minute>
+      </div>
+    </div>
+  </div>
+  

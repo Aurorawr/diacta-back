@@ -1,0 +1,15 @@
+<mat-card class='minute-card'>
+    <mat-card-title>
+        <h1 class='inline-block title'><b>Acta reunión {{ minute.enum }}</b></h1>
+        <h3 class='float-r'>{{minute.place}}, {{minute.date.toLocaleString()}}. Inicio: {{minute.startTime}}</h3>
+        <mat-divider></mat-divider>
+    </mat-card-title>
+    <mat-card-content>
+        <p *ngIf='minute.description' class='minute-text'>{{ minute.description }}</p>
+        <mat-divider></mat-divider>
+        <h1>Asistentes</h1>
+        <p></p>
+        <mat-divider></mat-divider>
+    </mat-card-content>
+</mat-card>
+

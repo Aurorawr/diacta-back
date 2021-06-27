@@ -1,0 +1,28 @@
+.sessions-layout {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#login-card {
+    margin-top: -20vh;
+    height: 50%;
+    width: 60vw;
+}
+
+.child-1{
+    background-color: orange;
+    }
+    .child-2{
+    background-color: yellow;
+    }
+    .child-3{
+    background-color: green;
+    }
+    
+    .container{
+     margin: 15px;
+     height:200px;
+     border:2px solid red;
+    }

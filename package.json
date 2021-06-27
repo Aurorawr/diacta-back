@@ -8,7 +8,12 @@
   },
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "cd front && ng build"
+  },
+  "engines": {
+    "node": "14.16.1",
+    "npm": "6.14.12"
   },
   "keywords": [],
   "author": "",
