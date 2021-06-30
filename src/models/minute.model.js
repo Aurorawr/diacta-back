@@ -18,7 +18,8 @@ const annexSchema = new Schema({
     name: {
         type: String,
         required: [true, "El nombre de un anexo es obligatorio"],
-    }
+    },
+    description: String
 },{
     timestamps: true,
 });
@@ -73,7 +74,11 @@ const minuteSchema = new Schema({
     endTime: String,
     nextReunionDate: Date,
     topics: [topicSchema],
-    annexes: [annexSchema]
+    annexes: [annexSchema],
+    finished: {
+        type: String,
+        default: false
+    }
 },{
     timestamps: true,
 });
