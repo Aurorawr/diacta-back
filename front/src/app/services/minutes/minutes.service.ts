@@ -1,26 +1,27 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
 import { MinuteHeader } from 'src/app/models/minuteHeader/minute-header.model';
 import { Minute } from 'src/app/models/minute/minute.model';
+import { baseUrl } from 'src/app/services/shared';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MinutesService {
 
-  constructor() { }
+  minutesUrl = baseUrl + 'minutes/'
 
-  getMinutes() : Array<MinuteHeader> {
-    const minuteHeadersList : Array<MinuteHeader> = [];
+  constructor(private http: HttpClient) { }
 
-    for(let i = 1; i < 15; i++) {
-      minuteHeadersList.push({
-        _id: "fgjfjgfkgnfdnd",
-        date: new Date(),
-        enum: i
-      })
-    }
+  getMinutes() : Observable<any> {
+    const {
+      minutesUrl,
+      http
+    } = this;
 
-    return minuteHeadersList;
+    return http.get(minutesUrl);
   }
 
   getMinute() : Minute {
@@ -58,10 +59,6 @@ export class MinutesService {
             type: 'Duda',
             enum: 1,
             content: 'Alberto no recuerda si se iba a dar un plazo extra para los logros no cumplidos',
-        },
-        {
-          type: 'Nota',
-          content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
         },{
           type: 'Acuerdo',
           enum: 2,
@@ -73,13 +70,6 @@ export class MinutesService {
         title: 'Nueva planificación',
         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
         elements: [{
-            type: 'Nota',
-            content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
-        },
-        {
-          type: 'Nota',
-          content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
-        },{
           type: 'Compromiso',
           enum: 3,
           content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
@@ -97,9 +87,6 @@ export class MinutesService {
         {
           type: 'Compromiso',
           enum: 5,
-          content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
-        },{
-          type: 'Nota',
           content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
         }]
       }],

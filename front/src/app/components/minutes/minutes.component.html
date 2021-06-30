@@ -9,7 +9,7 @@
           <mat-list-item *ngFor="let minute of minutes">
             <mat-icon mat-list-icon>text_snippet</mat-icon>
             <h3 matLine>Reunión {{minute.enum}}</h3>
-            <p matLine>14/03/2018</p>
+            <p matLine>{{minute.date.toLocaleString().slice(0, 10)}}</p>
           </mat-list-item>
         </mat-list>
       </div>

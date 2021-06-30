@@ -18,7 +18,14 @@ export class MinutesComponent {
   ) {}
 
   ngOnInit() {
-    this.minutes = this.minutesService.getMinutes();
+    this.minutesService.getMinutes().subscribe(data => {
+      console.log(data);
+
+      this.minutes = data.minutes;
+    },
+    error => {
+      console.error(error);
+    });
   }
 
 }
