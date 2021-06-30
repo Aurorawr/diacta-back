@@ -63,6 +63,7 @@ const minuteSchema = new Schema({
         required: [true, "El enumerador de la acta es obligatorio"],
         unique: [true, "Ya existe un acta con este numerador"]
     },
+    header: String,
     description: String,
     participants: [participantSchema],
     previuosCompromises: [{ type: Schema.Types.ObjectId, ref: 'DialogueElement' }],
