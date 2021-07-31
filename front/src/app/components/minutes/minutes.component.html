@@ -5,17 +5,16 @@
           Empezar acta
           <mat-icon>note_add</mat-icon>
         </button>
-        <mat-list>
-          <mat-list-item *ngFor="let minute of minutes">
+        <mat-selection-list #minuteList [multiple]='false' (selectionChange)="onSelectedMinute(minuteList.selectedOptions.selected[0])">
+          <mat-list-option *ngFor="let minute of minutes" [value]='minute._id'>
             <mat-icon mat-list-icon>text_snippet</mat-icon>
             <h3 matLine>Reunión {{minute.enum}}</h3>
             <p matLine>{{minute.date.toLocaleString().slice(0, 10)}}</p>
-          </mat-list-item>
-        </mat-list>
+          </mat-list-option>
+        </mat-selection-list>
       </div>
       <div fxFlex class="minute-div">
-        <p>Seleccione una acta para ver detalles o inicie un acta nueva</p>
-        <app-minute></app-minute>
+        <app-minute [minuteId]='minuteSelectedId'></app-minute>
       </div>
     </div>
   </div>

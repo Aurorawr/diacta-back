@@ -1,9 +1,20 @@
 .minute-card {
     padding: 2rem 5rem;
+    height: 65vh;
+    margin: 0 1rem;
 }
 
 .minute-text {
     text-align: justify;
     padding-top: 1rem;
     padding-bottom: 1rem;
+}
+
+#no-data-text {
+    text-align: center;
+    margin-top: 30%;
+}
+
+#minute-spinner {
+    margin: 20% auto;
 }

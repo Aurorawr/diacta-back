@@ -1,4 +1,4 @@
-<mat-card class='minute-card'>
+<mat-card *ngIf="minute" class='minute-card'>
     <mat-card-title>
         <h1 class='inline-block title'><b>Acta reunión {{ minute.enum }}</b></h1>
         <h3 class='float-r'>{{minute.place}}, {{minute.date.toLocaleString()}}. Inicio: {{minute.startTime}}</h3>
@@ -11,5 +11,11 @@
         <p></p>
         <mat-divider></mat-divider>
     </mat-card-content>
+</mat-card>
+<mat-card *ngIf="!minute && !loading" class='minute-card'>
+    <h2 id='no-data-text'>No ha seleccionado ninguna acta</h2>
+</mat-card>
+<mat-card *ngIf="loading" class='minute-card'>
+    <mat-spinner id='minute-spinner'></mat-spinner>
 </mat-card>
 

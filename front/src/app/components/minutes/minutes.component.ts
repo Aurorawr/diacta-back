@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import {MatListOption} from '@angular/material/list';
 
 import { MinuteHeader } from 'src/app/models/minuteHeader/minute-header.model';
 import { MinutesService } from 'src/app/services/minutes/minutes.service'
@@ -12,6 +12,7 @@ import { MinutesService } from 'src/app/services/minutes/minutes.service'
 export class MinutesComponent {
 
   minutes : Array<MinuteHeader> = [];
+  minuteSelectedId : string = '';
 
   constructor(
     private minutesService : MinutesService
@@ -26,6 +27,11 @@ export class MinutesComponent {
     error => {
       console.error(error);
     });
+  }
+
+  onSelectedMinute(minuteOptions: MatListOption) {
+    console.log(minuteOptions.value)
+    this.minuteSelectedId = minuteOptions.value;
   }
 
 }

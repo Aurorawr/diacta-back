@@ -67,7 +67,7 @@ const minuteSchema = new Schema({
     header: String,
     description: String,
     participants: [participantSchema],
-    previuosCompromises: [{ type: Schema.Types.ObjectId, ref: 'DialogueElement' }],
+    previousCompromises: [{ type: Schema.Types.ObjectId, ref: 'DialogueElement' }],
     place: String,
     date: Date,
     startTime: String,
@@ -76,7 +76,7 @@ const minuteSchema = new Schema({
     topics: [topicSchema],
     annexes: [annexSchema],
     finished: {
-        type: String,
+        type: Boolean,
         default: false
     }
 },{

@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnChanges, Input, SimpleChanges } from '@angular/core';
 
-import { Minute, defaultMinute } from 'src/app/models/minute/minute.model';
+import { Minute } from 'src/app/models/minute/minute.model';
 import { MinutesService } from 'src/app/services/minutes/minutes.service';
 
 @Component({
@@ -9,19 +8,32 @@ import { MinutesService } from 'src/app/services/minutes/minutes.service';
   templateUrl: './minute.component.html',
   styleUrls: ['./minute.component.scss']
 })
-export class MinuteComponent implements OnInit {
+export class MinuteComponent implements OnChanges {
 
-  minute : Minute = defaultMinute;
+  @Input() minuteId: string = '';
+  minute : Minute | null = null;
+  loading : boolean = false;
 
   constructor(
-    private route : ActivatedRoute,
     private minutesService: MinutesService
   ) { }
 
-  ngOnInit(): void {
-    console.log(this.route.snapshot.paramMap.get('id'));
-
-    this.minute = this.minutesService.getMinute();
+  ngOnChanges(changes: SimpleChanges) {
+    console.log(changes)
+    const newMinuteId = changes.minuteId.currentValue;
+    if (newMinuteId) {
+      this.loading = true;
+      this.minutesService.getMinute(newMinuteId).subscribe(data => {
+        console.log(data);
+  
+        this.minute = data.minute;
+      },
+      error => {
+        console.error(error);
+      }, () => {
+        this.loading = false;
+      });
+    }
   }
 
 }
