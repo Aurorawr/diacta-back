@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import {MatListOption} from '@angular/material/list';
+import { MatListOption } from '@angular/material/list';
 
 import { MinuteHeader } from 'src/app/models/minuteHeader/minute-header.model';
-import { MinutesService } from 'src/app/services/minutes/minutes.service'
+import { MinutesService } from 'src/app/services/minutes/minutes.service';
 
 @Component({
   selector: 'app-minutes',

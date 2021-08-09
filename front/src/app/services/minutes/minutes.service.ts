@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 import { MinuteHeader } from 'src/app/models/minuteHeader/minute-header.model';
 import { Minute } from 'src/app/models/minute/minute.model';
+import { Preminute } from 'src/app/models/preminute/preminute.model';
 import { baseUrl } from 'src/app/services/shared';
 
 interface MinuteResponse {
@@ -39,5 +40,14 @@ export class MinutesService {
     const url = minutesUrl + minuteId;
 
     return http.get<MinuteResponse>(url);
+  }
+
+  createPreminute(preminute: Preminute) : Observable<any> {
+    const {
+      minutesUrl,
+      http
+    } = this;
+
+    return http.post(minutesUrl, preminute);
   }
 }

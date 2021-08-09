@@ -1,10 +1,10 @@
 <div class='padding-2r'>
     <div fxLayout='col'>
       <div fxFlex='20'>
-        <button class='full-width' mat-raised-button color="primary">
+        <a class='full-width' mat-raised-button color="primary" routerLink="/preparar-acta" routerLinkActive="active">
           Empezar acta
           <mat-icon>note_add</mat-icon>
-        </button>
+        </a>
         <mat-selection-list #minuteList [multiple]='false' (selectionChange)="onSelectedMinute(minuteList.selectedOptions.selected[0])">
           <mat-list-option *ngFor="let minute of minutes" [value]='minute._id'>
             <mat-icon mat-list-icon>text_snippet</mat-icon>
