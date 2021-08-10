@@ -21,6 +21,19 @@ exports.createUser = (req, res) => {
 
 };
 
+exports.getAllUsers = (req, res) => {
+    
+    const query = User.find({});
+
+    //query.select('+_id email name lastname');
+
+    query.exec(function(err, users) {
+        if (err) return res.status(500).send({ message: err.message });
+
+        return res.send({message: 'Usuarios obtenidos exitosamente', users});
+    });
+};
+
 exports.allAccess = (req, res) => {
     res.status(200).send("Public Content.");
 };
