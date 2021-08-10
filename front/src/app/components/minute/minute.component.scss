@@ -1,6 +1,6 @@
 .minute-card {
     padding: 2rem 5rem;
-    height: 65vh;
+    min-height: 65vh;
     margin: 0 1rem;
 }
 
@@ -8,6 +8,10 @@
     text-align: justify;
     padding-top: 1rem;
     padding-bottom: 1rem;
+}
+
+.info-text {
+    text-align: right;
 }
 
 #no-data-text {

@@ -3,6 +3,21 @@ import { Component, OnChanges, Input, SimpleChanges } from '@angular/core';
 import { Minute } from 'src/app/models/minute/minute.model';
 import { MinutesService } from 'src/app/services/minutes/minutes.service';
 
+const monthNames : {[key: number]: string}= {
+  0: 'enero',
+  1: 'febrero',
+  2: 'marzo',
+  3: 'abril',
+  4: 'mayo',
+  5: 'junio',
+  6: 'julio',
+  7: 'agosto',
+  8: 'septiembre',
+  9: 'octubre',
+  10: 'noviembre',
+  11: 'diciembre'
+}
+
 @Component({
   selector: 'app-minute',
   templateUrl: './minute.component.html',
@@ -34,6 +49,24 @@ export class MinuteComponent implements OnChanges {
         this.loading = false;
       });
     }
+  }
+
+  get getMinuteDatePlaceData() : string {
+    if (this.minute) {
+      const {
+        minute
+      } = this;
+      this.minute.date = new Date(minute.date)
+      const dateStr = `${minute.date.getDate()} de ${monthNames[minute.date.getMonth()]} del ${minute.date.getFullYear()}`
+      const convokedTimeStr = `Convocada: ${minute.date.getHours()}:${minute.date.getMinutes()}`
+      let startTimeStr = '';
+      if (minute.startTime) {
+        startTimeStr = ` Hora  de inicio: ${minute.startTime}`
+      }
+      let data = `${minute.place}, ${dateStr}. ${convokedTimeStr}.${startTimeStr}`;
+      return data
+    }
+    return ''
   }
 
 }
