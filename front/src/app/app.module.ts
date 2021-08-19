@@ -31,8 +31,9 @@ import { MinutesComponent } from './components/minutes/minutes.component';
 import { MinuteComponent } from './components/minute/minute.component';
 import { CreatePreminuteComponent } from './components/create-preminute/create-preminute.component';
 import { MinuteCollabComponent } from './components/minute-collab/minute-collab.component';
+import { environment } from 'src/environments/environment';
 
-const socketConfig: SocketIoConfig = {url: "http://localhost:8080", options: {}}
+const socketConfig: SocketIoConfig = {url: environment.socketUrl, options: {}}
 @NgModule({
   declarations: [
     AppComponent,

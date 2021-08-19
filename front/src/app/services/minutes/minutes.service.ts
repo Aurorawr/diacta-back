@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { MinuteHeader } from 'src/app/models/minuteHeader/minute-header.model';
 import { Minute } from 'src/app/models/minute/minute.model';
 import { Preminute } from 'src/app/models/preminute/preminute.model';
-import { baseUrl } from 'src/app/services/shared';
+import { environment } from 'src/environments/environment';
 
 interface MinuteResponse {
   message: string;
@@ -17,7 +17,7 @@ interface MinuteResponse {
 })
 export class MinutesService {
 
-  minutesUrl = baseUrl + 'minutes/'
+  minutesUrl = environment.baseUrl + 'minutes/'
 
   constructor(private http: HttpClient) { }
 

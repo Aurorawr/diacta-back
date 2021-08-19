@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { User } from 'src/app/models/user/user.model';
-import { baseUrl } from 'src/app/services/shared';
+import { environment } from 'src/environments/environment';
 
 interface UsersResponse {
   message: string;
@@ -15,7 +15,7 @@ interface UsersResponse {
 })
 export class UsersService {
 
-  usersUrl = baseUrl + 'users/';
+  usersUrl = environment.baseUrl + 'users/';
 
   constructor(private httpClient: HttpClient) { }
 
