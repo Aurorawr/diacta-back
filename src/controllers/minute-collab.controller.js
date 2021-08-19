@@ -53,7 +53,7 @@ module.exports = server => {
     socket.on("editBasicData", async (name, value) => {
       //await minute.updateOne({[name]: value});
       minute[name] = value
-      io.emit("basicData", {
+      socket.broadcast.emit("basicData", {
         name,
         value
       });
