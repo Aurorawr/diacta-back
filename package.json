@@ -9,6 +9,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "preinstall": "cd front && npm install",
     "postinstall": "cd front && ng build"
   },
   "engines": {
