@@ -1,6 +1,10 @@
 <mat-card *ngIf="minute" class='minute-card'>
     <mat-card-title>
         <h1 class='inline-block title'><b>Acta reunión {{ minute.enum }}</b></h1>
+        <a mat-raised-button color="primary" class="float-r" routerLink="/acta/{{minute._id}}">
+            Empezar acta
+            <mat-icon>login</mat-icon>
+        </a>
         <mat-divider></mat-divider>
     </mat-card-title>
     <mat-card-content>

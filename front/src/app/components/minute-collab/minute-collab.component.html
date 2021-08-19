@@ -1,0 +1,45 @@
+<div>
+    <mat-card class="minute-collab-card">
+        <mat-card-title>
+            <h1 class='inline-block title'><b>Acta en desarrollo</b></h1>
+        </mat-card-title>
+        <mat-card-content>
+            <div *ngIf="minute" class='padding-2r'>
+                <mat-form-field *ngIf='minute.header' appearance="standard" class='full-width'>
+                    <textarea #headerInput matInput [value]='minute.header' (keyup)='editBasicData("header", $event)'></textarea>
+                </mat-form-field>
+                <h3 class="info-text">{{getMinuteDatePlaceData}}</h3>
+                <p *ngIf='minute.description' class='minute-text'>{{ minute.description }}</p>
+                <h1>Asistentes</h1>
+                <mat-list>
+                    <mat-list-item *ngFor="let participant of minute.participants">{{participant.user.name}} ({{participant.user.email}})</mat-list-item>
+                </mat-list>
+                <h1>Compromisos previos</h1>
+                <p *ngIf='!minute.previousCompromises.length' class='minute-text'>No hay compromisos previos</p>
+                <h1>Tabla de la reunión</h1>
+                <mat-list>
+                    <mat-list-item *ngFor="let topic of minute.topics">{{topic.enum}}. {{topic.name}}</mat-list-item>
+                </mat-list>
+                <h1>Desarrollo</h1>
+                <div *ngFor="let topic of minute.topics">
+                    <h2>{{topic.enum}}. {{topic.name}}</h2>
+                    <p *ngIf='topic.description' class='minute-text'>{{topic.description}}</p>
+                    <p *ngFor='let note of topic.notes' class='minute-text'>{{note.content}}</p>
+                    <p *ngFor='let diaEl of topic.dialogueElements' class='minute-text'><b>{{diaEl.elementType}} {{minute.enum}}.{{diaEl.enum}}:</b> {{diaEl.content}}</p>
+                </div>
+                <h1>Adjuntos</h1>
+                <mat-list>
+                    <mat-list-item *ngFor='let annex of minute.annexes' class="full-width">
+                        <mat-icon matListIcon>assignment</mat-icon>
+                        <p matLine>{{ annex.name }}</p>
+                        <p matLine><a href="{{annex.url}}" target="_blank">Link</a></p>
+                        <button mat-icon-button>
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-list-item>
+                </mat-list>
+                <h3 *ngIf="minute.endTime" class="info-text"><b>Hora de término:</b> {{minute.endTime}}</h3>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

@@ -36,9 +36,9 @@ app.get('/*', function(req, res) {
   res.sendFile(path.join(__dirname + '/front/dist/front/index.html'));
 });
 
-const server = require('http').createServer(app);
-const io = require('socket.io')(server)
+const server = require('http').Server(app);
 
+require('./src/controllers/minute-collab.controller') (server)
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
 server.listen(PORT, () => {

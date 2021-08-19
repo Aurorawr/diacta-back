@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CreatePreminuteComponent } from './components/create-preminute/create-preminute.component';
 import { LoginComponent } from './components/login/login.component';
+import { MinuteCollabComponent } from './components/minute-collab/minute-collab.component';
 import { MinutesComponent } from './components/minutes/minutes.component';
 
 const routes: Routes = [
@@ -13,6 +14,9 @@ const routes: Routes = [
   },
   {
     path: 'preparar-acta', component: CreatePreminuteComponent
+  },
+  {
+    path: 'acta/:minuteId', component: MinuteCollabComponent
   },
   {
     path: '', redirectTo: '/login', pathMatch: 'full'
