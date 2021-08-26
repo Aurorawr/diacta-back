@@ -32,6 +32,8 @@ import { MinuteComponent } from './components/minute/minute.component';
 import { CreatePreminuteComponent } from './components/create-preminute/create-preminute.component';
 import { MinuteCollabComponent } from './components/minute-collab/minute-collab.component';
 import { environment } from 'src/environments/environment';
+import { KanbanComponent } from './components/kanban/kanban.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 const socketConfig: SocketIoConfig = {url: environment.socketUrl, options: {}}
 @NgModule({
@@ -41,7 +43,8 @@ const socketConfig: SocketIoConfig = {url: environment.socketUrl, options: {}}
     MinutesComponent,
     MinuteComponent,
     CreatePreminuteComponent,
-    MinuteCollabComponent
+    MinuteCollabComponent,
+    KanbanComponent
   ],
   imports: [
     BrowserModule,
@@ -65,7 +68,8 @@ const socketConfig: SocketIoConfig = {url: environment.socketUrl, options: {}}
     MatTooltipModule,
     FormsModule,
     ReactiveFormsModule,
-    SocketIoModule.forRoot(socketConfig)
+    SocketIoModule.forRoot(socketConfig),
+    DragDropModule
   ],
   providers: [
     {provide: MAT_DATE_LOCALE, useValue: 'es'}
