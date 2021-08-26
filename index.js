@@ -29,16 +29,16 @@ require('./src/routes/user.routes') (app);
 require('./src/routes/minute.routes') (app);
 
 // Serve static files
-app.use(express.static(__dirname + '/front/dist/front'));
+app.use(express.static(__dirname + '/public'));
 
 // Send all requests to index.html
 app.get('/*', function(req, res) {
-  res.sendFile(path.join(__dirname + '/front/dist/front/index.html'));
+  res.sendFile(path.join(__dirname + '/public/index.html'));
 });
 
-const server = require('http').createServer(app);
-const io = require('socket.io')(server)
+const server = require('http').Server(app);
 
+require('./src/controllers/minute-collab.controller') (server)
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
 server.listen(PORT, () => {

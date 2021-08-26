@@ -22,6 +22,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
 
 import { AppComponent } from './app.component';
@@ -29,14 +30,18 @@ import { LoginComponent } from './components/login/login.component';
 import { MinutesComponent } from './components/minutes/minutes.component';
 import { MinuteComponent } from './components/minute/minute.component';
 import { CreatePreminuteComponent } from './components/create-preminute/create-preminute.component';
+import { MinuteCollabComponent } from './components/minute-collab/minute-collab.component';
+import { environment } from 'src/environments/environment';
 
+const socketConfig: SocketIoConfig = {url: environment.socketUrl, options: {}}
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     MinutesComponent,
     MinuteComponent,
-    CreatePreminuteComponent
+    CreatePreminuteComponent,
+    MinuteCollabComponent
   ],
   imports: [
     BrowserModule,
@@ -59,7 +64,8 @@ import { CreatePreminuteComponent } from './components/create-preminute/create-p
     MatToolbarModule,
     MatTooltipModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SocketIoModule.forRoot(socketConfig)
   ],
   providers: [
     {provide: MAT_DATE_LOCALE, useValue: 'es'}
