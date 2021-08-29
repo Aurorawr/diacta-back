@@ -11,6 +11,12 @@ interface UserCredentials {
   password: string;
 }
 
+interface LoginResponse {
+  message: string;
+  token?: string;
+  user?: User
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -22,7 +28,7 @@ export class AuthService {
     private http: HttpClient
   ) { }
 
-  logIn(credentials: UserCredentials) : Observable<User> {
+  logIn(credentials: UserCredentials) : Observable<LoginResponse> {
     const {
       authUrl,
       http
@@ -30,6 +36,6 @@ export class AuthService {
 
     const url = authUrl + 'signin'
 
-    return http.post<User>(url, credentials)
+    return http.post<LoginResponse>(url, credentials)
   }
 }

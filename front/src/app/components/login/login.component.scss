@@ -1,5 +1,5 @@
 .sessions-layout {
-    height: 100vh;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -7,8 +7,24 @@
 
 #login-card {
     margin-top: -20vh;
-    height: 50%;
     width: 60vw;
+}
+
+#login-div {
+    border-left: lightgray solid 1px;
+    min-height: 40vh;
+    padding: 2rem 3rem;
+}
+
+.login-icon {
+    display: block;
+    margin: 0 auto;
+}
+
+.login-button {
+    width: 50%;
+    margin: 0 auto;
+    margin-top: 1rem;
 }
 
 .child-1{

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import {Router} from "@angular/router";
+import { Router } from "@angular/router";
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { AuthService } from 'src/app/services/auth/auth.service';
 
@@ -21,7 +22,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -36,12 +38,27 @@ export class LoginComponent implements OnInit {
     } =  this
     
     authService.logIn(userCredentials)
-    .subscribe(user => {
-      console.log(user)
+    .subscribe(response => {
+      const {
+        user,
+        token
+      } = response
+      localStorage.setItem('diacta-user', JSON.stringify(user))
+      localStorage.setItem('diacta-token', JSON.stringify(token))
       this.router.navigate(['/actas'])
     },
-    error => {
-      console.error(error)
+    response => {
+      const {
+        error: {
+          message
+        }
+      } = response
+      this.snackBar.open(message, '', {
+        horizontalPosition: 'right',
+        verticalPosition: 'top',
+        panelClass: 'error-notification',
+        duration: 5000
+      })
     })
   }
 

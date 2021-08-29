@@ -31,6 +31,7 @@ userSchema.statics.findByEmail = function(email) {
 
 userSchema.method('toJSON', function() {
   const user = this.toObject();
+  delete user._id;
   delete user.password;
   delete user.createdAt;
   delete user.updatedAt;
