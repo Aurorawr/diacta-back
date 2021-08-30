@@ -2,8 +2,19 @@ const User = require("../models/user.model");
 const jwt = require("jsonwebtoken");
 const {secret} = require("../config/auth.config.js");
 
+getToken = (headers) => {
+  const authHeader = headers['authorization']
+  if(authHeader) {
+    const headerData = authHeader.split(' ')
+    if (headerData.length == 2 && headerData[0] == 'Bearer') {
+      return headerData[1]
+    }
+  }
+  return null
+}
+
 verifyToken = (req, res, next) => {
-  let token = req.headers["x-access-token"];
+  let token = getToken(req.headers);
 
   if (!token) {
     return res.status(403).send({

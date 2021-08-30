@@ -1,4 +1,4 @@
-const { validateRequest } = require('../middleware')
+const { validateRequest, verifyToken } = require('../middleware')
 const { body } = require('express-validator');
 const {
     createPreMinute,
@@ -22,9 +22,7 @@ module.exports = (app) => {
     
     app.post(
         "/api/minutes",
-        //body('email').isEmail().withMessage('El email del usuario es obligatorio'),
-        //body('password').isStrongPassword(),
-        //[validateRequest],
+        [verifyToken],
         createPreMinute
     );
 
@@ -38,9 +36,7 @@ module.exports = (app) => {
 
     app.get(
         "/api/minutes",
-        //body('email').isEmail().withMessage('El email del usuario es obligatorio'),
-        //body('password').isStrongPassword(),
-        //[validateRequest],
+        [verifyToken],
         getMinutesList
     );
 

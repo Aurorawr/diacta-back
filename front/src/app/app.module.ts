@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -35,6 +35,8 @@ import { MinuteCollabComponent } from './components/minute-collab/minute-collab.
 import { environment } from 'src/environments/environment';
 import { KanbanComponent } from './components/kanban/kanban.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+
+import { TokenInjectorService } from 'src/app/services/tokenInjector/token-injector.service'
 
 const socketConfig: SocketIoConfig = {url: environment.socketUrl, options: {}}
 @NgModule({
@@ -74,7 +76,15 @@ const socketConfig: SocketIoConfig = {url: environment.socketUrl, options: {}}
     DragDropModule
   ],
   providers: [
-    {provide: MAT_DATE_LOCALE, useValue: 'es'}
+    {
+      provide: MAT_DATE_LOCALE,
+      useValue: 'es'
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInjectorService,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

@@ -1,7 +1,11 @@
-const authJwt = require('./authJwt');
+const {
+    verifyToken,
+    isAdmin
+} = require('./authJwt');
 const validateRequest = require('./validation')
 
 module.exports = {
-    authJwt,
+    verifyToken,
+    isAdmin,
     validateRequest
 }
