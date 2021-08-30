@@ -43,7 +43,27 @@ export class AuthService {
     )
   }
 
-  setSession(response: LoginResponse) {
+  isLogged() : boolean {
+    const user = localStorage.getItem('diacta-user')
+    const token = localStorage.getItem('diacta-token')
+    if (user && token) {
+      return true
+    }
+    return false
+  }
+
+  isAdmin() : boolean {
+    const userStr = localStorage.getItem('diacta-user')
+    if (userStr) {
+      const user = JSON.parse(userStr)
+      if (user.isAdmin) {
+        return true
+      }
+    }
+    return false
+  }
+
+  private setSession(response: LoginResponse) {
     const {
       user,
       token

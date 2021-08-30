@@ -6,21 +6,35 @@ import { LoginComponent } from './components/login/login.component';
 import { MinuteCollabComponent } from './components/minute-collab/minute-collab.component';
 import { MinutesComponent } from './components/minutes/minutes.component';
 
+import { UserLoggedInGuard } from 'src/app/guards/user-logged-in.guard'
+import { UserNotLoggedGuard } from 'src/app/guards/user-not-logged.guard'
+import { UserIsAdminGuard } from 'src/app/guards/user-is-admin.guard'
+
 const routes: Routes = [
   {
-    path: 'login', component: LoginComponent
+    path: 'login',
+    component: LoginComponent,
+    canActivate: [UserNotLoggedGuard]
   },
   {
-    path: 'actas', component: MinutesComponent
+    path: 'actas', 
+    component: MinutesComponent,
+    canActivate: [UserLoggedInGuard]
   },
   {
-    path: 'tablero', component: KanbanComponent
+    path: 'tablero',
+    component: KanbanComponent,
+    canActivate: [UserLoggedInGuard]
   },
   {
-    path: 'preparar-acta', component: CreatePreminuteComponent
+    path: 'preparar-acta',
+    component: CreatePreminuteComponent,
+    canActivate: [UserLoggedInGuard, UserIsAdminGuard]
   },
   {
-    path: 'acta/:minuteId', component: MinuteCollabComponent
+    path: 'acta/:minuteId',
+    component: MinuteCollabComponent,
+    canActivate: [UserLoggedInGuard]
   },
   {
     path: '', redirectTo: '/login', pathMatch: 'full'
