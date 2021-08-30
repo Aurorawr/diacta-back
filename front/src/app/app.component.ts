@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router'
+
+import { AuthService } from 'src/app/services/auth/auth.service'
 
 @Component({
   selector: 'app-root',
@@ -6,5 +9,16 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'front';
+  title = 'Actas San Miguel';
+
+  constructor(
+    private auth: AuthService,
+    private router: Router
+  ) { }
+
+  logOut() {
+    this.auth.logOut()
+    this.router.navigate(['/login'])
+  }
+
 }

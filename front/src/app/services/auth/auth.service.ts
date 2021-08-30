@@ -43,6 +43,11 @@ export class AuthService {
     )
   }
 
+  logOut() {
+    localStorage.removeItem('diacta-user')
+    localStorage.removeItem('diacta-token')
+  }
+
   isLogged() : boolean {
     const user = localStorage.getItem('diacta-user')
     const token = localStorage.getItem('diacta-token')
