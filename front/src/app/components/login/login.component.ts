@@ -39,12 +39,6 @@ export class LoginComponent implements OnInit {
     
     authService.logIn(userCredentials)
     .subscribe(response => {
-      const {
-        user,
-        token
-      } = response
-      localStorage.setItem('diacta-user', JSON.stringify(user))
-      localStorage.setItem('diacta-token', JSON.stringify(token))
       this.router.navigate(['/actas'])
     },
     response => {

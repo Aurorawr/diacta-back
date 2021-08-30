@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 
 import { User } from 'src/app/models/user/user.model';
 import { environment } from 'src/environments/environment';
-import { catchError } from 'rxjs/operators';
+import { shareReplay, tap } from 'rxjs/operators';
 
 interface UserCredentials {
   email: string;
@@ -37,5 +37,20 @@ export class AuthService {
     const url = authUrl + 'signin'
 
     return http.post<LoginResponse>(url, credentials)
+    .pipe(
+      shareReplay(),
+      tap(response => this.setSession(response))
+    )
+  }
+
+  setSession(response: LoginResponse) {
+    const {
+      user,
+      token
+    } = response
+    if (user && token) {
+      localStorage.setItem('diacta-user', JSON.stringify(user))
+      localStorage.setItem('diacta-token', token)
+    }
   }
 }
