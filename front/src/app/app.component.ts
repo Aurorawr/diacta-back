@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router'
+import { Router, NavigationStart } from '@angular/router'
 
 import { AuthService } from 'src/app/services/auth/auth.service'
 
@@ -10,11 +10,23 @@ import { AuthService } from 'src/app/services/auth/auth.service'
 })
 export class AppComponent {
   title = 'Actas San Miguel';
+  logged = true
 
   constructor(
     private auth: AuthService,
     private router: Router
-  ) { }
+  ) {
+    router.events.subscribe(event => {
+      if (event instanceof NavigationStart) {
+        if (event.url == '/login') {
+          this.logged = false
+        }
+        else {
+          this.logged = true
+        }
+      }
+    })
+  }
 
   logOut() {
     this.auth.logOut()
