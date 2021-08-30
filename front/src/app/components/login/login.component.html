@@ -2,11 +2,6 @@
     <mat-card id='login-card'>
         <mat-card-content>
             <div fxLayout="col">
-                <div fxFlex='50'>
-                    <h1 class='align-center'>Bienvenido,</h1>
-                    <img class='login-icon' src="assets/img/logoActas.png">
-                    <h2 class='align-center'>al gestor de actas dialógicas del Banco de Tiempo de San Miguel</h2>
-                </div>
                 <div fxFlex='50' id='login-div'>
                     <h2 class='align-center'>Iniciar sesión</h2>
                     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
@@ -34,6 +29,11 @@
                             </button>
                         </div>
                     </form>
+                </div>
+                <div fxFlex='50'>
+                    <h1 class='align-center'>Bienvenido,</h1>
+                    <img class='login-icon' src="assets/img/logoActas.png">
+                    <h2 class='align-center'>al gestor de actas dialógicas del Banco de Tiempo de San Miguel</h2>
                 </div>
             </div>
         </mat-card-content>
