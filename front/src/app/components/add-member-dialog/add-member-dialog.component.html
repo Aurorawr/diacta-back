@@ -1,0 +1,41 @@
+<h2 mat-dialog-title>Agregar miembro</h2>
+<mat-dialog-content>
+    <div fxFlexFill fxLayout='row wrap' fxLayoutGap="1rem 1rem grid">
+        <div fxFlex='50'>
+            <mat-form-field appearance="outline" class='full-width'>
+                <mat-label>Nombres</mat-label>
+                <input matInput [(ngModel)]='data.name'>
+            </mat-form-field>  
+        </div>
+        <div fxFlex=50>
+            <mat-form-field appearance="outline" class='full-width'>
+                <mat-label>Apellidos</mat-label>
+                <input matInput [(ngModel)]='data.lastname'>
+            </mat-form-field>
+        </div>
+        <div fxFlex=50>
+            <mat-form-field appearance="outline" class='full-width'>
+                <mat-label>Email</mat-label>
+                <input matInput [(ngModel)]='data.email'>
+            </mat-form-field> 
+        </div>
+        <div fxFlex=50>
+            <mat-form-field appearance="outline" class='full-width'>
+                <mat-label>Contraseña</mat-label>
+                <input matInput [type]="hidePassword ? 'password' : 'text'" [(ngModel)]='data.password'>
+                <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+                    <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                  </button>
+            </mat-form-field>
+        </div>
+        <div fxFlex=50>
+            <h3 class='inline-block'>Rol: </h3>
+            Miembro
+            <mat-slide-toggle [(ngModel)]='data.isAdmin'>Administrador</mat-slide-toggle>
+        </div>
+    </div>   
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Agregar</button>
+</mat-dialog-actions>

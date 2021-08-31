@@ -1,7 +1,8 @@
-const { validateRequest } = require('../middleware')
+const { validateRequest, verifyToken } = require('../middleware')
 const { body } = require('express-validator');
 const {
     createUser,
+    editUser,
     getAllUsers
 } =  require('../controllers/user.controller');
 
@@ -18,13 +19,20 @@ module.exports = (app) => {
         "/api/users",
         body('name').not().isEmpty().withMessage('El nombre del usuario es obligatorio'),
         body('email').isEmail().withMessage('El email del usuario es obligatorio'),
-        body('password').isStrongPassword(),
-        [validateRequest],
+        body('password').not().isEmpty().withMessage('La contraseña del usuario es obligatoria'),
+        [validateRequest, verifyToken],
         createUser
+    );
+
+    app.put(
+        "/api/users/:userId",
+        [validateRequest, verifyToken],
+        editUser
     );
 
     app.get(
         "/api/users",
+        [verifyToken],
         getAllUsers
     );
 }

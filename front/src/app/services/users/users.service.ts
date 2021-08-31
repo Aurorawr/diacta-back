@@ -10,6 +10,11 @@ interface UsersResponse {
   users: Array<User>;
 }
 
+interface UserResponse {
+  message: string;
+  user: User;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -26,5 +31,23 @@ export class UsersService {
     } = this
 
     return httpClient.get<UsersResponse>(usersUrl);
+  }
+
+  createUser(userData: User) {
+    const {
+      usersUrl,
+      httpClient
+    } = this
+
+    return httpClient.post<UserResponse>(usersUrl, userData)
+  }
+
+  editUser(userId: string, userData: any) {
+    const {
+      usersUrl,
+      httpClient
+    } = this
+    const url = usersUrl + userId
+    return httpClient.put<UserResponse>(url, userData)
   }
 }

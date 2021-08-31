@@ -9,6 +9,7 @@ import { MinutesComponent } from './components/minutes/minutes.component';
 import { UserLoggedInGuard } from 'src/app/guards/user-logged-in.guard'
 import { UserNotLoggedGuard } from 'src/app/guards/user-not-logged.guard'
 import { UserIsAdminGuard } from 'src/app/guards/user-is-admin.guard'
+import { UsersComponent } from './components/users/users.component';
 
 const routes: Routes = [
   {
@@ -34,6 +35,11 @@ const routes: Routes = [
   {
     path: 'acta/:minuteId',
     component: MinuteCollabComponent,
+    canActivate: [UserLoggedInGuard]
+  },
+  {
+    path: 'usuarios',
+    component: UsersComponent,
     canActivate: [UserLoggedInGuard]
   },
   {
