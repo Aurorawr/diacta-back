@@ -17,7 +17,7 @@ module.exports = (app) => {
     app.post(
         "/api/auth/signin",
         body('email').isEmail().withMessage('El email del usuario es obligatorio'),
-        body('password').isStrongPassword(),
+        body('password').not().isEmpty().withMessage('La contraseña del usuario es obligatoria'),
         [validateRequest],
         signIn
     );

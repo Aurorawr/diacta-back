@@ -20,6 +20,10 @@ const userSchema = new Schema({
   isAdmin: {
     type: Boolean,
     default: false
+  },
+  isBanned: {
+    type: Boolean,
+    default: false
   }
 },{
   timestamps: true,
@@ -31,7 +35,6 @@ userSchema.statics.findByEmail = function(email) {
 
 userSchema.method('toJSON', function() {
   const user = this.toObject();
-  delete user._id;
   delete user.password;
   delete user.createdAt;
   delete user.updatedAt;

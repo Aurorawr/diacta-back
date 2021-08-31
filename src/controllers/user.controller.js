@@ -34,14 +34,17 @@ exports.getAllUsers = (req, res) => {
     });
 };
 
-exports.allAccess = (req, res) => {
-    res.status(200).send("Public Content.");
-};
+exports.editUser = (req, res) => {
+    const {
+        params: {
+            userId
+        },
+        body : userData
+    } = req;
 
-exports.userBoard = (req, res) => {
-    res.status(200).send("User Content.");
-};
+    User.findByIdAndUpdate(userId, userData, {new: true},  function(err, user) {
+        if (err) return res.status(500).send({ message: err.message });
 
-exports.adminBoard = (req, res) => {
-    res.status(200).send("Admin Content.");
+        return res.send({message: 'Usuario editado exitosamente', user: user.toJSON()});
+    })
 };

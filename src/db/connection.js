@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const { URL } = require('../config/db.config');
 
-mongoose.connect(URL, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true})
+mongoose.connect(URL, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false})
 .then(() => {
     console.log('Conectado exitosamente a la aplicación')
 }, err => {
