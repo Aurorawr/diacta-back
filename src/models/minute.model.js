@@ -75,9 +75,10 @@ const minuteSchema = new Schema({
     nextReunionDate: Date,
     topics: [topicSchema],
     annexes: [annexSchema],
-    finished: {
-        type: Boolean,
-        default: false
+    phase: {
+        type: Number,
+        enum: [1, 2, 3],
+        default: 1
     }
 },{
     timestamps: true,

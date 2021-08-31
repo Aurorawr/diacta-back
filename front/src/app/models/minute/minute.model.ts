@@ -49,5 +49,5 @@ export interface Minute {
     nextReunionDate: Date;
     topics: Array<TopicType>;
     annexes: Array<annexType>;
-    finished: boolean;
+    phase: number;
 }

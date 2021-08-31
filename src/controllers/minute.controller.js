@@ -86,7 +86,7 @@ exports.getPreMinute = async (req, res) => {
 
 exports.getMinutesList = async (req, res) => {
     
-    Minute.find({}).select('_id enum date').exec(function(err, minutes) {
+    Minute.find({}).select('_id enum date phase').sort('-enum').exec(function(err, minutes) {
         if (err) {
             return res.status(500).send({ message: err.message });
         }

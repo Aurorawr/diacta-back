@@ -34,4 +34,26 @@ export class MinutesComponent {
     this.minuteSelectedId = minuteOptions.value;
   }
 
+  getMinuteIcon(phase: number): string {
+    switch(phase) {
+      case 1:
+        return 'assignment'
+      case 2:
+        return 'pending_actions'
+      default:
+        return 'assignment_turned_in'
+    }
+  }
+
+  getMinuteTitle(phase: number): string {
+    switch(phase) {
+      case 1:
+        return 'Acta preparada'
+      case 2:
+        return 'Acta en desarrollo'
+      default:
+        return 'Acta desarrollada'
+    }
+  }
+
 }

@@ -6,8 +6,8 @@
           <mat-icon>note_add</mat-icon>
         </a>
         <mat-selection-list #minuteList [multiple]='false' (selectionChange)="onSelectedMinute(minuteList.selectedOptions.selected[0])">
-          <mat-list-option *ngFor="let minute of minutes" [value]='minute._id'>
-            <mat-icon mat-list-icon>text_snippet</mat-icon>
+          <mat-list-option *ngFor="let minute of minutes" [value]='minute._id' [title]="getMinuteTitle(minute.phase)">
+            <mat-icon class='phase-{{minute.phase}}' mat-list-icon>{{getMinuteIcon(minute.phase)}}</mat-icon>
             <h3 matLine>Reunión {{minute.enum}}</h3>
             <p matLine>{{minute.date.toLocaleString().slice(0, 10)}}</p>
           </mat-list-option>
