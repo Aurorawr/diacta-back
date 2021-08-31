@@ -1,4 +1,6 @@
 import { Component, OnChanges, Input, SimpleChanges } from '@angular/core';
+import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { Minute } from 'src/app/models/minute/minute.model';
 import { MinutesService } from 'src/app/services/minutes/minutes.service';
@@ -30,11 +32,12 @@ export class MinuteComponent implements OnChanges {
   loading : boolean = false;
 
   constructor(
-    private minutesService: MinutesService
+    private minutesService: MinutesService,
+    private router: Router,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(changes)
     const newMinuteId = changes.minuteId.currentValue;
     if (newMinuteId) {
       this.loading = true;
@@ -44,7 +47,14 @@ export class MinuteComponent implements OnChanges {
         this.minute = data.minute;
       },
       error => {
-        console.error(error);
+        this.snackBar.open('No existe un acta con ese Id', '', {
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: 'error-notification',
+          duration: 5000
+        })
+        this.loading = false;
+        this.router.navigate(['/actas'])
       }, () => {
         this.loading = false;
       });

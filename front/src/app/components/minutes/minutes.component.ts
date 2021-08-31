@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatListOption } from '@angular/material/list';
 
 import { MinuteHeader } from 'src/app/models/minuteHeader/minute-header.model';
@@ -15,10 +16,13 @@ export class MinutesComponent {
   minuteSelectedId : string = '';
 
   constructor(
-    private minutesService : MinutesService
+    private minutesService : MinutesService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit() {
+    console.log('init!')
     this.minutesService.getMinutes().subscribe(data => {
       console.log(data);
 
@@ -27,11 +31,22 @@ export class MinutesComponent {
     error => {
       console.error(error);
     });
+
+    this.route.queryParamMap.subscribe(params => {
+      if(params) {
+        const minuteId = params.get('id');
+        if (minuteId) {
+          this.minuteSelectedId = minuteId;
+        }
+      }
+    })
   }
 
   onSelectedMinute(minuteOptions: MatListOption) {
-    console.log(minuteOptions.value)
-    this.minuteSelectedId = minuteOptions.value;
+    this.router.navigate(['/actas'], {
+      queryParams: {id: minuteOptions.value},
+      queryParamsHandling: 'merge'
+    })
   }
 
   getMinuteIcon(phase: number): string {
