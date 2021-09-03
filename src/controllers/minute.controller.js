@@ -80,7 +80,7 @@ exports.getPreMinute = async (req, res) => {
             return res.status(500).send({ message: err.message });
         }
 
-        return res.send({ message: 'Acta obtenida', minute });
+        return res.send({ message: 'Acta obtenida', minute: minute.toJSON() });
     });
 }
 

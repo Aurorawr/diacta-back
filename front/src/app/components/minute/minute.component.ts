@@ -28,6 +28,7 @@ const monthNames : {[key: number]: string}= {
 export class MinuteComponent implements OnChanges {
 
   @Input() minuteId: string = '';
+  @Input() isAdmin: boolean = false;
   minute : Minute | null = null;
   loading : boolean = false;
 

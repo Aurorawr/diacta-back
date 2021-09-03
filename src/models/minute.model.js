@@ -84,4 +84,13 @@ const minuteSchema = new Schema({
     timestamps: true,
 });
 
+minuteSchema.method('toJSON', function() {
+    const minute = this.toObject();
+    delete minute.createdAt;
+    delete minute.updatedAt;
+    delete minute.__v;
+  
+    return minute;
+  })
+
 module.exports = model('Minute', minuteSchema);

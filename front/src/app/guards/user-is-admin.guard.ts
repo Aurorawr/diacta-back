@@ -18,9 +18,9 @@ export class UserIsAdminGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-      if(!this.auth.isAdmin()) {
-        this.router.navigate(['/actas'])
-      }
+    if(!this.auth.isAdmin()) {
+      this.router.navigate(['/actas'])
+    }
     return true;
   }
   

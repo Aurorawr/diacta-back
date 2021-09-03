@@ -38,6 +38,11 @@ const routes: Routes = [
     canActivate: [UserLoggedInGuard]
   },
   {
+    path: 'acta/editar/:id',
+    component: CreatePreminuteComponent,
+    canActivate: [UserLoggedInGuard, UserIsAdminGuard]
+  },
+  {
     path: 'usuarios',
     component: UsersComponent,
     canActivate: [UserLoggedInGuard]

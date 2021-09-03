@@ -4,6 +4,7 @@ import { MatListOption } from '@angular/material/list';
 
 import { MinuteHeader } from 'src/app/models/minuteHeader/minute-header.model';
 import { MinutesService } from 'src/app/services/minutes/minutes.service';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: 'app-minutes',
@@ -14,12 +15,18 @@ export class MinutesComponent {
 
   minutes : Array<MinuteHeader> = [];
   minuteSelectedId : string = '';
+  isAdmin = false
 
   constructor(
     private minutesService : MinutesService,
     private route: ActivatedRoute,
-    private router: Router
-  ) {}
+    private router: Router,
+    private authService: AuthService
+  ) {
+    if (authService.isAdmin()) {
+      this.isAdmin = true
+    }
+  }
 
   ngOnInit() {
     console.log('init!')

@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import * as moment from 'moment';
 
 import { User } from 'src/app/models/user/user.model';
 import { Preminute, Annex, Topic } from 'src/app/models/preminute/preminute.model';
 import { UsersService } from 'src/app/services/users/users.service';
 import { MinutesService } from 'src/app/services/minutes/minutes.service';
+import { Minute } from 'src/app/models/minute/minute.model';
 
 @Component({
   selector: 'app-create-preminute',
@@ -48,13 +50,34 @@ export class CreatePreminuteComponent implements OnInit {
 
   adviseParticipants: boolean = true
 
+  isEdition = false
+
   constructor(
     private usersService: UsersService,
     private minutesService: MinutesService,
-    public dialog: MatDialog
+    private route: ActivatedRoute,
+    private snackBar: MatSnackBar,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
+
+    const minuteId = this.route.snapshot.paramMap.get('id');
+    if (minuteId) {
+      this.minutesService.getMinute(minuteId).subscribe(data => {
+        this.preminute = data.minute
+        this.isEdition = true
+      },
+      error => {
+        this.snackBar.open('No existe un acta con ese Id', '', {
+          horizontalPosition: 'center',
+          verticalPosition: 'top',
+          panelClass: 'error-notification',
+          duration: 5000
+        })
+        this.router.navigate(['/actas'])
+      });
+    }
 
     this.usersService.getAllUsers().subscribe(response => {
       this.participants = response.users;
@@ -117,6 +140,10 @@ export class CreatePreminuteComponent implements OnInit {
     () => {
 
     })*/
+  }
+
+  formatToPreminute(minute: Minute) {
+    this.preminute = minute
   }
 
 }
