@@ -16,6 +16,7 @@ export class MinutesComponent {
   minutes : Array<MinuteHeader> = [];
   minuteSelectedId : string = '';
   isAdmin = false
+  minuteAlreadyPrepared = false
 
   constructor(
     private minutesService : MinutesService,
@@ -31,9 +32,10 @@ export class MinutesComponent {
   ngOnInit() {
     console.log('init!')
     this.minutesService.getMinutes().subscribe(data => {
-      console.log(data);
 
       this.minutes = data.minutes;
+
+      this.minuteAlreadyPrepared = this.searchMinuteAlreadyPrepared(data.minutes)
     },
     error => {
       console.error(error);
@@ -76,6 +78,14 @@ export class MinutesComponent {
       default:
         return 'Acta desarrollada'
     }
+  }
+
+  searchMinuteAlreadyPrepared(minutes: MinuteHeader[]): boolean {
+    const minutePrepared = this.minutes.find(minute => minute.phase == 1);
+    if (minutePrepared) {
+      return true
+    }
+    return false
   }
 
 }
