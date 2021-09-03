@@ -1,7 +1,8 @@
 <div class='padding-2r'>
     <div fxLayout='col'>
       <div fxFlex='20'>
-        <a *ngIf="isAdmin" class='full-width' mat-raised-button color="primary" routerLink="/preparar-acta" routerLinkActive="active">
+        <a *ngIf="isAdmin" class='full-width' mat-raised-button color="primary" routerLink="/preparar-acta" routerLinkActive="active"
+        [disabled]="minuteAlreadyPrepared" title="{{minuteAlreadyPrepared ? 'Ya existe un acta preparada' : ''}}">
           Preparar acta
           <mat-icon>note_add</mat-icon>
         </a>

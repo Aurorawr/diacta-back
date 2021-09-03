@@ -1,7 +1,7 @@
 <mat-card *ngIf="minute && !loading" class='minute-card'>
     <mat-card-title>
         <h1 class='inline-block title'><b>Acta reunión {{ minute.enum }}</b></h1>
-        <a *ngIf="isAdmin" mat-raised-button color="primary" class="float-r start-minute-btn" routerLink="/acta/{{minute._id}}">
+        <a *ngIf="isAdmin && minute.phase != 3" mat-raised-button color="primary" class="float-r start-minute-btn" routerLink="/acta/{{minute._id}}">
             Empezar acta
             <mat-icon>play_circle_outline</mat-icon>
         </a>

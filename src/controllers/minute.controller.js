@@ -79,7 +79,9 @@ exports.getPreMinute = async (req, res) => {
         if (err) {
             return res.status(500).send({ message: err.message });
         }
-
+        if(!minute) {
+            return res.status(400).send({ message: 'No existe un acta con el id indicado' });
+        }
         return res.send({ message: 'Acta obtenida', minute: minute.toJSON() });
     });
 }
