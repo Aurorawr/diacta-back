@@ -131,15 +131,16 @@ export class CreatePreminuteComponent implements OnInit {
     this.preminute.date = preminuteDate;
     console.log(this.preminute);
 
-    /*this.minutesService.createPreminute(this.preminute).subscribe(response => {
+    this.minutesService.createPreminute(this.preminute).subscribe(response => {
       console.log(response);
+      this.router.navigate(['/actas'])
     },
     error => {
       console.error(error);
     },
     () => {
 
-    })*/
+    })
   }
 
   formatToPreminute(minute: Minute) {
