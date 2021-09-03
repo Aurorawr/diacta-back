@@ -17,8 +17,18 @@ exports.createPreMinute = async (req, res) => {
         }
     });
 
+    const previousCompromises = await DialogueElement.find({
+        'elementType': "Compromiso",
+        'references.minuteEnum': 1
+    }).select('_id').exec();
+
+    const previousCompromisesIds = previousCompromises.map(compromise => {
+        return compromise._id
+    })
+
     preMinuteData.enum = minuteEnum;
     preMinuteData.participants = participants;
+    preMinuteData.previousCompromises = previousCompromisesIds
     
     Minute.create(preMinuteData, function(err, minute) {
         if (err) {
@@ -71,9 +81,7 @@ exports.getPreMinute = async (req, res) => {
         }
     });
 
-    query.populate({
-        path: 'previuosCompromises'
-    });
+    query.populate('previousCompromises');
 
     query.exec(function(err, minute) {
         if (err) {

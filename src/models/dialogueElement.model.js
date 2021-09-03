@@ -1,5 +1,16 @@
 const { Schema, model } = require('mongoose');
 
+const references = {
+    minuteEnum: {
+        type: Number,
+        required: true
+    },
+    topicEnum: {
+        type: Number,
+        required: true
+    },
+}
+
 const dialogueElementSchema = new Schema({
     elementType: {
         type: String,
@@ -13,7 +24,8 @@ const dialogueElementSchema = new Schema({
     content: {
         type: String,
         required: [true, "El contenido de un elemento del diálogo es obligatorio"],
-    }
+    },
+    references: references
 },{
     timestamps: true,
 });
