@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild, HostListener } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 
@@ -20,6 +20,18 @@ const monthNames : {[key: number]: string}= {
   11: 'diciembre'
 }
 
+type Attribute = 'header' | 'description'
+
+interface Edition {
+  editing: boolean;
+  edtitorId: string;
+  editorName: string;
+}
+
+type Editions = {
+  [key in Attribute]: Edition
+}
+
 @Component({
   selector: 'app-minute-collab',
   templateUrl: './minute-collab.component.html',
@@ -31,7 +43,27 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
   minute: Minute | null= null;
   documents: Observable<string[]> = new Observable();
   currentDoc: string = '';
+
+  localEditions = {
+    header: false,
+    description: false
+  }
+
+  externalEditions: Editions = {
+    header: {
+      editing: false,
+      edtitorId: '',
+      editorName: ''
+    },
+    description: {
+      editing: false,
+      edtitorId: '',
+      editorName: ''
+    }
+  }
+
   private _docSub: Subscription = new Subscription();
+  
 
   @ViewChild('headerInput') headerInput!:ElementRef;
 
@@ -48,9 +80,20 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
       this.collabService.editedData.subscribe(response => {
         console.log(response)
         if (this.minute) {
-          this.headerInput.nativeElement.value = response.value
+          this.minute[response.name] = response.value
         }
       })
+      this.collabService.editions.subscribe(response => {
+        const externalEditions = response as Editions
+        this.externalEditions = externalEditions
+      })
+      this.collabService.switchedEdition.subscribe(response => {
+        console.log(response)
+        const attribute = response.attribute as Attribute
+        const edition = response.value as Edition
+        this.externalEditions[attribute] = edition
+      })
+      //this.collabService.getEditions()
       if (!this.minute) {
         this.collabService.initMinute(minuteId)
       }
@@ -59,8 +102,33 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     //his._docSub = this.collabService.currentDocument.subscribe(doc => this.currentDoc = doc.id);
   }
 
+  /*@HostListener('window:unload', ['$event'])
+  unloadHandler(event: any) {
+      this.PostCall();
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  beforeUnloadHander(event: any) {
+      return false;
+  }
+
+  PostCall() {
+    this.switchPendingEditions()
+  }*/
+
+  
+  switchPendingEditions() {
+    Object.entries(this.localEditions).forEach(([attribute, value]) => {
+      console.log(attribute, value)
+      if(value) {
+        this.collabService.switchEdition(attribute)
+      }
+    })
+  }
+
   ngOnDestroy() {
-    this._docSub.unsubscribe();
+    //this._docSub.unsubscribe();
+    alert('destroy')
   }
 
   editBasicData(name: string, event: KeyboardEvent) {
@@ -76,6 +144,11 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
 
   newDoc() {
     this.collabService.newDocument();
+  }
+
+  switchEdit(attribute: Attribute) {
+    this.localEditions[attribute]= !this.localEditions[attribute]
+    this.collabService.switchEdition(attribute)
   }
 
   get getMinuteDatePlaceData() : string {

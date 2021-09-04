@@ -5,17 +5,54 @@
         </mat-card-title>
         <mat-card-content>
             <div *ngIf="minute" class='padding-2r'>
-                <mat-form-field *ngIf='minute.header' appearance="standard" class='full-width'>
-                    <textarea #headerInput matInput [value]='minute.header' (keyup)='editBasicData("header", $event)'></textarea>
-                </mat-form-field>
+                <div *ngIf='minute.header'>
+                    <div>
+                        <h2 class='inline-block'>Encabezado</h2>
+                        <button class='edit-button' mat-icon-button color="primary" (click)='switchEdit("header")' [disabled]='externalEditions.header.editing'>
+                            <mat-icon *ngIf='!localEditions.header'>edit</mat-icon>
+                            <mat-icon *ngIf='localEditions.header'>edit_off</mat-icon>
+                        </button>
+                        <h3 *ngIf='externalEditions.header.editing' class='inline-block'>El usuario {{externalEditions.header.editorName}} está editando este campo...</h3>
+                    </div>
+                    <p *ngIf='!localEditions.header' class='minute-text'>{{ minute.header }}</p>
+                    <div *ngIf='localEditions.header' class='align-right'>
+                        <mat-form-field appearance="standard" class='full-width'>
+                            <textarea #headerInput matInput cdkTextareaAutosize [(ngModel)]='minute.header' (keyup)='editBasicData("header", $event)'></textarea>
+                        </mat-form-field>
+                        <button mat-icon-button color="primary" (click)='switchEdit("header")'>
+                            <mat-icon>edit_off</mat-icon>
+                        </button>
+                    </div>
+                </div>
                 <h3 class="info-text">{{getMinuteDatePlaceData}}</h3>
-                <p *ngIf='minute.description' class='minute-text'>{{ minute.description }}</p>
+                <div *ngIf='minute.description'>
+                    <div>
+                        <h2 class='inline-block'>Descripción</h2>
+                        <button class='edit-button' mat-icon-button color="primary" (click)='switchEdit("description")' [disabled]='externalEditions.description.editing'>
+                            <mat-icon *ngIf='!localEditions.description'>edit</mat-icon>
+                            <mat-icon *ngIf='localEditions.description'>edit_off</mat-icon>
+                        </button>
+                        <h3 *ngIf='externalEditions.description.editing' class='inline-block'>El usuario {{externalEditions.description.editorName}} está editando este campo...</h3>
+                    </div>
+                    <p *ngIf='!localEditions.description' class='minute-text'>{{ minute.description }}</p>
+                    <div *ngIf='localEditions.description' class='align-right'>
+                        <mat-form-field appearance="standard" class='full-width'>
+                            <textarea #headerInput matInput cdkTextareaAutosize [(ngModel)]='minute.description' (keyup)='editBasicData("description", $event)'></textarea>
+                        </mat-form-field>
+                        <button mat-icon-button color="primary" (click)='switchEdit("description")'>
+                            <mat-icon>edit_off</mat-icon>
+                        </button>
+                    </div>
+                </div>
                 <h1>Asistentes</h1>
                 <mat-list>
                     <mat-list-item *ngFor="let participant of minute.participants">{{participant.user.name}} ({{participant.user.email}})</mat-list-item>
                 </mat-list>
                 <h1>Compromisos previos</h1>
                 <p *ngIf='!minute.previousCompromises.length' class='minute-text'>No hay compromisos previos</p>
+                <div *ngIf='minute.previousCompromises.length'>
+                    <h4 *ngFor="let compromise of minute.previousCompromises; let i = index">{{i+1}}. {{compromise.content}}</h4>
+                </div>
                 <h1>Tabla de la reunión</h1>
                 <mat-list>
                     <mat-list-item *ngFor="let topic of minute.topics">{{topic.enum}}. {{topic.name}}</mat-list-item>

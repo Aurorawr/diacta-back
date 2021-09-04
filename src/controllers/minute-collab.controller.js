@@ -3,6 +3,19 @@ const User = require('../models/user.model');
 
 let minute = undefined;
 
+const editions = {
+  header: {
+    editing: false,
+    editorId: '',
+    editorName: ''
+  },
+  description: {
+    editing: false,
+    editorId: '',
+    editorName: ''
+  }
+}
+
 module.exports = server => {
   const io = require('socket.io')(server, {
     cors: {
@@ -38,16 +51,14 @@ module.exports = server => {
             }
         });
 
-        query.populate({
-            path: 'previuosCompromises'
-        });
+        query.populate('previousCompromises');
 
         minute = await query.exec();
 
         console.log('estoy dentro')
 
-        io.emit("minute", minute);
       }
+      io.emit("minute", minute);
     });
 
     socket.on("editBasicData", async (name, value) => {
@@ -57,6 +68,43 @@ module.exports = server => {
         name,
         value
       });
+    });
+
+    socket.once('getEditions', () => {
+      io.emit('editions', editions)
+    })
+
+    socket.on("swithEdit", async (attribute, user) => {
+      const actualState = editions[attribute]
+      if (actualState.editing) {
+        if (actualState.editorId == user.id) {
+          const newState = {
+            editing: false,
+            editorId: '',
+            editorName: ''
+          }
+          editions[attribute] = newState
+          socket.broadcast.emit('edtionSwitched', {
+            attribute,
+            value: newState
+          })
+        }
+        else {
+          socket.emit('errorMessage', 'El campo ya está siendo editado')
+        }
+      }
+      else {
+        const newState = {
+          editing: true,
+          editorId: user.id,
+          editorName: user.name
+        }
+        editions[attribute] = newState
+        socket.broadcast.emit('edtionSwitched', {
+          attribute,
+          value: newState
+        })
+      }
     });
 
     /*socket.on("addDoc", doc => {

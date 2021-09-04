@@ -68,6 +68,14 @@ export class AuthService {
     return false
   }
 
+  getLoggedUser() {
+    const userData = localStorage.getItem('diacta-user')
+    if (userData) {
+      return JSON.parse(userData)
+    }
+    return null
+  }
+
   private setSession(response: LoginResponse) {
     const {
       user,
