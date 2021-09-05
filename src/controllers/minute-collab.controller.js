@@ -1,5 +1,6 @@
 const Minute = require('../models/minute.model');
 const DialogueElement = require('../models/dialogueElement.model');
+const Task = require('../models/task.model.js');
 
 const DEFAULT_EDITION = {
   editing: false,
@@ -200,6 +201,12 @@ module.exports = server => {
       const savedElement = await newElement.save();
       if (savedElement == newElement) {
         io.emit('dataSaved', new Date())
+        if(savedElement.elementType == 'Compromiso') {
+          const newTask = new Task({
+            compromise: savedElement._id,
+          })
+          await newTask.save()
+        }
       }
     });
 
