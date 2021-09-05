@@ -28,6 +28,7 @@ export class MinuteCollabService {
   newAnnex = this.socket.fromEvent('newAnnex')
   newDialogueElement = this.socket.fromEvent<any>('newDialogueElement')
   newNote = this.socket.fromEvent<any>('newNote')
+  dataSavedDate = this.socket.fromEvent<string>('dataSaved')
   errorMessage = this.socket.fromEvent<any>('errorMessage');
 
   constructor(

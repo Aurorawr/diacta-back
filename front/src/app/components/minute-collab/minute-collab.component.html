@@ -1,4 +1,5 @@
 <div>
+    <h2 *ngIf="lastChangesDate">Últimos cambios realizados a las {{lastChangesDate.toLocaleString()}}</h2>
     <mat-card class="minute-collab-card">
         <mat-card-title>
             <h1 class='inline-block title'><b>Acta en desarrollo</b></h1>
@@ -87,9 +88,41 @@
                 <h1>Desarrollo</h1>
                 <div *ngFor="let topic of minute.topics">
                     <h2>{{topic.enum}}. {{topic.name}}</h2>
+                    <button *ngIf='!localEditions.addingDialogueElements' mat-raised-button color="primary" (click)='addEdit("addingDialogueElements", topic._id)'>
+                        Agregar elemento del diálogo
+                    </button>
+                    <div *ngIf='localEditions.addingDialogueElements' class='align-right'>
+                        <div fxLayout='col'>
+                            <div fxFlex='33'>
+                                <mat-form-field appearance="standard" class="full-width">
+                                    <mat-label>Tipo</mat-label>
+                                    <mat-select [(value)]='newDialogueElement.elementType'>
+                                      <mat-option *ngFor="let type of dialogueElementTypes" [value]="type">
+                                        {{type}}
+                                      </mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                            </div>
+                            <div fxFlex>
+                                <mat-form-field appearance="standard" class="full-width">
+                                    <mat-label>Contenido</mat-label>
+                                    <textarea matInput cdkTextareaAutosize [(ngModel)]='newDialogueElement.content' rows="2"></textarea>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <button mat-icon-button color="primary" (click)='removeEdit("addingDialogueElements", true)'>
+                            <mat-icon>cancel</mat-icon>
+                        </button>
+                        <button mat-icon-button color="primary" (click)='removeEdit("addingDialogueElements", false, topic._id)'>
+                            <mat-icon>save</mat-icon>
+                        </button>
+                    </div>
                     <p *ngIf='topic.description' class='minute-text'>{{topic.description}}</p>
                     <p *ngFor='let note of topic.notes' class='minute-text'>{{note.content}}</p>
                     <p *ngFor='let diaEl of topic.dialogueElements' class='minute-text'><b>{{diaEl.elementType}} {{minute.enum}}.{{diaEl.enum}}:</b> {{diaEl.content}}</p>
+                    <div *ngFor='let edition of externalEditions.addingDialogueElements'>
+                        <h3 *ngIf="edition.topicId == topic._id" class='inline-block'>El usuario {{edition.editorName}} está agregando un nuevo elemento del diálogo...</h3>
+                    </div>
                 </div>
                 <h1>Adjuntos</h1>
                 <mat-list>

@@ -183,14 +183,24 @@ module.exports = server => {
       io.emit("newAnnex", savedAnnex);
     });
 
-    socket.on("addDialogueElement", (topicId, element) => {
-      const elementsQuantity = minute.topics.id(topicId).dialogueElements.length
+    socket.on("addDialogueElement", async (topicId, element) => {
+      const topic = minute.topics.id(topicId)
+      const elementsQuantity = topic.dialogueElements.length
       element.enum = elementsQuantity+1
-      const savedElement = new DialogueElement(element)
+      element.references = {
+        minuteEnum: minute.enum,
+        topicEnum: topic.enum
+      }
+      const newElement = new DialogueElement(element)
+      minute.topics.id(topicId).dialogueElements.push(newElement)
       io.emit("newDialogueElement", {
         topicId,
-        newElement: savedElement
+        newElement: newElement
       });
+      const savedElement = await newElement.save();
+      if (savedElement == newElement) {
+        io.emit('dataSaved', new Date())
+      }
     });
 
     socket.on("addNote", (topicId, note) => {

@@ -74,8 +74,8 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     content: ''
   }
 
-  newDialogueElement: {type: string, content: string} = {
-    type: '',
+  newDialogueElement: {elementType: string, content: string} = {
+    elementType: 'Acuerdo',
     content: ''
   }
 
@@ -84,6 +84,8 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     name: '',
     description: ''
   }
+
+  dialogueElementTypes  = ['Acuerdo', 'Compromiso', 'Duda', 'Desacuerdo']
 
   localEditions = {
     header: false,
@@ -114,6 +116,8 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     addingNotes: [],
     addingDialogueElements: []
   }
+
+  lastChangesDate = new Date()
 
   private _docSub: Subscription = new Subscription();
   
@@ -263,6 +267,9 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
             return topic
           })
         }
+      })
+      this.collabService.dataSavedDate.subscribe(response => {
+        this.lastChangesDate = new Date(response)
       })
       //this.collabService.getEditions()
       if (!this.minute) {
