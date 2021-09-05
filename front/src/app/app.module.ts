@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, Injectable } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -27,7 +27,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+
+import { MinuteCollabSocket } from 'src/app/sockets/minute-collab.socket'
 
 
 import { AppComponent } from './app.component';
@@ -36,7 +37,6 @@ import { MinutesComponent } from './components/minutes/minutes.component';
 import { MinuteComponent } from './components/minute/minute.component';
 import { CreatePreminuteComponent } from './components/create-preminute/create-preminute.component';
 import { MinuteCollabComponent } from './components/minute-collab/minute-collab.component';
-import { environment } from 'src/environments/environment';
 import { KanbanComponent } from './components/kanban/kanban.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
@@ -44,7 +44,7 @@ import { TokenInjectorService } from 'src/app/services/tokenInjector/token-injec
 import { UsersComponent } from './components/users/users.component';
 import { AddMemberDialogComponent } from './components/add-member-dialog/add-member-dialog.component'
 
-const socketConfig: SocketIoConfig = {url: environment.socketUrl, options: {}}
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -84,7 +84,6 @@ const socketConfig: SocketIoConfig = {url: environment.socketUrl, options: {}}
     MatTooltipModule,
     FormsModule,
     ReactiveFormsModule,
-    SocketIoModule.forRoot(socketConfig),
     DragDropModule
   ],
   providers: [
@@ -96,7 +95,8 @@ const socketConfig: SocketIoConfig = {url: environment.socketUrl, options: {}}
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInjectorService,
       multi: true
-    }
+    },
+    MinuteCollabSocket
   ],
   bootstrap: [AppComponent],
   entryComponents: [
