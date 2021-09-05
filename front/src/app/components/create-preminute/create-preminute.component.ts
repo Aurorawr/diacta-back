@@ -65,7 +65,7 @@ export class CreatePreminuteComponent implements OnInit {
     const minuteId = this.route.snapshot.paramMap.get('id');
     if (minuteId) {
       this.minutesService.getMinute(minuteId).subscribe(data => {
-        this.preminute = data.minute
+        //this.preminute = data.minute
         this.isEdition = true
       },
       error => {
@@ -143,8 +143,8 @@ export class CreatePreminuteComponent implements OnInit {
     })
   }
 
-  formatToPreminute(minute: Minute) {
+  /*formatToPreminute(minute: Minute) {
     this.preminute = minute
-  }
+  }*/
 
 }

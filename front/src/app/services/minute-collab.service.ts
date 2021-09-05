@@ -17,10 +17,17 @@ export class MinuteCollabService {
 
   user!: {id: string, name: string}
 
-  minute = this.socket.fromEvent<Minute>('minute');
+  minute = this.socket.fromEvent<any>('minute');
   editions = this.socket.fromEvent('editions')
   editedData = this.socket.fromEvent<BasicDataEdition>('basicData');
-  switchedEdition = this.socket.fromEvent<any>('edtionSwitched');
+  topicEdited = this.socket.fromEvent<any>('topicEdited')
+  annexEdited = this.socket.fromEvent<any>('annexEdited')
+  dialogueElementEdited = this.socket.fromEvent<any>('dialogueElementEdited')
+  noteEdited = this.socket.fromEvent<any>('noteEdited')
+  newTopic = this.socket.fromEvent('newTopic')
+  newAnnex = this.socket.fromEvent('newAnnex')
+  newDialogueElement = this.socket.fromEvent<any>('newDialogueElement')
+  newNote = this.socket.fromEvent<any>('newNote')
   errorMessage = this.socket.fromEvent<any>('errorMessage');
 
   constructor(
@@ -61,8 +68,32 @@ export class MinuteCollabService {
     console.log('switched')
   }
 
+  addEdition(attribute: string, topicId = '') {
+    this.socket.emit('addEdition', attribute, this.user, topicId)
+  }
+
+  removeEdition(attribute: string) {
+    this.socket.emit('removeEdition', attribute, this.user)
+  }
+
   getEditions() {
     this.socket.emit('getEditions')
+  }
+
+  addTopic(topic: any) {
+    this.socket.emit('addTopic', topic)
+  }
+
+  addAnnex(annex: any) {
+    this.socket.emit('addAnnex', annex)
+  }
+
+  addDialogueElement(topicId: string, element: any) {
+    this.socket.emit('addDialogueElement', topicId, element)
+  }
+
+  addNote(topicId: string, note: any) {
+    this.socket.emit('addNote', topicId, note)
   }
 
   private docId() {

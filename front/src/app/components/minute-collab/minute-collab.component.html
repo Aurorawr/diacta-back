@@ -51,12 +51,39 @@
                 <h1>Compromisos previos</h1>
                 <p *ngIf='!minute.previousCompromises.length' class='minute-text'>No hay compromisos previos</p>
                 <div *ngIf='minute.previousCompromises.length'>
+                    <button mat-icon-button class="float-r" color="primary" (click)='switchEdit("description")'>
+                        <mat-icon>edit</mat-icon>
+                    </button>
                     <h4 *ngFor="let compromise of minute.previousCompromises; let i = index">{{i+1}}. {{compromise.content}}</h4>
                 </div>
-                <h1>Tabla de la reunión</h1>
-                <mat-list>
-                    <mat-list-item *ngFor="let topic of minute.topics">{{topic.enum}}. {{topic.name}}</mat-list-item>
-                </mat-list>
+                <div>
+                    <div>
+                        <h1 class='inline-block'>Tabla de la reunión</h1>
+                        <button class='edit-button' mat-icon-button color="primary" (click)='addEdit("addingTopic")'>
+                            <mat-icon *ngIf='!localEditions.addingTopic'>add_circle_outline</mat-icon>
+                        </button>
+                    </div>
+                    <mat-list>
+                        <mat-list-item *ngFor="let topic of minute.topics">{{topic.enum}}. {{topic.name}}</mat-list-item>
+                    </mat-list>
+                    <h3 *ngFor='let edition of externalEditions.addingTopic' class='inline-block'>El usuario {{edition.editorName}} está agregando un nuevo tema...</h3>
+                    <div *ngIf='localEditions.addingTopic' class='align-right'>
+                        <mat-form-field appearance="standard" class="full-width">
+                            <mat-label>Nombre del tema</mat-label>
+                            <input matInput [(ngModel)]='newTopic.name' />
+                        </mat-form-field>
+                        <mat-form-field appearance="standard" class="full-width">
+                            <mat-label>Descripción (opcional)</mat-label>
+                            <textarea matInput cdkTextareaAutosize [(ngModel)]='newTopic.description' rows="2"></textarea>
+                        </mat-form-field>
+                        <button mat-icon-button color="primary" (click)='removeEdit("addingTopic", true)'>
+                            <mat-icon>cancel</mat-icon>
+                        </button>
+                        <button mat-icon-button color="primary" (click)='removeEdit("addingTopic")'>
+                            <mat-icon>save</mat-icon>
+                        </button>
+                    </div>
+                </div>
                 <h1>Desarrollo</h1>
                 <div *ngFor="let topic of minute.topics">
                     <h2>{{topic.enum}}. {{topic.name}}</h2>

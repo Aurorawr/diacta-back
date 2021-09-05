@@ -1,11 +1,11 @@
 import { User } from 'src/app/models/user/user.model';
 
-interface NoteType {
+export interface NoteType {
     _id: string;
     content: string;
 }
 
-interface DialogueElementType {
+export interface DialogueElementType {
     _id: string;
     elementType: 'Duda' | 'Compromiso' | 'Acuerdo' | 'Desacuerdo';
     enum: number;
@@ -19,16 +19,16 @@ interface ParticipantType {
     assistance: boolean;
 }
 
-interface TopicType {
-    _id: string;
+export interface TopicType {
+    _id?: string;
     enum: number;
     name: string;
-    description: string;
+    description?: string;
     dialogueElements: Array<DialogueElementType>;
     notes: Array<NoteType>;
 }
 
-interface annexType {
+export interface annexType {
     _id: string;
     url: string;
     name: string;
