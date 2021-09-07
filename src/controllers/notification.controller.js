@@ -1,3 +1,4 @@
+const schedule = require('node-schedule');
 const {transporter} = require('../config/transporter.config')
 const {twilioClient} = require('../config/twilio.config')
 
@@ -21,4 +22,12 @@ exports.sendSMS = () => {
     }).then(message => {
         console.log(message)
     })
+}
+
+exports.scheduleReminder = () => {
+    //const reminderRule = new schedule.RecurrenceRule()
+
+    const reminderDate = new Date(2021, 8, 5, 22, 24, 0);
+
+    const job = schedule.scheduleJob(reminderDate, this.sendMail)
 }
