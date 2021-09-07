@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Socket } from 'ngx-socket-io';
+import { MinuteCollabSocket } from 'src/app/sockets/minute-collab.socket'
 
 import { Minute } from 'src/app/models/minute/minute.model';
 import { User } from '../models/user/user.model';
@@ -32,7 +32,7 @@ export class MinuteCollabService {
   errorMessage = this.socket.fromEvent<any>('errorMessage');
 
   constructor(
-    private socket: Socket,
+    private socket: MinuteCollabSocket,
     private auth: AuthService
   ) {
     const loggedUser = auth.getLoggedUser()
@@ -95,6 +95,10 @@ export class MinuteCollabService {
 
   addNote(topicId: string, note: any) {
     this.socket.emit('addNote', topicId, note)
+  }
+
+  disconnect() {
+    this.socket.disconnect()
   }
 
   private docId() {
