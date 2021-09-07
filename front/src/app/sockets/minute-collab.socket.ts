@@ -5,6 +5,6 @@ import { environment } from 'src/environments/environment';
 @Injectable()
 export class MinuteCollabSocket extends Socket {
   constructor() {
-    super({url: environment.socketUrl, options: {}})
+    super({url: environment.socketUrl+'minute-collab', options: {}})
   }
 }
