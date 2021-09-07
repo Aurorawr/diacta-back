@@ -97,6 +97,10 @@ export class MinuteCollabService {
     this.socket.emit('addNote', topicId, note)
   }
 
+  disconnect() {
+    this.socket.disconnect()
+  }
+
   private docId() {
     let text = '';
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

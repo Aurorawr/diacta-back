@@ -340,8 +340,7 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    //this._docSub.unsubscribe();
-    //alert('destroy')
+    this.collabService.disconnect()
   }
 
   editBasicData(name: string, event: KeyboardEvent) {
