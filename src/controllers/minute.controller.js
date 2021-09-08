@@ -1,6 +1,7 @@
 const Minute = require('../models/minute.model');
 const User = require('../models/user.model');
 const DialogueElement = require('../models/dialogueElement.model');
+const sanitize = require('mongo-sanitize')
 
 exports.createPreMinute = async (req, res) => {
     const {
@@ -29,8 +30,8 @@ exports.createPreMinute = async (req, res) => {
     preMinuteData.enum = minuteEnum;
     preMinuteData.participants = participants;
     preMinuteData.previousCompromises = previousCompromisesIds
-    
-    Minute.create(preMinuteData, function(err, minute) {
+    const sanitizedPreminute = sanitize(preMinuteData)
+    Minute.create(sanitizedPreminute, function(err, minute) {
         if (err) {
             return res.status(500).send({ message: err.message });
         }

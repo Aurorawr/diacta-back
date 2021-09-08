@@ -1,7 +1,7 @@
 <div>
     <mat-card class='preminute-card'>
         <mat-card-title>
-            <h1 class='inline-block title'><b>Preparando acta de reunión</b></h1>
+            <h1 class='inline-block title'><strong>Preparando acta de reunión</strong></h1>
         </mat-card-title>
         <mat-card-content>
             <div fxFlexFill fxLayout='row wrap' fxLayoutGap="1rem 1rem grid">
@@ -115,7 +115,7 @@
                                 <mat-list-item *ngFor='let annex of preminute.annexes' class="full-width">
                                     <mat-icon matListIcon>assignment</mat-icon>
                                     <p matLine>{{ annex.name }}</p>
-                                    <p matLine><a href="{{annex.url}}" target="_blank">Link</a></p>
+                                    <p matLine><a href="{{annex.url}}" target="_blank" rel="noopener">Link</a></p>
                                     <button mat-icon-button>
                                         <mat-icon>close</mat-icon>
                                     </button>

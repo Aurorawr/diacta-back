@@ -28,7 +28,7 @@ export interface TopicType {
     notes: Array<NoteType>;
 }
 
-export interface annexType {
+export interface AnnexType {
     _id: string;
     url: string;
     name: string;
@@ -48,6 +48,6 @@ export interface Minute {
     endTime: string;
     nextReunionDate: Date;
     topics: Array<TopicType>;
-    annexes: Array<annexType>;
+    annexes: Array<AnnexType>;
     phase: number;
 }

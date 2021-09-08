@@ -2,7 +2,7 @@ const User = require("../models/user.model");
 const jwt = require("jsonwebtoken");
 const {secret} = require("../config/auth.config.js");
 
-getToken = (headers) => {
+const getToken = (headers) => {
   const authHeader = headers['authorization']
   if(authHeader) {
     const headerData = authHeader.split(' ')
@@ -13,7 +13,7 @@ getToken = (headers) => {
   return null
 }
 
-verifyToken = (req, res, next) => {
+const verifyToken = (req, res, next) => {
   let token = getToken(req.headers);
 
   if (!token) {
@@ -33,7 +33,7 @@ verifyToken = (req, res, next) => {
   });
 };
 
-isAdmin = (req, res, next) => {
+const isAdmin = (req, res, next) => {
   const {
     userId
   } = req;

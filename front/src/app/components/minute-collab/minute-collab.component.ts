@@ -1,9 +1,9 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild, HostListener } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
+import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 
 import { MinuteCollabService } from 'src/app/services/minute-collab/minute-collab.service';
-import { Minute, TopicType, annexType, NoteType, DialogueElementType } from 'src/app/models/minute.model';
+import { Minute, TopicType, AnnexType, NoteType, DialogueElementType } from 'src/app/models/minute.model';
 
 const monthNames : {[key: number]: string}= {
   0: 'enero',
@@ -146,44 +146,41 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
         this.externalEditions = externalEditions
       })
       this.collabService.topicEdited.subscribe(response => {
-        const topicId = response.topicId as String;
+        const topicId = response.topicId as string;
         const topicData = response.data as TopicType;
         if (this.minute) {
           const actualTopics = this.minute.topics
           this.minute.topics = actualTopics.map(topic => {
             if(topic._id == topicId) {
-              const newTopic = {...topic, topicData} as TopicType
-              return newTopic
+              return {...topic, topicData} as TopicType
             }
             return topic
           })
         }
       })
       this.collabService.annexEdited.subscribe(response => {
-        const annexId = response.annexId as String;
-        const annexData = response.data as annexType;
+        const annexId = response.annexId as string;
+        const annexData = response.data as AnnexType;
         if (this.minute) {
           const actualAnnexes = this.minute.annexes
           this.minute.annexes = actualAnnexes.map(annex => {
             if(annex._id == annexId) {
-              const newAnnex = {...annex, ...annexData} as annexType
-              return newAnnex
+              return {...annex, ...annexData} as AnnexType
             }
             return annex
           })
         }
       })
       this.collabService.dialogueElementEdited.subscribe(response => {
-        const topicId = response.topicId as String;
-        const elementId = response.elementId as String;
+        const topicId = response.topicId as string;
+        const elementId = response.elementId as string;
         const elementData = response.data as DialogueElementType;
         if (this.minute) {
           const topicEdited = this.minute.topics.find(topic =>  topic._id == topicId)
           if (topicEdited) {
             const newElements = topicEdited.dialogueElements.map(element => {
               if(element._id == elementId) {
-                const newElement = {...element, ...elementData} as DialogueElementType
-                return newElement
+                return {...element, ...elementData} as DialogueElementType
               }
               return element
             })
@@ -198,16 +195,15 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
         }
       })
       this.collabService.noteEdited.subscribe(response => {
-        const topicId = response.topicId as String;
-        const noteId = response.noteId as String;
+        const topicId = response.topicId as string;
+        const noteId = response.noteId as string;
         const noteData = response.data as DialogueElementType;
         if (this.minute) {
           const topicEdited = this.minute.topics.find(topic =>  topic._id == topicId)
           if (topicEdited) {
             const newNotes = topicEdited.notes.map(note => {
               if(note._id == noteId) {
-                const newNote = {...note, ...noteData} as NoteType
-                return newNote
+                return {...note, ...noteData} as NoteType
               }
               return note
             })
@@ -226,11 +222,11 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
         this.minute?.topics.push(newTopic)
       })
       this.collabService.newAnnex.subscribe(response => {
-        const newAnnex = response as annexType
+        const newAnnex = response as AnnexType
         this.minute?.annexes.push(newAnnex)
       })
       this.collabService.newDialogueElement.subscribe(response => {
-        const topicId = response.topicId as String;
+        const topicId = response.topicId as string;
         const newElement = response.newElement as DialogueElementType
         if (this.minute) {
           this.minute.topics = this.minute.topics.map(topic => {
@@ -242,7 +238,7 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
         }
       })
       this.collabService.newNote.subscribe(response => {
-        const topicId = response.topicId as String;
+        const topicId = response.topicId as string;
         const newNote = response.newNote as NoteType
         if (this.minute) {
           this.minute.topics = this.minute.topics.map(topic => {
@@ -364,8 +360,7 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
       if (minute.startTime) {
         startTimeStr = ` Hora  de inicio: ${minute.startTime}`
       }
-      let data = `${minute.place}, ${dateStr}. ${convokedTimeStr}.${startTimeStr}`;
-      return data
+      return `${minute.place}, ${dateStr}. ${convokedTimeStr}.${startTimeStr}`;
     }
     return ''
   }

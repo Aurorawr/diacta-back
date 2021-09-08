@@ -73,8 +73,7 @@ export class MinuteComponent implements OnChanges {
       if (minute.startTime) {
         startTimeStr = ` Hora  de inicio: ${minute.startTime}`
       }
-      let data = `${minute.place}, ${dateStr}. ${convokedTimeStr}.${startTimeStr}`;
-      return data
+      return `${minute.place}, ${dateStr}. ${convokedTimeStr}.${startTimeStr}`;
     }
     return ''
   }

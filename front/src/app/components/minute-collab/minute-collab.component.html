@@ -2,7 +2,7 @@
     <h2 *ngIf="lastChangesDate">Últimos cambios realizados a las {{lastChangesDate.toLocaleString()}}</h2>
     <mat-card class="minute-collab-card">
         <mat-card-title>
-            <h1 class='inline-block title'><b>Acta en desarrollo</b></h1>
+            <h1 class='inline-block title'><strong>Acta en desarrollo</strong></h1>
         </mat-card-title>
         <mat-card-content>
             <div *ngIf="minute" class='padding-2r'>
@@ -119,7 +119,7 @@
                     </div>
                     <p *ngIf='topic.description' class='minute-text'>{{topic.description}}</p>
                     <p *ngFor='let note of topic.notes' class='minute-text'>{{note.content}}</p>
-                    <p *ngFor='let diaEl of topic.dialogueElements' class='minute-text'><b>{{diaEl.elementType}} {{minute.enum}}.{{diaEl.enum}}:</b> {{diaEl.content}}</p>
+                    <p *ngFor='let diaEl of topic.dialogueElements' class='minute-text'><strong>{{diaEl.elementType}} {{minute.enum}}.{{diaEl.enum}}:</strong> {{diaEl.content}}</p>
                     <div *ngFor='let edition of externalEditions.addingDialogueElements'>
                         <h3 *ngIf="edition.topicId == topic._id" class='inline-block'>El usuario {{edition.editorName}} está agregando un nuevo elemento del diálogo...</h3>
                     </div>
@@ -129,13 +129,13 @@
                     <mat-list-item *ngFor='let annex of minute.annexes' class="full-width">
                         <mat-icon matListIcon>assignment</mat-icon>
                         <p matLine>{{ annex.name }}</p>
-                        <p matLine><a href="{{annex.url}}" target="_blank">Link</a></p>
+                        <p matLine><a href="{{annex.url}}" target="_blank" rel="noopener">Link</a></p>
                         <button mat-icon-button>
                             <mat-icon>close</mat-icon>
                         </button>
                     </mat-list-item>
                 </mat-list>
-                <h3 *ngIf="minute.endTime" class="info-text"><b>Hora de término:</b> {{minute.endTime}}</h3>
+                <h3 *ngIf="minute.endTime" class="info-text"><strong>Hora de término:</strong> {{minute.endTime}}</h3>
             </div>
         </mat-card-content>
     </mat-card>

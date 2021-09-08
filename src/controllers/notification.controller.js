@@ -3,7 +3,7 @@ const {transporter} = require('../config/transporter.config')
 const {twilioClient} = require('../config/twilio.config')
 
 exports.sendMail = async () => {
-    const info = await transporter.sendMail({
+    await transporter.sendMail({
         from: 'BdT San Miguel <no-responder@bdt.cl>',
         to: "lucas.quintanilla@usach.cl",
         subject: "Bienvenido al Banco",
@@ -26,5 +26,5 @@ exports.scheduleReminder = () => {
 
     const reminderDate = new Date(2021, 8, 5, 22, 24, 0);
 
-    const job = schedule.scheduleJob(reminderDate, this.sendMail)
+    schedule.scheduleJob(reminderDate, this.sendMail)
 }

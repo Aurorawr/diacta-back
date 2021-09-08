@@ -129,10 +129,6 @@ module.exports = (io, socket) => {
   });
 
   socket.on("editDialogueElement", (topicId, elementId, data) => {
-    const {
-      type,
-      content
-    } = data
     socket.broadcast.emit("dialogueElementEdited", {
       topicId,
       elementId,
@@ -253,8 +249,10 @@ module.exports = (io, socket) => {
             break
           case 'topicAttr':
             editions.topics[topicId][attribute][attributeId] = newState
+            break
           case 'annex':
             editions.annexes[annexId] = newState
+            break
           default:
         }
         socket.broadcast.emit('editions', editions)
@@ -278,8 +276,10 @@ module.exports = (io, socket) => {
           break
         case 'topicAttr':
           editions.topics[topicId][attribute][attributeId] = newState
+          break
         case 'annex':
           editions.annexes[annexId] = newState
+          break
         default:
       }
       socket.broadcast.emit('editions', editions)

@@ -1,5 +1,6 @@
 const User = require('../models/user.model');
 const {bcrypt_salt} = require('../config/auth.config');
+const sanitize = require('mongo-sanitize')
 
 var bcrypt = require("bcryptjs");
 
@@ -11,9 +12,10 @@ exports.createUser = (req, res) => {
         password
     } = userData;
 
-    salt = bcrypt.genSaltSync(parseInt(bcrypt_salt))
+    const salt = bcrypt.genSaltSync(parseInt(bcrypt_salt))
     userData.password = bcrypt.hashSync(password, salt);
-    User.create(userData, function(err, newUser) {
+    const sanitizedUserData = sanitize(userData)
+    User.create(sanitizedUserData, function(err, newUser) {
         if (err) return res.status(500).send({ message: err.message });
 
         return res.send({message: 'Usuario creado exitosamente', user: newUser.toJSON()});
@@ -40,7 +42,8 @@ exports.editUser = (req, res) => {
         body : userData
     } = req;
 
-    User.findByIdAndUpdate(userId, userData, {new: true},  function(err, user) {
+    const sanitizedUserData = sanitize(userData)
+    User.findByIdAndUpdate(userId, sanitizedUserData, {new: true},  function(err, user) {
         if (err) return res.status(500).send({ message: err.message });
 
         return res.send({message: 'Usuario editado exitosamente', user: user.toJSON()});

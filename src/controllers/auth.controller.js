@@ -1,5 +1,6 @@
 const User = require('../models/user.model');
 const {secret} = require('../config/auth.config');
+const sanitize = require('mongo-sanitize')
 
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
@@ -12,7 +13,9 @@ exports.signIn = (req, res) => {
         }
     } = req;
 
-    User.findOne({email}, (err, user) => {
+    const sanitizedEmail = sanitize(email)
+    const sanitizedPassword = sanitize(password)
+    User.findOne({sanitizedEmail}, (err, user) => {
         if (err) {
             return res.status(500).send({ message: err.message });
         }
@@ -26,7 +29,7 @@ exports.signIn = (req, res) => {
             password : dbPasword
         } = user;
 
-        const passwordIsValid = bcrypt.compareSync(password, dbPasword);
+        const passwordIsValid = bcrypt.compareSync(sanitizedPassword, dbPasword);
         if (!passwordIsValid) {
             return res.status(401).send({message: "Contraseña incorrecta"});
         }

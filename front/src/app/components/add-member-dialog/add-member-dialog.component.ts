@@ -12,7 +12,6 @@ interface UserCreateData {
 @Component({
   selector: 'app-add-member-dialog',
   templateUrl: './add-member-dialog.component.html',
-  styleUrls: ['./add-member-dialog.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
 export class AddMemberDialogComponent  {

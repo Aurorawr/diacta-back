@@ -82,9 +82,6 @@ export class CreatePreminuteComponent implements OnInit {
     },
     error => {
       console.error(error)
-    },
-    () => {
-
     })
   }
 
@@ -132,9 +129,6 @@ export class CreatePreminuteComponent implements OnInit {
     },
     error => {
       console.error(error);
-    },
-    () => {
-
     })
   }
 }
