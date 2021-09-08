@@ -3,11 +3,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import * as moment from 'moment';
 
-import { User } from 'src/app/models/user/user.model';
-import { Preminute, Annex, Topic } from 'src/app/models/preminute/preminute.model';
+import { User } from 'src/app/models/user.model';
+import { Preminute, Annex, Topic } from 'src/app/models/preminute.model';
 import { UsersService } from 'src/app/services/users/users.service';
 import { MinutesService } from 'src/app/services/minutes/minutes.service';
-import { Minute } from 'src/app/models/minute/minute.model';
+import { Minute } from 'src/app/models/minute.model';
 
 @Component({
   selector: 'app-create-preminute',

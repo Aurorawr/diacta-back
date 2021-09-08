@@ -1,8 +1,6 @@
 import { Component, Inject, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
-import { User } from 'src/app/models/user/user.model'
-
 interface UserCreateData {
   name: string;
   lastname?: string;

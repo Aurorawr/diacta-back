@@ -2,7 +2,7 @@ import { Component, OnChanges, Input, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-import { Minute } from 'src/app/models/minute/minute.model';
+import { Minute } from 'src/app/models/minute.model';
 import { MinutesService } from 'src/app/services/minutes/minutes.service';
 
 const monthNames : {[key: number]: string}= {

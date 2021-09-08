@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTable } from '@angular/material/table';
 
-import { User } from 'src/app/models/user/user.model'
+import { User } from 'src/app/models/user.model'
 import { UsersService } from 'src/app/services/users/users.service'
 import { AuthService } from 'src/app/services/auth/auth.service'
 import { AddMemberDialogComponent } from '../add-member-dialog/add-member-dialog.component';

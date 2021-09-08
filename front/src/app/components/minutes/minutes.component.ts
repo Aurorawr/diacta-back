@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatListOption } from '@angular/material/list';
 
-import { MinuteHeader } from 'src/app/models/minuteHeader/minute-header.model';
+import { MinuteHeader } from 'src/app/models/minute-header.model';
 import { MinutesService } from 'src/app/services/minutes/minutes.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 

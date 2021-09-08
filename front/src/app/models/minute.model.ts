@@ -1,4 +1,4 @@
-import { User } from 'src/app/models/user/user.model';
+import { User } from 'src/app/models/user.model';
 
 export interface NoteType {
     _id: string;

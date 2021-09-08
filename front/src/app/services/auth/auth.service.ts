@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 
-import { User } from 'src/app/models/user/user.model';
+import { User } from 'src/app/models/user.model';
 import { environment } from 'src/environments/environment';
 import { shareReplay, tap } from 'rxjs/operators';
 

@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy, ElementRef, ViewChild, HostListener } fro
 import { Observable, Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 
-import { MinuteCollabService } from 'src/app/services/minute-collab.service';
-import { Minute, TopicType, annexType, NoteType, DialogueElementType } from 'src/app/models/minute/minute.model';
+import { MinuteCollabService } from 'src/app/services/minute-collab/minute-collab.service';
+import { Minute, TopicType, annexType, NoteType, DialogueElementType } from 'src/app/models/minute.model';
 
 const monthNames : {[key: number]: string}= {
   0: 'enero',

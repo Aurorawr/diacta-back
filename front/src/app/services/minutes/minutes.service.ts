@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { MinuteHeader } from 'src/app/models/minuteHeader/minute-header.model';
-import { Minute } from 'src/app/models/minute/minute.model';
-import { Preminute } from 'src/app/models/preminute/preminute.model';
+import { Minute } from 'src/app/models/minute.model';
+import { Preminute } from 'src/app/models/preminute.model';
 import { environment } from 'src/environments/environment';
 
 interface MinuteResponse {

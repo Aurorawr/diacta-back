@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MinuteCollabSocket } from 'src/app/sockets/minute-collab.socket'
 
-import { Minute } from 'src/app/models/minute/minute.model';
-import { User } from '../models/user/user.model';
-import { AuthService } from './auth/auth.service';
+import { AuthService } from '../auth/auth.service';
 
 interface BasicDataEdition {
   name: 'header' | 'description' | 'startTime' | 'endTime';
