@@ -7,7 +7,6 @@ import { User } from 'src/app/models/user.model';
 import { Preminute, Annex, Topic } from 'src/app/models/preminute.model';
 import { UsersService } from 'src/app/services/users/users.service';
 import { MinutesService } from 'src/app/services/minutes/minutes.service';
-import { Minute } from 'src/app/models/minute.model';
 
 @Component({
   selector: 'app-create-preminute',
@@ -65,7 +64,6 @@ export class CreatePreminuteComponent implements OnInit {
     const minuteId = this.route.snapshot.paramMap.get('id');
     if (minuteId) {
       this.minutesService.getMinute(minuteId).subscribe(data => {
-        //this.preminute = data.minute
         this.isEdition = true
       },
       error => {
@@ -116,7 +114,6 @@ export class CreatePreminuteComponent implements OnInit {
   }
 
   changeTime() {
-    console.log(this.time)
     const timeArray = this.time.split(':');
     const hours = parseInt(timeArray[0], 10);
     const minutes = parseInt(timeArray[1], 10);
@@ -129,10 +126,8 @@ export class CreatePreminuteComponent implements OnInit {
   createPreminute() {
     const preminuteDate = this.date.toDate()
     this.preminute.date = preminuteDate;
-    console.log(this.preminute);
 
     this.minutesService.createPreminute(this.preminute).subscribe(response => {
-      console.log(response);
       this.router.navigate(['/actas'])
     },
     error => {
@@ -142,9 +137,4 @@ export class CreatePreminuteComponent implements OnInit {
 
     })
   }
-
-  /*formatToPreminute(minute: Minute) {
-    this.preminute = minute
-  }*/
-
 }

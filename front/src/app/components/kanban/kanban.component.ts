@@ -58,7 +58,6 @@ export class KanbanComponent {
   ]
 
   drop(event: CdkDragDrop<Task[]>): void {
-    console.log(event)
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {

@@ -1,8 +1,7 @@
 const { validateRequest } = require('../middleware')
 const { body } = require('express-validator');
 const {
-    signIn,
-    signUp
+    signIn
 } =  require('../controllers/auth.controller');
 
 module.exports = (app) => {

@@ -1,5 +1,4 @@
-const { validateRequest, verifyToken } = require('../middleware')
-const { body } = require('express-validator');
+const { verifyToken } = require('../middleware')
 const {
     createPreMinute,
     getPreMinute,
@@ -28,9 +27,7 @@ module.exports = (app) => {
 
     app.get(
         "/api/minutes/:minuteId",
-        //body('email').isEmail().withMessage('El email del usuario es obligatorio'),
-        //body('password').isStrongPassword(),
-        //[validateRequest],
+        [verifyToken],
         getPreMinute
     );
 
@@ -42,41 +39,31 @@ module.exports = (app) => {
 
     app.put(
         "/api/minutes/:minuteId",
-        //body('email').isEmail().withMessage('El email del usuario es obligatorio'),
-        //body('password').isStrongPassword(),
-        //[validateRequest],
+        [verifyToken],
         updateMinuteData
     );
 
     app.post(
         "/api/minutes/:minuteId/topics",
-        //body('email').isEmail().withMessage('El email del usuario es obligatorio'),
-        //body('password').isStrongPassword(),
-        //[validateRequest],
+        [verifyToken],
         addTopic
     );
 
     app.post(
         "/api/minutes/:minuteId/annexes",
-        //body('email').isEmail().withMessage('El email del usuario es obligatorio'),
-        //body('password').isStrongPassword(),
-        //[validateRequest],
+        [verifyToken],
         addAnnexe
     );
 
     app.post(
         "/api/minutes/:minuteId/topics/:topicId/dialogueElement",
-        //body('email').isEmail().withMessage('El email del usuario es obligatorio'),
-        //body('password').isStrongPassword(),
-        //[validateRequest],
+        [verifyToken],
         addDialogueElement
     );
 
     app.post(
         "/api/minutes/:minuteId/topics/:topicId/note",
-        //body('email').isEmail().withMessage('El email del usuario es obligatorio'),
-        //body('password').isStrongPassword(),
-        //[validateRequest],
+        [verifyToken],
         addNote
     );
 }

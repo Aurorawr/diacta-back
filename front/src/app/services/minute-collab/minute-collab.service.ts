@@ -52,19 +52,12 @@ export class MinuteCollabService {
     this.socket.emit('initMinute', minuteId);
   }
 
-  newDocument() {
-    this.socket.emit('addDoc', { id: this.docId(), doc: '' });
-  }
-
   editBasicData(name: string, value: any) {
     this.socket.emit('editBasicData', name, value);
   }
 
   switchEdition(attributeName: string) {
-    console.log(attributeName)
-    console.log(this.user)
     this.socket.emit('swithEdit', attributeName, this.user);
-    console.log('switched')
   }
 
   addEdition(attribute: string, topicId = '') {
@@ -97,16 +90,5 @@ export class MinuteCollabService {
 
   disconnect() {
     this.socket.disconnect()
-  }
-
-  private docId() {
-    let text = '';
-    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-    for (let i = 0; i < 5; i++) {
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-
-    return text;
   }
 }

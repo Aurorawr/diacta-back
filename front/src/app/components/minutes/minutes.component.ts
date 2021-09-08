@@ -30,7 +30,6 @@ export class MinutesComponent {
   }
 
   ngOnInit() {
-    console.log('init!')
     this.minutesService.getMinutes().subscribe(data => {
 
       this.minutes = data.minutes;
@@ -80,8 +79,8 @@ export class MinutesComponent {
     }
   }
 
-  searchMinuteAlreadyPrepared(minutes: MinuteHeader[]): boolean {
-    const minutePrepared = this.minutes.find(minute => minute.phase == 1);
+  searchMinuteAlreadyPrepared(minutes: MinuteHeader[] = this.minutes): boolean {
+    const minutePrepared = minutes.find(minute => minute.phase == 1);
     if (minutePrepared) {
       return true
     }

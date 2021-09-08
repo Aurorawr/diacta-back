@@ -25,8 +25,6 @@ exports.getAllUsers = (req, res) => {
     
     const query = User.find({});
 
-    //query.select('+_id email name lastname');
-
     query.exec(function(err, users) {
         if (err) return res.status(500).send({ message: err.message });
 

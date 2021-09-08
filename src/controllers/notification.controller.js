@@ -10,8 +10,6 @@ exports.sendMail = async () => {
         text: "Esto funciona?",
         html: "<h1>Esto funciona?</h1>"
     })
-
-    console.log(info)
 }
 
 exports.sendSMS = () => {
@@ -25,7 +23,6 @@ exports.sendSMS = () => {
 }
 
 exports.scheduleReminder = () => {
-    //const reminderRule = new schedule.RecurrenceRule()
 
     const reminderDate = new Date(2021, 8, 5, 22, 24, 0);
 

@@ -45,8 +45,6 @@ module.exports = (io, socket) => {
 
       minute = await query.exec();
 
-      console.log('estoy dentro')
-
       editions.header = DEFAULT_EDITION
       editions.description = DEFAULT_EDITION
       editions.topics = {}

@@ -43,7 +43,6 @@ export class MinuteComponent implements OnChanges {
     if (newMinuteId) {
       this.loading = true;
       this.minutesService.getMinute(newMinuteId).subscribe(data => {
-        console.log(data);
   
         this.minute = data.minute;
       },

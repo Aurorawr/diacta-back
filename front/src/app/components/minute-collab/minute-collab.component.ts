@@ -119,9 +119,6 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
 
   lastChangesDate = new Date()
 
-  private _docSub: Subscription = new Subscription();
-  
-
   @ViewChild('headerInput') headerInput!:ElementRef;
 
   constructor(
@@ -132,9 +129,7 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
   ngOnInit() {
     const minuteId = this.route.snapshot.paramMap.get('minuteId');
     if (minuteId) {
-      console.log(this.minute)
       this.collabService.minute.subscribe(response => {
-        console.log(response)
         const minute = response.minute as Minute
         const editions = response.editions  as Editions
         this.setLocalEdition(minute)
@@ -142,18 +137,15 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
         this.minute = minute
       });
       this.collabService.editedData.subscribe(response => {
-        console.log(response)
         if (this.minute) {
           this.minute[response.name] = response.value
         }
       })
       this.collabService.editions.subscribe(response => {
-        console.log(response)
         const externalEditions = response as Editions
         this.externalEditions = externalEditions
       })
       this.collabService.topicEdited.subscribe(response => {
-        console.log(response)
         const topicId = response.topicId as String;
         const topicData = response.data as TopicType;
         if (this.minute) {
@@ -168,7 +160,6 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
         }
       })
       this.collabService.annexEdited.subscribe(response => {
-        console.log(response)
         const annexId = response.annexId as String;
         const annexData = response.data as annexType;
         if (this.minute) {
@@ -183,7 +174,6 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
         }
       })
       this.collabService.dialogueElementEdited.subscribe(response => {
-        console.log(response)
         const topicId = response.topicId as String;
         const elementId = response.elementId as String;
         const elementData = response.data as DialogueElementType;
@@ -208,7 +198,6 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
         }
       })
       this.collabService.noteEdited.subscribe(response => {
-        console.log(response)
         const topicId = response.topicId as String;
         const noteId = response.noteId as String;
         const noteData = response.data as DialogueElementType;
@@ -233,17 +222,14 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
         }
       })
       this.collabService.newTopic.subscribe(response => {
-        console.log(response)
         const newTopic = response as TopicType
         this.minute?.topics.push(newTopic)
       })
       this.collabService.newAnnex.subscribe(response => {
-        console.log(response)
         const newAnnex = response as annexType
         this.minute?.annexes.push(newAnnex)
       })
       this.collabService.newDialogueElement.subscribe(response => {
-        console.log(response)
         const topicId = response.topicId as String;
         const newElement = response.newElement as DialogueElementType
         if (this.minute) {
@@ -256,7 +242,6 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
         }
       })
       this.collabService.newNote.subscribe(response => {
-        console.log(response)
         const topicId = response.topicId as String;
         const newNote = response.newNote as NoteType
         if (this.minute) {
@@ -271,28 +256,11 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
       this.collabService.dataSavedDate.subscribe(response => {
         this.lastChangesDate = new Date(response)
       })
-      //this.collabService.getEditions()
       if (!this.minute) {
         this.collabService.initMinute(minuteId)
       }
-      console.log(this.collabService.minute)
     }
-    //his._docSub = this.collabService.currentDocument.subscribe(doc => this.currentDoc = doc.id);
   }
-
-  /*@HostListener('window:unload', ['$event'])
-  unloadHandler(event: any) {
-      this.PostCall();
-  }
-
-  @HostListener('window:beforeunload', ['$event'])
-  beforeUnloadHander(event: any) {
-      return false;
-  }
-
-  PostCall() {
-    this.switchPendingEditions()
-  }*/
 
   setLocalEdition(minute: Minute) {
     const localEditions: any = {
@@ -326,13 +294,11 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     minute.annexes.forEach(annex => {
       localEditions.annexes[annex._id] = false
     })
-    console.log(localEditions)
     this.localEditions = localEditions
   }
   
   switchPendingEditions() {
     Object.entries(this.localEditions).forEach(([attribute, value]) => {
-      console.log(attribute, value)
       if(value) {
         this.collabService.switchEdition(attribute)
       }
@@ -348,14 +314,6 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     const value = target.value;
 
     this.collabService.editBasicData(name, value);
-  }
-
-  loadDoc(id: string) {
-    //this.collabService.getDocument(id);
-  }
-
-  newDoc() {
-    this.collabService.newDocument();
   }
 
   switchEdit(attribute: Attribute) {
@@ -391,7 +349,6 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
 
   addTopic() {
     this.localEditions.addingTopic= false
-    console.log(this.newTopic)
     this.collabService.addTopic(this.newTopic)
   }
 

@@ -1,4 +1,4 @@
-import { NgModule, Injectable } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -44,7 +44,6 @@ import { TokenInjectorService } from 'src/app/services/tokenInjector/token-injec
 import { UsersComponent } from './components/users/users.component';
 import { AddMemberDialogComponent } from './components/add-member-dialog/add-member-dialog.component';
 import { NotificationsComponent } from './components/notifications/notifications.component'
-
 
 @NgModule({
   declarations: [
