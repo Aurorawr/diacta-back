@@ -10,6 +10,7 @@ import { UserLoggedInGuard } from 'src/app/guards/user-logged-in.guard'
 import { UserNotLoggedGuard } from 'src/app/guards/user-not-logged.guard'
 import { UserIsAdminGuard } from 'src/app/guards/user-is-admin.guard'
 import { UsersComponent } from './components/users/users.component';
+import { NotificationsComponent } from './components/notifications/notifications.component';
 
 const routes: Routes = [
   {
@@ -25,6 +26,11 @@ const routes: Routes = [
   {
     path: 'tablero',
     component: KanbanComponent,
+    canActivate: [UserLoggedInGuard]
+  },
+  {
+    path: 'recordatorios',
+    component: NotificationsComponent,
     canActivate: [UserLoggedInGuard]
   },
   {

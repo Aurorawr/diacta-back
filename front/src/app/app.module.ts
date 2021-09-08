@@ -42,7 +42,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { TokenInjectorService } from 'src/app/services/tokenInjector/token-injector.service';
 import { UsersComponent } from './components/users/users.component';
-import { AddMemberDialogComponent } from './components/add-member-dialog/add-member-dialog.component'
+import { AddMemberDialogComponent } from './components/add-member-dialog/add-member-dialog.component';
+import { NotificationsComponent } from './components/notifications/notifications.component'
 
 
 @NgModule({
@@ -55,7 +56,8 @@ import { AddMemberDialogComponent } from './components/add-member-dialog/add-mem
     MinuteCollabComponent,
     KanbanComponent,
     UsersComponent,
-    AddMemberDialogComponent
+    AddMemberDialogComponent,
+    NotificationsComponent
   ],
   imports: [
     BrowserModule,
