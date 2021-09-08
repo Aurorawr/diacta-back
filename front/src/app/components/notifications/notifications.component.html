@@ -3,9 +3,39 @@
         <mat-card-title class="title">Programación de recordatorios</mat-card-title>
         <mat-card-content class="padding-2r">
             <div>
-                <h1 class="inline-block">Mis recordatorios</h1>
+                <h1 class="inline-block">Mis recordatorios <mat-icon>notifications</mat-icon></h1>
+                <button mat-icon-button class="float-r" color="primary">
+                    <mat-icon>notification_add</mat-icon>
+                </button>
             </div>
-            
+            <div fxFlexFill fxLayout='row wrap' fxLayoutGap="1rem 1rem grid">
+                <div fxFlex='25' *ngFor='let reminder of reminders'>
+                    <mat-card class='reminder-card'>
+                        <mat-card-subtitle>Recordatorio</mat-card-subtitle>
+                        <mat-card-title>{{reminder.event}}</mat-card-title>
+                        <mat-card-content>
+                            <mat-list>
+                                <mat-list-item>
+                                    <mat-icon matListIcon>schedule_send</mat-icon>
+                                    <p matLine>{{reminder.when}}</p>
+                                </mat-list-item>
+                                <mat-list-item>
+                                    <mat-icon matListIcon>message</mat-icon>
+                                    <p matLine>{{getMediaString(reminder.vias)}}</p>
+                                </mat-list-item>
+                            </mat-list>
+                        </mat-card-content>
+                        <mat-card-actions align="end">
+                            <button mat-icon-button color="primary">
+                                <mat-icon>visibility</mat-icon>
+                            </button>
+                            <button mat-icon-button color="primary">
+                                <mat-icon>edit_notifications</mat-icon>
+                            </button>
+                          </mat-card-actions>
+                    </mat-card>
+                </div>
+            </div>            
         </mat-card-content>
     </mat-card>
 </div>
