@@ -1,15 +1,20 @@
 const schedule = require('node-schedule');
 const {transporter} = require('../config/transporter.config')
 const {twilioClient} = require('../config/twilio.config')
+const fs = require('fs')
+const { promisify } = require('util');
+
+const readFile = promisify(fs.readFile)
 
 exports.sendMail = async () => {
-    await transporter.sendMail({
+    const mailOptions = {
         from: 'BdT San Miguel <no-responder@bdt.cl>',
         to: "lucas.quintanilla@usach.cl",
         subject: "Bienvenido al Banco",
         text: "Esto funciona?",
-        html: "<h1>Esto funciona?</h1>"
-    })
+        html: "<h1>Esto funciona</h1>"
+    }
+    await transporter.sendMail(mailOptions)
 }
 
 exports.sendSMS = () => {
