@@ -1,9 +1,15 @@
 import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 
 import { MinuteCollabService } from 'src/app/services/minute-collab/minute-collab.service';
 import { Minute, TopicType, AnnexType, NoteType, DialogueElementType } from 'src/app/models/minute.model';
+
+import { AddDialogueElementDialog } from 'src/app/dialogs/add-dialogue-element/index.component'
+import { AddAnnexDialog } from 'src/app/dialogs/add-annex/index.component'
+import { AddNoteDialog } from 'src/app/dialogs/add-note/index.component'
+import { AddTopicDialog } from 'src/app/dialogs/add-topic/index.component'
 
 const monthNames : {[key: number]: string}= {
   0: 'enero',
@@ -61,7 +67,7 @@ interface Editions {
 export class MinuteCollabComponent implements OnInit, OnDestroy {
 
   minuteId: string = '';
-  minute: Minute | null= null;
+  minute!: Minute;
   documents: Observable<string[]> = new Observable();
   currentDoc: string = '';
 
@@ -74,7 +80,8 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     content: ''
   }
 
-  newDialogueElement: {elementType: string, content: string} = {
+  newDialogueElement: DialogueElementType = {
+    enum: 1,
     elementType: 'Acuerdo',
     content: ''
   }
@@ -84,8 +91,6 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     name: '',
     description: ''
   }
-
-  dialogueElementTypes  = ['Acuerdo', 'Compromiso', 'Duda', 'Desacuerdo']
 
   localEditions = {
     header: false,
@@ -123,7 +128,8 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
 
   constructor(
     private collabService: MinuteCollabService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -273,10 +279,14 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
       const notes: any = {}
       const dialogueElements: any = {}
       topic.dialogueElements.forEach(element => {
-        dialogueElements[element._id] = false
+        if (element._id) {
+          dialogueElements[element._id] = false
+        }
       })
       topic.notes.forEach(note => {
-        notes[note._id] = false
+        if (note._id) {
+          notes[note._id] = false
+        }
       })
       if (topic._id) {
         localEditions.topics[topic._id] = {
@@ -288,7 +298,9 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
       }
     })
     minute.annexes.forEach(annex => {
-      localEditions.annexes[annex._id] = false
+      if (annex._id) {
+        localEditions.annexes[annex._id] = false
+      }
     })
     this.localEditions = localEditions
   }
@@ -322,6 +334,95 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     this.collabService.addEdition(attribute, topicId)
   }
 
+  addDialogueElement(topicId: string | undefined) {
+    if (topicId) {
+      this.collabService.addEdition('addingDialogueElements', topicId)
+      const dialogRef = this.dialog.open(AddDialogueElementDialog, {
+        width: '50vw',
+        data: {
+          enum: this.getNewDialogueElementEnum(topicId),
+          elementType: 'Acuerdo',
+          content: ''
+        }
+      })
+
+      dialogRef.afterClosed().subscribe(dialogueElementData => {
+        if (dialogueElementData) {
+          this.newDialogueElement = dialogueElementData
+          this.removeEdit('addingDialogueElements', false, topicId)
+        }
+        else {
+          this.removeEdit('addingDialogueElements', true, topicId)
+        }
+      })
+    }
+  }
+
+  addNote(topicId: string | undefined) {
+    if (topicId) {
+      this.collabService.addEdition('addingNotes', topicId)
+      const dialogRef = this.dialog.open(AddNoteDialog, {
+        width: '50vw',
+        data: {
+          content: ''
+        }
+      })
+
+      dialogRef.afterClosed().subscribe(noteData => {
+        if (noteData) {
+          this.newNote = noteData
+          this.removeEdit('addingNotes', false, topicId)
+        }
+        else {
+          this.removeEdit('addingNotes', true, topicId)
+        }
+      })
+    }
+  }
+
+  addTopic() {
+    this.collabService.addEdition('addingTopic')
+    const dialogRef = this.dialog.open(AddTopicDialog, {
+      width: '50vw',
+      data: {
+        name: '',
+        description: ''
+      }
+    })
+
+    dialogRef.afterClosed().subscribe(topicData => {
+      if (topicData) {
+        this.newTopic = topicData
+        this.removeEdit('addingTopic', false)
+      }
+      else {
+        this.removeEdit('addingTopic', true)
+      }
+    })
+  }
+
+  addAnnex() {
+    this.collabService.addEdition('addingAnnexes')
+    const dialogRef = this.dialog.open(AddAnnexDialog, {
+      width: '50vw',
+      data: {
+        url: '',
+        name: '',
+        description: ''
+      }
+    })
+
+    dialogRef.afterClosed().subscribe(annexData => {
+      if (annexData) {
+        this.newAnnex = annexData
+        this.removeEdit('addingAnnexes', false)
+      }
+      else {
+        this.removeEdit('addingAnnexes', true)
+      }
+    })
+  }
+
   removeEdit(attribute: Attribute, cancel = false, topicId='') {
     this.localEditions[attribute]= false
     this.collabService.removeEdition(attribute)
@@ -343,9 +444,11 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     }
   }
 
-  addTopic() {
-    this.localEditions.addingTopic= false
-    this.collabService.addTopic(this.newTopic)
+  filterEditions(editions: Edition[] ,topicId: string | undefined) {
+    if (topicId) {
+      return editions.filter(edition => edition.topicId == topicId)
+    }
+    return []
   }
 
   get getMinuteDatePlaceData() : string {
@@ -363,6 +466,14 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
       return `${minute.place}, ${dateStr}. ${convokedTimeStr}.${startTimeStr}`;
     }
     return ''
+  }
+
+  getNewDialogueElementEnum(topicId: string) {
+    const topic = this.minute.topics.find(topic => topic._id == topicId)
+    if (topic) {
+      return topic.dialogueElements.length + 1
+    }
+    return 0
   }
 
 }

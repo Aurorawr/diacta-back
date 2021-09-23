@@ -1,5 +1,7 @@
 <div>
-    <h2 *ngIf="lastChangesDate">Últimos cambios realizados a las {{lastChangesDate.toLocaleString()}}</h2>
+    <mat-card>
+        <h2 *ngIf="lastChangesDate">Últimos cambios realizados a las {{lastChangesDate.toLocaleString()}}</h2>
+    </mat-card>
     <mat-card class="minute-collab-card">
         <mat-card-title>
             <h1 class='inline-block title'><strong>Acta en desarrollo</strong></h1>
@@ -13,7 +15,9 @@
                             <mat-icon *ngIf='!localEditions.header'>edit</mat-icon>
                             <mat-icon *ngIf='localEditions.header'>edit_off</mat-icon>
                         </button>
-                        <h3 *ngIf='externalEditions.header.editing' class='inline-block'>El usuario {{externalEditions.header.editorName}} está editando este campo...</h3>
+                        <mat-chip-list *ngIf='externalEditions.header.editing' class='inline-block' aria-label="Editores">
+                            <mat-chip color='primary' selected>El usuario {{externalEditions.header.editorName}} está editando este campo...</mat-chip>
+                        </mat-chip-list>
                     </div>
                     <p *ngIf='!localEditions.header' class='minute-text'>{{ minute.header }}</p>
                     <div *ngIf='localEditions.header' class='align-right'>
@@ -33,7 +37,9 @@
                             <mat-icon *ngIf='!localEditions.description'>edit</mat-icon>
                             <mat-icon *ngIf='localEditions.description'>edit_off</mat-icon>
                         </button>
-                        <h3 *ngIf='externalEditions.description.editing' class='inline-block'>El usuario {{externalEditions.description.editorName}} está editando este campo...</h3>
+                        <mat-chip-list *ngIf='externalEditions.description.editing' class='inline-block' aria-label="Editores">
+                            <mat-chip color='primary' selected>El usuario {{externalEditions.header.editorName}} está editando este campo...</mat-chip>
+                        </mat-chip-list>
                     </div>
                     <p *ngIf='!localEditions.description' class='minute-text'>{{ minute.description }}</p>
                     <div *ngIf='localEditions.description' class='align-right'>
@@ -60,71 +66,48 @@
                 <div>
                     <div>
                         <h1 class='inline-block'>Tabla de la reunión</h1>
-                        <button class='edit-button' mat-icon-button color="primary" (click)='addEdit("addingTopic")'>
-                            <mat-icon *ngIf='!localEditions.addingTopic'>add_circle_outline</mat-icon>
+                        <button class='edit-button' mat-icon-button color="primary" (click)='addTopic()'>
+                            <mat-icon matTooltip="Agregue un nuevo tema a la reunión"
+                            matTooltipPosition="above">add_circle_outline</mat-icon>
                         </button>
                     </div>
                     <mat-list>
                         <mat-list-item *ngFor="let topic of minute.topics">{{topic.enum}}. {{topic.name}}</mat-list-item>
                     </mat-list>
-                    <h3 *ngFor='let edition of externalEditions.addingTopic' class='inline-block'>El usuario {{edition.editorName}} está agregando un nuevo tema...</h3>
-                    <div *ngIf='localEditions.addingTopic' class='align-right'>
-                        <mat-form-field appearance="standard" class="full-width">
-                            <mat-label>Nombre del tema</mat-label>
-                            <input matInput [(ngModel)]='newTopic.name' />
-                        </mat-form-field>
-                        <mat-form-field appearance="standard" class="full-width">
-                            <mat-label>Descripción (opcional)</mat-label>
-                            <textarea matInput cdkTextareaAutosize [(ngModel)]='newTopic.description' rows="2"></textarea>
-                        </mat-form-field>
-                        <button mat-icon-button color="primary" (click)='removeEdit("addingTopic", true)'>
-                            <mat-icon>cancel</mat-icon>
-                        </button>
-                        <button mat-icon-button color="primary" (click)='removeEdit("addingTopic")'>
-                            <mat-icon>save</mat-icon>
-                        </button>
-                    </div>
+                    <mat-chip-list class='inline-block' aria-label="Agregadores">
+                        <mat-chip *ngFor='let edition of externalEditions.addingTopic' color='primary' selected>
+                            El usuario {{edition.editorName}} está agregando un nuevo tema...
+                        </mat-chip>
+                    </mat-chip-list>
                 </div>
                 <h1>Desarrollo</h1>
                 <div *ngFor="let topic of minute.topics">
-                    <h2>{{topic.enum}}. {{topic.name}}</h2>
-                    <button *ngIf='!localEditions.addingDialogueElements' mat-raised-button color="primary" (click)='addEdit("addingDialogueElements", topic._id)'>
-                        Agregar elemento del diálogo
+                    <h2 class='inline-block'>{{topic.enum}}. {{topic.name}}</h2>
+                    <button *ngIf='!localEditions.addingDialogueElements' mat-icon-button  color="primary" (click)='addDialogueElement(topic._id)'>
+                        <mat-icon matTooltip="Agregue un elemento del diálogo para el tema"
+                        matTooltipPosition="above">add_reaction</mat-icon>
                     </button>
-                    <div *ngIf='localEditions.addingDialogueElements' class='align-right'>
-                        <div fxLayout='col'>
-                            <div fxFlex='33'>
-                                <mat-form-field appearance="standard" class="full-width">
-                                    <mat-label>Tipo</mat-label>
-                                    <mat-select [(value)]='newDialogueElement.elementType'>
-                                      <mat-option *ngFor="let type of dialogueElementTypes" [value]="type">
-                                        {{type}}
-                                      </mat-option>
-                                    </mat-select>
-                                  </mat-form-field>
-                            </div>
-                            <div fxFlex>
-                                <mat-form-field appearance="standard" class="full-width">
-                                    <mat-label>Contenido</mat-label>
-                                    <textarea matInput cdkTextareaAutosize [(ngModel)]='newDialogueElement.content' rows="2"></textarea>
-                                </mat-form-field>
-                            </div>
-                        </div>
-                        <button mat-icon-button color="primary" (click)='removeEdit("addingDialogueElements", true)'>
-                            <mat-icon>cancel</mat-icon>
-                        </button>
-                        <button mat-icon-button color="primary" (click)='removeEdit("addingDialogueElements", false, topic._id)'>
-                            <mat-icon>save</mat-icon>
-                        </button>
-                    </div>
+                    <button *ngIf='!localEditions.addingDialogueElements' mat-icon-button  color="primary" (click)='addNote(topic._id)'>
+                        <mat-icon matTooltip="Agregue una nota para el tema"
+                        matTooltipPosition="above">note_add</mat-icon>
+                    </button>
                     <p *ngIf='topic.description' class='minute-text'>{{topic.description}}</p>
                     <p *ngFor='let note of topic.notes' class='minute-text'>{{note.content}}</p>
                     <p *ngFor='let diaEl of topic.dialogueElements' class='minute-text'><strong>{{diaEl.elementType}} {{minute.enum}}.{{diaEl.enum}}:</strong> {{diaEl.content}}</p>
-                    <div *ngFor='let edition of externalEditions.addingDialogueElements'>
-                        <h3 *ngIf="edition.topicId == topic._id" class='inline-block'>El usuario {{edition.editorName}} está agregando un nuevo elemento del diálogo...</h3>
-                    </div>
+                    <mat-chip-list class='inline-block' aria-label="Agregadores">
+                        <mat-chip *ngFor='let edition of filterEditions(externalEditions.addingDialogueElements, topic._id)' color='primary' selected>
+                            El usuario {{edition.editorName}} está agregando un nuevo elemento del diálogo...
+                        </mat-chip>
+                        <mat-chip *ngFor='let edition of filterEditions(externalEditions.addingNotes, topic._id)' color='primary' selected>
+                            El usuario {{edition.editorName}} está agregando una nueva nota...
+                        </mat-chip>
+                    </mat-chip-list>
                 </div>
-                <h1>Adjuntos</h1>
+                <h1 class='inline-block'>Anexos</h1>
+                <button class='edit-button' mat-icon-button color="primary" (click)='addAnnex()'>
+                    <mat-icon matTooltip="Agregue un nuevo anexo a la reunión"
+                    matTooltipPosition="above">add_circle_outline</mat-icon>
+                </button>
                 <mat-list>
                     <mat-list-item *ngFor='let annex of minute.annexes' class="full-width">
                         <mat-icon matListIcon>assignment</mat-icon>
@@ -135,6 +118,11 @@
                         </button>
                     </mat-list-item>
                 </mat-list>
+                <mat-chip-list class='inline-block' aria-label="Agregadores">
+                    <mat-chip *ngFor='let edition of externalEditions.addingAnnexes' color='primary' selected>
+                        El usuario {{edition.editorName}} está agregando un nuevo anexo...
+                    </mat-chip>
+                </mat-chip-list>
                 <h3 *ngIf="minute.endTime" class="info-text"><strong>Hora de término:</strong> {{minute.endTime}}</h3>
             </div>
         </mat-card-content>

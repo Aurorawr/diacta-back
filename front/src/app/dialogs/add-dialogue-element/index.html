@@ -1,0 +1,25 @@
+<h2 mat-dialog-title>Agregar elemento del diálogo</h2>
+<mat-dialog-content>
+    <div fxFlexFill fxLayout='row wrap' fxLayoutGap="1rem 1rem grid">
+        <div fxFlex='33'>
+            <mat-form-field appearance="outline" class='full-width'>
+                <mat-label>Tipo</mat-label>
+                <mat-select [(value)]='data.elementType'>
+                    <mat-option *ngFor="let type of dialogueElementTypes" [value]="type">
+                    {{type}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>  
+        </div>
+        <div fxFlex='67'>
+            <mat-form-field appearance="outline" class='full-width'>
+                <mat-label>Contenido</mat-label>
+                <textarea matInput cdkTextareaAutosize [(ngModel)]='data.content' rows="2"></textarea>
+            </mat-form-field>
+        </div>
+    </div>   
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Agregar</button>
+</mat-dialog-actions>

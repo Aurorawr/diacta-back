@@ -11,6 +11,7 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -46,6 +47,11 @@ import { UsersComponent } from './components/users/users.component';
 import { AddMemberDialogComponent } from './components/add-member-dialog/add-member-dialog.component';
 import { NotificationsComponent } from './components/notifications/notifications.component'
 
+import { AddDialogueElementDialog } from './dialogs/add-dialogue-element/index.component';
+import { AddAnnexDialog } from './dialogs/add-annex/index.component';
+import { AddNoteDialog } from './dialogs/add-note/index.component';
+import { AddTopicDialog } from './dialogs/add-topic/index.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -57,7 +63,11 @@ import { NotificationsComponent } from './components/notifications/notifications
     KanbanComponent,
     UsersComponent,
     AddMemberDialogComponent,
-    NotificationsComponent
+    NotificationsComponent,
+    AddDialogueElementDialog,
+    AddAnnexDialog,
+    AddNoteDialog,
+    AddTopicDialog
   ],
   imports: [
     BrowserModule,
@@ -69,6 +79,7 @@ import { NotificationsComponent } from './components/notifications/notifications
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
+    MatChipsModule,
     MatDatepickerModule,
     MatDialogModule,
     MatFormFieldModule,
@@ -103,7 +114,11 @@ import { NotificationsComponent } from './components/notifications/notifications
   ],
   bootstrap: [AppComponent],
   entryComponents: [
-    AddMemberDialogComponent
+    AddMemberDialogComponent,
+    AddDialogueElementDialog,
+    AddAnnexDialog,
+    AddNoteDialog,
+    AddTopicDialog
   ]
 })
 export class AppModule { }

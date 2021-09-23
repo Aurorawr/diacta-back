@@ -1,19 +1,19 @@
 import { User } from 'src/app/models/user.model';
 
 export interface NoteType {
-    _id: string;
+    _id?: string;
     content: string;
 }
 
 export interface DialogueElementType {
-    _id: string;
+    _id?: string;
     elementType: 'Duda' | 'Compromiso' | 'Acuerdo' | 'Desacuerdo';
     enum: number;
     content: string;
 }
 
 interface ParticipantType {
-    _id: string;
+    _id?: string;
     user: User;
     confirmedAssistance: boolean;
     assistance: boolean;
@@ -29,7 +29,7 @@ export interface TopicType {
 }
 
 export interface AnnexType {
-    _id: string;
+    _id?: string;
     url: string;
     name: string;
     description?: string;
