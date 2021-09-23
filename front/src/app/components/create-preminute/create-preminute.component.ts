@@ -51,6 +51,15 @@ export class CreatePreminuteComponent implements OnInit {
 
   isEdition = false
 
+  errors = {
+    description: false,
+    place: false,
+    date: false,
+    time: false,
+    notSavedTopic: false,
+    notSavedAnnex: false
+  }
+
   constructor(
     private usersService: UsersService,
     private minutesService: MinutesService,
@@ -120,7 +129,50 @@ export class CreatePreminuteComponent implements OnInit {
     this.date = dateWithTime;
   }
 
+  validatePreminute() {
+    const errors = {
+      description: false,
+      place: false,
+      date: false,
+      time: false,
+      notSavedTopic: false,
+      notSavedAnnex: false
+    }
+    let errorDetected = false;
+    if (!this.preminute.description) {
+      errors.description = true;
+      errorDetected = true;
+    }
+    if (!this.preminute.place) {
+      errors.place = true;
+      errorDetected = true;
+    }
+    if (!this.preminute.date) {
+      errors.date = true;
+      errorDetected = true;
+    }
+    if (!this.time) {
+      errors.time = true;
+      errorDetected = true;
+    }
+    if(this.newTopic.name || this.newTopic.description) {
+      errors.notSavedTopic = true;
+      errorDetected = true;
+    }
+    if(this.newAnnex.name || this.newAnnex.description || this.newAnnex.description) {
+      errors.notSavedAnnex = true;
+      errorDetected = true;
+    }
+
+    this.errors = errors;
+
+    return !errorDetected;
+  }
+
   createPreminute() {
+    if (!this.validatePreminute()) {
+      return
+    }
     const preminuteDate = this.date.toDate()
     this.preminute.date = preminuteDate;
 
