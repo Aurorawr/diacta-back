@@ -1,12 +1,12 @@
 import { User } from 'src/app/models/user.model';
 
 export interface NoteType {
-    _id?: string;
+    _id: string;
     content: string;
 }
 
 export interface DialogueElementType {
-    _id?: string;
+    _id: string;
     elementType: 'Duda' | 'Compromiso' | 'Acuerdo' | 'Desacuerdo';
     enum: number;
     content: string;

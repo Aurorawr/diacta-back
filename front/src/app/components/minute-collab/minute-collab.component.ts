@@ -5,6 +5,9 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { MinuteCollabService } from 'src/app/services/minute-collab/minute-collab.service';
 import { Minute, TopicType, AnnexType, NoteType, DialogueElementType } from 'src/app/models/minute.model';
+import { Editions, Edition } from 'src/app/models/edition.model';
+import { EditionParams, SwitchEditionParams } from 'src/app/models/edition-params.model';
+import { EditionAttribute } from 'src/app/models/types.model'
 
 import { AddDialogueElementDialog } from 'src/app/dialogs/add-dialogue-element/index.component'
 import { AddAnnexDialog } from 'src/app/dialogs/add-annex/index.component'
@@ -24,39 +27,6 @@ const monthNames : {[key: number]: string}= {
   9: 'octubre',
   10: 'noviembre',
   11: 'diciembre'
-}
-
-type Attribute = 'header' | 'description' | 'addingTopic' | 'addingAnnexes' | 'addingNotes' | 'addingDialogueElements'
-
-interface Edition {
-  editing: boolean;
-  edtitorId: string;
-  editorName: string;
-  topicId?: string;
-}
-
-interface Editions {
-  header: Edition;
-  description: Edition;
-  topics: {
-    [key: string] : {
-      name: Edition;
-      description: Edition;
-      notes: {
-        [key: string] : Edition
-      },
-      dialogueElements: {
-        [key: string] : Edition
-      }
-    }
-  };
-  annexes: {
-    [key: string]: Edition
-  };
-  addingTopic: Edition[];
-  addingAnnexes: Edition[];
-  addingNotes: Edition[];
-  addingDialogueElements: Edition[];
 }
 
 @Component({
@@ -80,7 +50,7 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     content: ''
   }
 
-  newDialogueElement: DialogueElementType = {
+  newDialogueElement = {
     enum: 1,
     elementType: 'Acuerdo',
     content: ''
@@ -94,27 +64,24 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
 
   localEditions = {
     header: false,
-    description: false,
-    topics: {},
-    annexes: {},
-    addingTopic: false,
-    addingAnnexes: false,
-    addingNotes: false,
-    addingDialogueElements: false
+    description: false
   }
 
   externalEditions: Editions = {
     header: {
       editing: false,
-      edtitorId: '',
+      editorId: '',
       editorName: ''
     },
     description: {
       editing: false,
-      edtitorId: '',
+      editorId: '',
       editorName: ''
     },
-    topics: {},
+    topicName: {},
+    topicDescription: {},
+    dialogueElements: {},
+    notes: {},
     annexes: {},
     addingTopic: [],
     addingAnnexes: [],
@@ -135,11 +102,8 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
   ngOnInit() {
     const minuteId = this.route.snapshot.paramMap.get('minuteId');
     if (minuteId) {
-      this.collabService.minute.subscribe(response => {
-        const minute = response.minute as Minute
-        const editions = response.editions  as Editions
-        this.setLocalEdition(minute)
-        this.externalEditions = editions
+      this.collabService.minute.subscribe(minuteRespone => {
+        const minute = minuteRespone as Minute
         this.minute = minute
       });
       this.collabService.editedData.subscribe(response => {
@@ -148,6 +112,7 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
         }
       })
       this.collabService.editions.subscribe(response => {
+        console.log(response)
         const externalEditions = response as Editions
         this.externalEditions = externalEditions
       })
@@ -178,6 +143,7 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
         }
       })
       this.collabService.dialogueElementEdited.subscribe(response => {
+        console.log(response)
         const topicId = response.topicId as string;
         const elementId = response.elementId as string;
         const elementData = response.data as DialogueElementType;
@@ -244,9 +210,10 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
         }
       })
       this.collabService.newNote.subscribe(response => {
+        console.log(response)
         const topicId = response.topicId as string;
         const newNote = response.newNote as NoteType
-        if (this.minute) {
+        if (this.minute && newNote._id) {
           this.minute.topics = this.minute.topics.map(topic => {
             if(topic._id == topicId) {
               topic.notes.push(newNote)
@@ -258,59 +225,13 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
       this.collabService.dataSavedDate.subscribe(response => {
         this.lastChangesDate = new Date(response)
       })
+      this.collabService.errorMessage.subscribe(response => {
+        console.log(response)
+      })
       if (!this.minute) {
         this.collabService.initMinute(minuteId)
       }
     }
-  }
-
-  setLocalEdition(minute: Minute) {
-    const localEditions: any = {
-      header: false,
-      description: false,
-      topics: {},
-      annexes: {},
-      addingTopic: false,
-      addingAnnexes: false,
-      addingNotes: false,
-      addingDialogueElements: false
-    }
-    minute.topics.forEach(topic => {
-      const notes: any = {}
-      const dialogueElements: any = {}
-      topic.dialogueElements.forEach(element => {
-        if (element._id) {
-          dialogueElements[element._id] = false
-        }
-      })
-      topic.notes.forEach(note => {
-        if (note._id) {
-          notes[note._id] = false
-        }
-      })
-      if (topic._id) {
-        localEditions.topics[topic._id] = {
-          name: false,
-          description: false,
-          notes,
-          dialogueElements
-        }
-      }
-    })
-    minute.annexes.forEach(annex => {
-      if (annex._id) {
-        localEditions.annexes[annex._id] = false
-      }
-    })
-    this.localEditions = localEditions
-  }
-  
-  switchPendingEditions() {
-    Object.entries(this.localEditions).forEach(([attribute, value]) => {
-      if(value) {
-        this.collabService.switchEdition(attribute)
-      }
-    })
   }
 
   ngOnDestroy() {
@@ -324,13 +245,15 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     this.collabService.editBasicData(name, value);
   }
 
-  switchEdit(attribute: Attribute) {
-    this.localEditions[attribute]= !this.localEditions[attribute]
-    this.collabService.switchEdition(attribute)
+  switchEdit(params: SwitchEditionParams) {
+    const {
+      attribute,
+      attributeId
+    } = params
+    this.collabService.switchEdition(attribute, attributeId)
   }
 
-  addEdit(attribute: Attribute, topicId='') {
-    this.localEditions[attribute]= true
+  addEdit(attribute: EditionAttribute, topicId='') {
     this.collabService.addEdition(attribute, topicId)
   }
 
@@ -370,6 +293,7 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
 
       dialogRef.afterClosed().subscribe(noteData => {
         if (noteData) {
+          console.log(noteData)
           this.newNote = noteData
           this.removeEdit('addingNotes', false, topicId)
         }
@@ -423,13 +347,49 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     })
   }
 
-  removeEdit(attribute: Attribute, cancel = false, topicId='') {
-    this.localEditions[attribute]= false
+  editTopicAttribute(params: EditionParams) {
+    const {
+      topicId,
+      elementType,
+      elementId,
+      event
+    } = params
+    if (topicId && elementId) {
+      const target = event.target as HTMLTextAreaElement;
+      const value = target.value;
+
+      switch(elementType) {
+        case 'dialogueElements':
+          this.collabService.editDialogueElement(
+            topicId,
+            elementId,
+            {
+              content: value
+            }
+          );
+          break
+        case 'notes':
+          this.collabService.editNote(
+            topicId,
+            elementId,
+            {
+              content: value
+            }
+          )
+          break
+        default:
+          
+      }
+    }
+  }
+
+  removeEdit(attribute: EditionAttribute, cancel = false, topicId='') {
     this.collabService.removeEdition(attribute)
     if(!cancel) {
       switch(attribute) {
         case 'addingTopic':
           this.collabService.addTopic(this.newTopic)
+          this
           break
         case 'addingAnnexes':
           this.collabService.addAnnex(this.newAnnex)
@@ -438,6 +398,8 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
           this.collabService.addDialogueElement(topicId, this.newDialogueElement)
           break
         case 'addingNotes':
+          console.log('hola')
+          console.log(this.newNote)
           this.collabService.addNote(topicId, this.newNote)
           break;
       }

@@ -11,7 +11,7 @@
                 <div *ngIf='minute.header'>
                     <div>
                         <h2 class='inline-block'>Encabezado</h2>
-                        <button class='edit-button' mat-icon-button color="primary" (click)='switchEdit("header")' [disabled]='externalEditions.header.editing'>
+                        <button class='edit-button' mat-icon-button color="primary" (click)='switchEdit({attribute: "header"})' [disabled]='externalEditions.header.editing'>
                             <mat-icon *ngIf='!localEditions.header'>edit</mat-icon>
                             <mat-icon *ngIf='localEditions.header'>edit_off</mat-icon>
                         </button>
@@ -24,7 +24,7 @@
                         <mat-form-field appearance="standard" class='full-width'>
                             <textarea #headerInput matInput cdkTextareaAutosize [(ngModel)]='minute.header' (keyup)='editBasicData("header", $event)'></textarea>
                         </mat-form-field>
-                        <button mat-icon-button color="primary" (click)='switchEdit("header")'>
+                        <button mat-icon-button color="primary" (click)='switchEdit({attribute: "header"})'>
                             <mat-icon>edit_off</mat-icon>
                         </button>
                     </div>
@@ -33,7 +33,7 @@
                 <div *ngIf='minute.description'>
                     <div>
                         <h2 class='inline-block'>Descripción</h2>
-                        <button class='edit-button' mat-icon-button color="primary" (click)='switchEdit("description")' [disabled]='externalEditions.description.editing'>
+                        <button class='edit-button' mat-icon-button color="primary" (click)='switchEdit({attribute: "description"})' [disabled]='externalEditions.description.editing'>
                             <mat-icon *ngIf='!localEditions.description'>edit</mat-icon>
                             <mat-icon *ngIf='localEditions.description'>edit_off</mat-icon>
                         </button>
@@ -46,7 +46,7 @@
                         <mat-form-field appearance="standard" class='full-width'>
                             <textarea #headerInput matInput cdkTextareaAutosize [(ngModel)]='minute.description' (keyup)='editBasicData("description", $event)'></textarea>
                         </mat-form-field>
-                        <button mat-icon-button color="primary" (click)='switchEdit("description")'>
+                        <button mat-icon-button color="primary" (click)='switchEdit({attribute: "description"})'>
                             <mat-icon>edit_off</mat-icon>
                         </button>
                     </div>
@@ -58,9 +58,6 @@
                 <h1>Compromisos previos</h1>
                 <p *ngIf='!minute.previousCompromises.length' class='minute-text'>No hay compromisos previos</p>
                 <div *ngIf='minute.previousCompromises.length'>
-                    <button mat-icon-button class="float-r" color="primary" (click)='switchEdit("description")'>
-                        <mat-icon>edit</mat-icon>
-                    </button>
                     <h4 *ngFor="let compromise of minute.previousCompromises; let i = index">{{i+1}}. {{compromise.content}}</h4>
                 </div>
                 <div>
@@ -83,17 +80,32 @@
                 <h1>Desarrollo</h1>
                 <div *ngFor="let topic of minute.topics">
                     <h2 class='inline-block'>{{topic.enum}}. {{topic.name}}</h2>
-                    <button *ngIf='!localEditions.addingDialogueElements' mat-icon-button  color="primary" (click)='addDialogueElement(topic._id)'>
+                    <button mat-icon-button  color="primary" (click)='addDialogueElement(topic._id)'>
                         <mat-icon matTooltip="Agregue un elemento del diálogo para el tema"
                         matTooltipPosition="above">add_reaction</mat-icon>
                     </button>
-                    <button *ngIf='!localEditions.addingDialogueElements' mat-icon-button  color="primary" (click)='addNote(topic._id)'>
+                    <button mat-icon-button  color="primary" (click)='addNote(topic._id)'>
                         <mat-icon matTooltip="Agregue una nota para el tema"
                         matTooltipPosition="above">note_add</mat-icon>
                     </button>
-                    <p *ngIf='topic.description' class='minute-text'>{{topic.description}}</p>
-                    <p *ngFor='let note of topic.notes' class='minute-text'>{{note.content}}</p>
-                    <p *ngFor='let diaEl of topic.dialogueElements' class='minute-text'><strong>{{diaEl.elementType}} {{minute.enum}}.{{diaEl.enum}}:</strong> {{diaEl.content}}</p>
+                    <div *ngIf='topic.description'>
+                        <button mat-icon-button class="float-r" color="primary">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <p class='minute-text'>{{topic.description}}</p>
+                    </div>
+                    <div *ngFor='let note of topic.notes'>
+                        <minute-collab-edition [value]='note.content' type='notes' [attributeId]='note._id'
+                            [topicId]='topic._id' [externalEditing]="externalEditions.notes[note._id]"
+                            (switchEdit)='switchEdit($event)' (onEdit)='editTopicAttribute($event)'
+                        ></minute-collab-edition>
+                    </div>
+                    <div *ngFor='let diaEl of topic.dialogueElements'>
+                        <minute-collab-edition [value]='diaEl.content' type='dialogueElements' [attributeId]='diaEl._id'
+                            [topicId]='topic._id' [externalEditing]="externalEditions.dialogueElements[diaEl._id]"
+                            (switchEdit)='switchEdit($event)' (onEdit)='editTopicAttribute($event)'
+                        ></minute-collab-edition>
+                    </div>
                     <mat-chip-list class='inline-block' aria-label="Agregadores">
                         <mat-chip *ngFor='let edition of filterEditions(externalEditions.addingDialogueElements, topic._id)' color='primary' selected>
                             El usuario {{edition.editorName}} está agregando un nuevo elemento del diálogo...

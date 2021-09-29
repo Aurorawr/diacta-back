@@ -1,0 +1,20 @@
+<div>
+    <button mat-icon-button class="float-r" color="primary" (click)='switchEdition()'
+        [disabled]="isExternalEditing()">
+        <mat-icon>edit</mat-icon>
+    </button>
+    <mat-card *ngIf="isExternalEditing()" class="editing-card">
+        {{getEditorName()}} está editando...
+    </mat-card>
+    <p *ngIf='!editing; else editorInput' class='minute-text'>{{value}}</p>
+    <ng-template #editorInput>
+        <div class='align-right'>
+            <mat-form-field appearance="standard" class='full-width'>
+                <textarea matInput cdkTextareaAutosize [(ngModel)]='value' (keyup)='edit($event)'></textarea>
+            </mat-form-field>
+            <button mat-icon-button color="primary" (click)='switchEdition()'>
+                <mat-icon>edit_off</mat-icon>
+            </button>
+        </div>
+    </ng-template>
+</div>

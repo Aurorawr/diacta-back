@@ -56,8 +56,8 @@ export class MinuteCollabService {
     this.socket.emit('editBasicData', name, value);
   }
 
-  switchEdition(attributeName: string) {
-    this.socket.emit('swithEdit', attributeName, this.user);
+  switchEdition(attributeName: string, attributeId: null | string = null) {
+    this.socket.emit('swithEdit', attributeName, this.user, attributeId);
   }
 
   addEdition(attribute: string, topicId = '') {
@@ -86,6 +86,22 @@ export class MinuteCollabService {
 
   addNote(topicId: string, note: any) {
     this.socket.emit('addNote', topicId, note)
+  }
+
+  editTopic(topicId: string, topicData: any) {
+    this.socket.emit('editTopic', topicId, topicData)
+  }
+
+  editAnnex(annexId: string, annexData: any) {
+    this.socket.emit('editAnnex', annexId, annexData)
+  }
+
+  editDialogueElement(topicId: string, elementId: string, elementData: any) {
+    this.socket.emit('editDialogueElement', topicId, elementId, elementData)
+  }
+
+  editNote(topicId: string, noteId: string, elementData: any) {
+    this.socket.emit('editNote', topicId, noteId, elementData)
   }
 
   disconnect() {

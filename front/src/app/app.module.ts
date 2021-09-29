@@ -39,6 +39,7 @@ import { MinutesComponent } from './components/minutes/minutes.component';
 import { MinuteComponent } from './components/minute/minute.component';
 import { CreatePreminuteComponent } from './components/create-preminute/create-preminute.component';
 import { MinuteCollabComponent } from './components/minute-collab/minute-collab.component';
+import { MinuteCollabEditionComponent } from './components/minute-collab/components/edition/index.component';
 import { KanbanComponent } from './components/kanban/kanban.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
@@ -67,7 +68,8 @@ import { AddTopicDialog } from './dialogs/add-topic/index.component';
     AddDialogueElementDialog,
     AddAnnexDialog,
     AddNoteDialog,
-    AddTopicDialog
+    AddTopicDialog,
+    MinuteCollabEditionComponent
   ],
   imports: [
     BrowserModule,

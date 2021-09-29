@@ -9,6 +9,7 @@ const DEFAULT_EDITION = {
 }
 
 let minute = undefined;
+let dialogueElements = {};
 
 const editions = {};
 
@@ -47,7 +48,10 @@ module.exports = (io, socket) => {
 
       editions.header = DEFAULT_EDITION
       editions.description = DEFAULT_EDITION
-      editions.topics = {}
+      editions.topicName = {}
+      editions.topicDescription = {}
+      editions.dialogueElements = {}
+      editions.notes = {}
       editions.annexes = {}
       editions.addingTopic = []
       editions.addingAnnexes = []
@@ -55,31 +59,29 @@ module.exports = (io, socket) => {
       editions.addingDialogueElements = []
 
       minute.topics.forEach(topic => {
-        const notes = {}
-        const dialogueElements = {}
+        /*const notesEditions = {}
+        const dialogueElementsEditions = {}
         topic.notes.forEach(note => {
           notes[note._id] = DEFAULT_EDITION
-        })
+        })*/
         topic.dialogueElements.forEach(element => {
-          dialogueElements[element._id] = DEFAULT_EDITION
+          //dialogueElementsEditions[element._id] = DEFAULT_EDITION
+          dialogueElements[element._id] = element
         })
-        editions.topics[topic._id] = {
+        /*editions.topics[topic._id] = {
           name: DEFAULT_EDITION,
           description: DEFAULT_EDITION,
-          notes,
-          dialogueElements
-        }
+          notes: notesEditions,
+          dialogueElements: dialogueElementsEditions
+        }*/
       })
 
-      minute.annexes.forEach(annex => {
+      /*minute.annexes.forEach(annex => {
         editions.annexes[annex._id] = DEFAULT_EDITION
-      })
+      })*/
 
     }
-    io.emit("minute", {
-      minute,
-      editions
-    });
+    io.emit("minute", minute);
   });
 
   socket.on("editBasicData", (name, value) => {
@@ -129,6 +131,12 @@ module.exports = (io, socket) => {
   });
 
   socket.on("editDialogueElement", (topicId, elementId, data) => {
+    const {
+      content
+    } = data
+    if (content) {
+      dialogueElements[elementId].content = content
+    }
     socket.broadcast.emit("dialogueElementEdited", {
       topicId,
       elementId,
@@ -151,18 +159,22 @@ module.exports = (io, socket) => {
     });
   });
 
-  socket.on("addTopic", (topic) => {
+  socket.on("addTopic", async (topic) => {
     const topicsQuantity = minute.topics.length
     topic.enum = topicsQuantity+1
     minute.topics.push(topic)
     const savedTopic = minute.topics[topicsQuantity]
     io.emit("newTopic", savedTopic);
+    await minute.save()
+    io.emit('dataSaved', new Date())
   });
 
-  socket.on("addAnnex", (annex) => {
+  socket.on("addAnnex", async (annex) => {
     minute.annexes.push(annex)
     const savedAnnex = minute.annexes[minute.annexes.length-1]
     io.emit("newAnnex", savedAnnex);
+    await minute.save()
+    io.emit('dataSaved', new Date())
   });
 
   socket.on("addDialogueElement", async (topicId, element) => {
@@ -181,6 +193,7 @@ module.exports = (io, socket) => {
     });
     const savedElement = await newElement.save();
     if (savedElement == newElement) {
+      dialogueElements[savedElement._id] = savedElement
       io.emit('dataSaved', new Date())
       if(savedElement.elementType == 'Compromiso') {
         const newTask = new Task({
@@ -191,7 +204,7 @@ module.exports = (io, socket) => {
     }
   });
 
-  socket.on("addNote", (topicId, note) => {
+  socket.on("addNote", async (topicId, note) => {
     const notesQuantity = minute.topics.id(topicId).notes.length
     minute.topics.id(topicId).notes.push(note)
     const savedNote = minute.topics.id(topicId).notes[notesQuantity]
@@ -199,66 +212,36 @@ module.exports = (io, socket) => {
       topicId,
       newNote: savedNote
     });
+    await minute.save()
+    io.emit('dataSaved', new Date())
   });
 
-  socket.on("swithEdit", async (attribute, user, options=null) => {
+  socket.on("swithEdit", async (attribute, user, attributeId=null) => {
     let actualState = null
-    let editionType = ''
-    if (options) {
-      const {
-        topicId,
-        annexId,
-        attributeId
-      } = options
-      if(topicId) {
-        if (attributeId) {
-          actualState = editions.topics[topicId][attribute][attributeId]
-          editionType = 'topicAttr'
-        }
-        else {
-          actualState = editions.topics[topicId][attribute]
-          editionType = 'topic'
-        }
-      }
-      else if (annexId) {
-        actualState = editions.annexes[annexId]
-        editionType = 'annex'
-      }
-      else {
-        socket.emit('errorMessage', 'Malas opciones para la edición')
-        return
-      }
+    let saveMinute = false
+    if (attributeId) {
+      actualState = editions[attribute][attributeId]
     }
     else {
       actualState = editions[attribute]
-      editionType = 'basic'
     }
-    if (actualState.editing) {
+    if (actualState && actualState.editing) {
       if (actualState.editorId == user.id) {
-        const newState = {
-          editing: false,
-          editorId: '',
-          editorName: ''
+        if (attributeId) {
+          delete editions[attribute][attributeId]
         }
-        switch(editionType) {
-          case 'basic':
-            editions[attribute] = newState
-            break
-          case 'topic':
-            editions.topics[topicId][attribute] = newState
-            break
-          case 'topicAttr':
-            editions.topics[topicId][attribute][attributeId] = newState
-            break
-          case 'annex':
-            editions.annexes[annexId] = newState
-            break
-          default:
+        else {
+          editions[attribute] = {
+            editing: false,
+            editorId: '',
+            editorName: ''
+          }
         }
-        socket.broadcast.emit('editions', editions)
+        saveMinute = true
       }
       else {
         socket.emit('errorMessage', 'El campo ya está siendo editado')
+        return
       }
     }
     else {
@@ -267,22 +250,22 @@ module.exports = (io, socket) => {
         editorId: user.id,
         editorName: user.name
       }
-      switch(editionType) {
-        case 'basic':
-          editions[attribute] = newState
-          break
-        case 'topic':
-          editions.topics[topicId][attribute] = newState
-          break
-        case 'topicAttr':
-          editions.topics[topicId][attribute][attributeId] = newState
-          break
-        case 'annex':
-          editions.annexes[annexId] = newState
-          break
-        default:
+      if (attributeId) {
+        editions[attribute][attributeId] = newState
       }
-      socket.broadcast.emit('editions', editions)
+      else {
+        editions[attribute] = newState
+      }
+    }
+    socket.broadcast.emit('editions', editions)
+    if (saveMinute) {
+      if (attribute == 'dialogueElements') {
+        await dialogueElements[attributeId].save()
+      }
+      else {
+        await minute.save()
+      }
+      io.emit('dataSaved', new Date())
     }
   });
 
