@@ -251,6 +251,9 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
       attributeId
     } = params
     this.collabService.switchEdition(attribute, attributeId)
+    if (attribute == 'header' || attribute == 'description') {
+      this.localEditions[attribute] = !this.localEditions[attribute]
+    }
   }
 
   addEdit(attribute: EditionAttribute, topicId='') {
