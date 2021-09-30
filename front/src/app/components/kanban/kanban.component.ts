@@ -1,66 +1,76 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, EventEmitter } from '@angular/core';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { MatDialog } from '@angular/material/dialog';
 
-interface Task {
-  compromise: string;
-  user: string;
-}
+import { TasksService } from 'src/app/services/tasks/tasks.service'
+import { Task, GroupedTasks, TaskUser } from 'src/app/models/task.model'
+import { TaskDialog } from 'src/app/dialogs/task/index.component'
 @Component({
   selector: 'app-kanban',
   templateUrl: './kanban.component.html',
   styleUrls: ['./kanban.component.scss'],
 })
-export class KanbanComponent {
-  listIds = [
-    'Get to work',
-    'Pick up groceries',
-    'Go home',
-    'Fall asleep'
-  ];
+export class KanbanComponent implements OnInit {
+
+  tasks: GroupedTasks = {
+    new: [],
+    doing: [],
+    paused: [],
+    testing: [],
+    ended: []
+  }
+
+  members: TaskUser[] = []
+
+  newConnected = ['doingList']
+  doingConnected = ['newList', 'pausedList', 'testingList', 'endedList']
+  pausedConnected = ['doingList', 'endedList']
+  testingConnected = ['endedList']
+  endedConnected = []
 
   seeAllTasks = true
 
-  new: Task[] = [
-    {
-      compromise: "Hay que encontrar a alguien que nos ayude con la difusión por redes sociales",
-      user: ""
-    },
-    {
-      compromise: "Florecia va a experimentar con la plataforma del banco de tiempo para explicarnos su funcionamiento",
-      user: "Florencia Campos"
-    }
-  ]
-  doing: Task[] = [
-    {
-      compromise: "Se necesita diseñar el flyer de difusión antes de la próxima reunión",
-      user: "Esteban Contreras"
-    },
-    {
-      compromise: "Edmundo le explicará a los inasistentes lo tratado en la reunión",
-      user: "Edmundo Leiva"
-    }
-  ]
+  assignUserEmmiter = new EventEmitter<{taskId: string, userId: string}>()
+  assignDueDateEmmiter = new EventEmitter<{taskId: string, dueDate: Date}>()
 
-  paused: Task[] = []
+  constructor(
+    private tasksService: TasksService,
+    private dialog: MatDialog
+  ) {
+    this.assignUserEmmiter.subscribe((response) => {
+      const {
+        taskId,
+        userId
+      } = response
+      this.assignUserToTask(taskId, userId)
+    })
+    this.assignDueDateEmmiter.subscribe((response) => {
+      const {
+        taskId,
+        dueDate
+      } = response
+      this.assignDueDateToTask(taskId, dueDate)
+    })
+  }
 
-  testing: Task[] = [
-    {
-      compromise: "Alejandro hará una pequeña investigación sobre otros BdT en Santiago",
-      user: "Alejandro Bloqueado"
-    }
-  ]
-
-  ended: Task[] = [
-    {
-      compromise: "Edmundo invitará a Inés de CITIAPPS para que nos explique la instalación de un BdT.",
-      user: "Edmundo Leiva"
-    }
-  ]
+  ngOnInit() {
+    this.tasksService.tasks.subscribe(response => {
+      this.tasks = response
+    })
+    this.tasksService.members.subscribe(response => {
+      this.members = response
+    })
+  }
 
   drop(event: CdkDragDrop<Task[]>): void {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
+      if (event.previousContainer.id == "newList") {
+        if (!event.previousContainer.data[event.previousIndex].user) {
+          return
+        }
+      }
       transferArrayItem(event.previousContainer.data,
           event.container.data,
           event.previousIndex,
@@ -68,12 +78,34 @@ export class KanbanComponent {
     }
   }
 
-  getInitials(personName: string) {
-    const wordsList = personName.split(' ')
-    let initials: string = ""
-    wordsList.forEach(word => {
-      initials += word[0]
+  getInitials(user: TaskUser | undefined) {
+    if (user) {
+      let initials: string = user.name[0]
+      if(user.lastname) {
+        initials += user.lastname[0]
+      }
+      return initials
+    }
+    return ""
+  }
+
+  openTask(task: Task) {
+    this.dialog.open(TaskDialog, {
+      width: '50vw',
+      data: {
+        task,
+        members: this.members,
+        assignMember: this.assignUserEmmiter,
+        assigDueDate: this.assignDueDateEmmiter
+      }
     })
-    return initials
+  }
+
+  assignUserToTask(taskId: string, userId: string) {
+    this.tasksService.assignUser(taskId, userId)
+  }
+
+  assignDueDateToTask(taskId: string, dueDate: Date) {
+    this.tasksService.assignDueDate(taskId, dueDate)
   }
 }

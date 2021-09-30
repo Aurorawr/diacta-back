@@ -1,0 +1,59 @@
+<mat-dialog-content>
+    <mat-card>
+        <mat-card-header>
+            <div mat-card-avatar>
+                <mat-icon>work</mat-icon>
+            </div>
+            <mat-card-title>{{task.compromise.content}}</mat-card-title>
+            <mat-card-subtitle>En estado {{statesName[task.state]}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-list>
+                <mat-list-item>
+                    <mat-icon mat-list-icon>perm_identity</mat-icon>
+                    <div mat-line>{{ getUsername() }}</div>
+                    <div mat-line>Encargado</div>
+                    <button mat-icon-button (click)="assigningUser = !assigningUser">
+                        <mat-icon>assignment_ind</mat-icon>
+                    </button>
+                </mat-list-item>
+                <mat-list-item>
+                    <mat-icon mat-list-icon>calendar_today</mat-icon>
+                    <div mat-line>{{ task.dueDate ? task.dueDate.toLocaleString() : "Sin definir" }}</div>
+                    <div mat-line>Fecha de término</div>
+                    <button mat-icon-button (click)="assigningDueDate = !assigningDueDate">
+                        <mat-icon>event</mat-icon>
+                    </button>
+                </mat-list-item>
+            </mat-list>
+            <div *ngIf="assigningUser">
+                <h3>Asignar tarea</h3>
+                <mat-form-field appearance="outline">
+                    <mat-label>Seleccione el encargado</mat-label>
+                    <mat-select [(value)]="memberAssignedId">
+                      <mat-option>No establecido</mat-option>
+                      <mat-option *ngFor="let member of members" [value]="member._id">{{getUsername(member)}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <button mat-raised-button color="primary" class='float-r' (click)='assignUser()'>
+                    Asignar
+                </button>
+            </div>
+            <div *ngIf="assigningDueDate">
+                <h3>Asignar fecha de término</h3>
+                <mat-form-field appearance="outline">
+                    <mat-label>Ingrese el día</mat-label>
+                    <input matInput [matDatepicker]="dp" [(ngModel)]='assignedDueDate'>
+                    <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                    <mat-datepicker #dp></mat-datepicker>
+                </mat-form-field>  
+                <button mat-raised-button color="primary" class='float-r' (click)='assignDueDate()'>
+                    Asignar
+                </button>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cerrar</button>
+</mat-dialog-actions>

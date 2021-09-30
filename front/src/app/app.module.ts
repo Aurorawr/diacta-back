@@ -31,7 +31,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { MinuteCollabSocket } from 'src/app/sockets/minute-collab.socket'
-
+import { TasksSocket } from 'src/app/sockets/tasks.socket'
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
@@ -52,6 +52,7 @@ import { AddDialogueElementDialog } from './dialogs/add-dialogue-element/index.c
 import { AddAnnexDialog } from './dialogs/add-annex/index.component';
 import { AddNoteDialog } from './dialogs/add-note/index.component';
 import { AddTopicDialog } from './dialogs/add-topic/index.component';
+import { TaskDialog } from './dialogs/task/index.component';
 
 @NgModule({
   declarations: [
@@ -69,7 +70,8 @@ import { AddTopicDialog } from './dialogs/add-topic/index.component';
     AddAnnexDialog,
     AddNoteDialog,
     AddTopicDialog,
-    MinuteCollabEditionComponent
+    MinuteCollabEditionComponent,
+    TaskDialog
   ],
   imports: [
     BrowserModule,
@@ -112,7 +114,8 @@ import { AddTopicDialog } from './dialogs/add-topic/index.component';
       useClass: TokenInjectorService,
       multi: true
     },
-    MinuteCollabSocket
+    MinuteCollabSocket,
+    TasksSocket
   ],
   bootstrap: [AppComponent],
   entryComponents: [
@@ -120,7 +123,8 @@ import { AddTopicDialog } from './dialogs/add-topic/index.component';
     AddDialogueElementDialog,
     AddAnnexDialog,
     AddNoteDialog,
-    AddTopicDialog
+    AddTopicDialog,
+    TaskDialog
   ]
 })
 export class AppModule { }

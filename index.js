@@ -40,9 +40,14 @@ const io = require('socket.io')(server, {
 })
 
 const registerMinuteCollabHandlers = require('./src/controllers/minute-collab.controller')
+const registerTasksHandlers = require('./src/controllers/task.controller')
 const minuteCollab = io.of('/minute-collab')
+const tasks = io.of('/tasks')
 minuteCollab.on('connection', (socket) => {
   registerMinuteCollabHandlers(minuteCollab, socket)
+})
+tasks.on('connection', (socket) => {
+  registerTasksHandlers(tasks, socket)
 })
 
 const PORT = process.env.PORT || 8080;
