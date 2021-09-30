@@ -20,7 +20,7 @@ interface ParticipantType {
 }
 
 export interface TopicType {
-    _id?: string;
+    _id: string;
     enum: number;
     name: string;
     description?: string;

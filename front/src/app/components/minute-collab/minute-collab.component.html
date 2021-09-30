@@ -88,12 +88,10 @@
                         <mat-icon matTooltip="Agregue una nota para el tema"
                         matTooltipPosition="above">note_add</mat-icon>
                     </button>
-                    <div *ngIf='topic.description'>
-                        <button mat-icon-button class="float-r" color="primary">
-                            <mat-icon>edit</mat-icon>
-                        </button>
-                        <p class='minute-text'>{{topic.description}}</p>
-                    </div>
+                    <minute-collab-edition *ngIf='topic.description' [value]='topic.description' type='topicDescription'
+                            [topicId]='topic._id' [externalEditing]="externalEditions.topicDescription[topic._id]"
+                            (switchEdit)='switchEdit($event)' (onEdit)='editTopicAttribute($event)'
+                    ></minute-collab-edition>
                     <div *ngFor='let note of topic.notes'>
                         <minute-collab-edition [value]='note.content' type='notes' [attributeId]='note._id'
                             [topicId]='topic._id' [externalEditing]="externalEditions.notes[note._id]"

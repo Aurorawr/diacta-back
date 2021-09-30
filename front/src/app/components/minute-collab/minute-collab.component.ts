@@ -357,31 +357,43 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
       elementId,
       event
     } = params
-    if (topicId && elementId) {
-      const target = event.target as HTMLTextAreaElement;
-      const value = target.value;
-
-      switch(elementType) {
-        case 'dialogueElements':
-          this.collabService.editDialogueElement(
-            topicId,
-            elementId,
-            {
-              content: value
-            }
-          );
-          break
-        case 'notes':
-          this.collabService.editNote(
-            topicId,
-            elementId,
-            {
-              content: value
-            }
-          )
-          break
-        default:
-          
+    const target = event.target as HTMLTextAreaElement;
+    const value = target.value;
+    if (topicId) {
+      if (elementId) {
+        switch(elementType) {
+          case 'dialogueElements':
+            this.collabService.editDialogueElement(
+              topicId,
+              elementId,
+              {
+                content: value
+              }
+            );
+            break
+          case 'notes':
+            this.collabService.editNote(
+              topicId,
+              elementId,
+              {
+                content: value
+              }
+            )
+            break
+          default:
+            
+        }
+      }
+      else {
+        const topicData: any = {}
+        switch(elementType) {
+          case 'topicName':
+            topicData.name = value
+            break
+          case 'topicDescription':
+            topicData.description = value
+        }
+        this.collabService.editTopic(topicId, topicData)
       }
     }
   }
