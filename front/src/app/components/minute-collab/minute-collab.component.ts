@@ -123,7 +123,7 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
           const actualTopics = this.minute.topics
           this.minute.topics = actualTopics.map(topic => {
             if(topic._id == topicId) {
-              return {...topic, topicData} as TopicType
+              return {...topic, ...topicData} as TopicType
             }
             return topic
           })
@@ -359,42 +359,42 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     } = params
     const target = event.target as HTMLTextAreaElement;
     const value = target.value;
-    if (topicId) {
-      if (elementId) {
-        switch(elementType) {
-          case 'dialogueElements':
-            this.collabService.editDialogueElement(
-              topicId,
-              elementId,
-              {
-                content: value
-              }
-            );
-            break
-          case 'notes':
-            this.collabService.editNote(
-              topicId,
-              elementId,
-              {
-                content: value
-              }
-            )
-            break
-          default:
-            
-        }
+    if (topicId && elementId) {
+      switch(elementType) {
+        case 'dialogueElements':
+          this.collabService.editDialogueElement(
+            topicId,
+            elementId,
+            {
+              content: value
+            }
+          );
+          break
+        case 'notes':
+          this.collabService.editNote(
+            topicId,
+            elementId,
+            {
+              content: value
+            }
+          )
+          break
+        default:
+          
       }
-      else {
-        const topicData: any = {}
-        switch(elementType) {
-          case 'topicName':
-            topicData.name = value
-            break
-          case 'topicDescription':
-            topicData.description = value
-        }
-        this.collabService.editTopic(topicId, topicData)
+    }
+    else if (elementId) {
+      const topicData: any = {}
+      switch(elementType) {
+        case 'topicName':
+          topicData.name = value
+          break
+        case 'topicDescription':
+          topicData.description = value
+          break
+        default:
       }
+      this.collabService.editTopic(elementId, topicData)
     }
   }
 
