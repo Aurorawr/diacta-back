@@ -4,7 +4,7 @@
     </mat-card>
     <mat-list *ngIf='!editing; else editorInput'>
         <mat-list-item>
-            <p class='minute-text'>{{value}}</p>
+            <p class='minute-text'><strong>{{suffix}}</strong>{{value}}</p>
             <button mat-icon-button color="primary" (click)='switchEdition()'
                 [disabled]="isExternalEditing()">
                 <mat-icon>edit</mat-icon>

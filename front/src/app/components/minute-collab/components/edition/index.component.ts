@@ -13,6 +13,7 @@ type InputType = 'input' | 'textarea'
 })
 export class MinuteCollabEditionComponent {
     @Input() value = '';
+    @Input() suffix = '';
     @Input() type: EditionAttribute = 'topicName';
     @Input() attributeId: undefined | string = undefined;
     @Input() topicId: string | undefined = undefined;

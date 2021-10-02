@@ -101,7 +101,7 @@
                     <div *ngFor='let diaEl of topic.dialogueElements'>
                         <minute-collab-edition [value]='diaEl.content' type='dialogueElements' [attributeId]='diaEl._id'
                             [topicId]='topic._id' [externalEditing]="externalEditions.dialogueElements[diaEl._id]"
-                            (switchEdit)='switchEdit($event)' (onEdit)='editTopicAttribute($event)'
+                            [suffix]='getDialogueElementSuffix(diaEl)' (switchEdit)='switchEdit($event)' (onEdit)='editTopicAttribute($event)'
                         ></minute-collab-edition>
                     </div>
                     <mat-chip-list class='inline-block' aria-label="Agregadores">

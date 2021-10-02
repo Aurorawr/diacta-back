@@ -453,4 +453,8 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     return 0
   }
 
+  getDialogueElementSuffix(el: DialogueElementType) {
+    return `${el.elementType} ${this.minute.enum}.${el.enum}: `
+  }
+
 }
