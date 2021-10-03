@@ -120,11 +120,14 @@
                 </button>
                 <mat-list>
                     <mat-list-item *ngFor='let annex of minute.annexes' class="full-width">
+                        <mat-card *ngIf="getAnnexExtEdition(annex._id).editing" class="editing-annex-card">
+                            {{getAnnexExtEdition(annex._id).editorName}} está editando...
+                        </mat-card>
                         <mat-icon matListIcon>assignment</mat-icon>
                         <p matLine>{{ annex.name }}</p>
                         <p matLine><a href="{{annex.url}}" target="_blank" rel="noopener">Link</a></p>
-                        <button mat-icon-button>
-                            <mat-icon>close</mat-icon>
+                        <button mat-icon-button (click)="editAnnex(annex)" [disabled]='getAnnexExtEdition(annex._id).editing'>
+                            <mat-icon>edit</mat-icon>
                         </button>
                     </mat-list-item>
                 </mat-list>

@@ -193,6 +193,7 @@ module.exports = (io, socket) => {
     });
     const savedElement = await newElement.save();
     if (savedElement == newElement) {
+      await minute.save()
       dialogueElements[savedElement._id] = savedElement
       io.emit('dataSaved', new Date())
       if(savedElement.elementType == 'Compromiso') {

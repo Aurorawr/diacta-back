@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -333,9 +333,11 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(AddAnnexDialog, {
       width: '50vw',
       data: {
-        url: '',
-        name: '',
-        description: ''
+        annex: {
+          url: '',
+          name: '',
+          description: ''
+        }
       }
     })
 
@@ -398,6 +400,25 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     }
   }
 
+  editAnnex(annex: AnnexType) {
+    this.collabService.switchEdition('annexes', annex._id)
+    const onEditAnnex = new EventEmitter();
+    onEditAnnex.subscribe(annexData => {
+      this.collabService.editAnnex(annex._id, annexData)
+    })
+    const dialogRef = this.dialog.open(AddAnnexDialog, {
+      width: '50vw',
+      data: {
+        annex,
+        onEdit: onEditAnnex
+      }
+    })
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.collabService.switchEdition('annexes', annex._id)
+    })
+  }
+
   removeEdit(attribute: EditionAttribute, cancel = false, topicId='') {
     this.collabService.removeEdition(attribute)
     if(!cancel) {
@@ -455,6 +476,18 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
 
   getDialogueElementSuffix(el: DialogueElementType) {
     return `${el.elementType} ${this.minute.enum}.${el.enum}: `
+  }
+
+  getAnnexExtEdition(annexId: string) : Edition {
+    const externalAnnexEdit = this.externalEditions.annexes[annexId]
+    if (externalAnnexEdit) {
+      return externalAnnexEdit
+    }
+    return {
+      editing: false,
+      editorId: '',
+      editorName: ''
+    }
   }
 
 }
