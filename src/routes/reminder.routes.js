@@ -14,7 +14,7 @@ module.exports = (app) => {
     });
 
     app.post(
-        '/api/reminder',
+        '/api/reminders/:userId',
         [verifyToken],
         createReminder
     )

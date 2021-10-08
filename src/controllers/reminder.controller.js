@@ -58,9 +58,11 @@ const scheduleReminder = (reminderData, user) => {
 
 exports.createReminder = async (req, res) => {
     const {
-        body: {
-            reminder,
+        params: {
             userId
+        },
+        body: {
+            reminder
         }
     } = req
     
