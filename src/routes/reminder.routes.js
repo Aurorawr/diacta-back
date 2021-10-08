@@ -1,8 +1,8 @@
-const { validateRequest, verifyToken } = require('../middleware')
-const { body } = require('express-validator');
+const { verifyToken } = require('../middleware')
 const {
-    sendTasksEmail
-} =  require('../controllers/notification.controller')
+    createReminder,
+    getUserReminders
+} =  require('../controllers/reminder.controller')
 
 module.exports = (app) => {
     app.use(function(req, res, next) {
@@ -13,10 +13,16 @@ module.exports = (app) => {
         next();
     });
 
-    app.get('/api/reminder/sendMail', function (req, res) {
-        sendTasksEmail("lucas.quintanilla@usach.cl")
+    app.post(
+        '/api/reminder',
+        [verifyToken],
+        createReminder
+    )
 
-        res.send({message: "Enviado?"})
-    })
+    app.get(
+        '/api/reminders/:userId',
+        [verifyToken],
+        getUserReminders
+    )
 
 }

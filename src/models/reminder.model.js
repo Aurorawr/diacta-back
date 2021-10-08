@@ -47,6 +47,7 @@ const reminderSchema = new Schema({
     },
     vias: {
         type: [String],
+        enum: ['Email', 'SMS'],
         required: [true, "Debe ingresar al menos un medio para el recordatorio"]
     },
     message: String

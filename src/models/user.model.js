@@ -17,6 +17,7 @@ const userSchema = new Schema({
     type: String,
     required: [true, "La contraseña del usuario es requerida"],
   },
+  cellphone: String,
   isAdmin: {
     type: Boolean,
     default: false

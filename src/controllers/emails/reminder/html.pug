@@ -53,4 +53,7 @@ html
                 h2.title-header Actas Banco de Tiempo de San Miguel
             h1 Hola #{name}
             p.message #{message}
-            button.check-button Revisar
+            - const actionUrl = #{url}
+            if actionUrl
+                a(href=actionUrl)
+                    button.check-button Revisar

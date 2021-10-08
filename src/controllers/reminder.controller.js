@@ -3,20 +3,60 @@ const User = require('../models/user.model');
 const sanitize = require('mongo-sanitize')
 const schedule = require('node-schedule');
 
-const scheduleReminder = (reminderData) => {
+const {
+    sendMail,
+    sendSMS
+} = require('./notification.controller')
+
+const scheduleReminder = (reminderData, user) => {
 
     const {
         when,
         vias,
-        event
+        event,
+        message
     } = reminderData
+    const {
+        name,
+        email,
+        cellphone
+    } = user
 
-    const reminderDate = new Date(2021, 8, 5, 22, 24, 0);
+    let reminderMessage = ""
+    let url = ""
+    if (event == 'Reunión') {
+        reminderMessage = "Se aproximan nuevas reuniones. Recuerda revisar las fechas de estas y revisar las actas preparadas."
+        url = "https://diacta.herokuapp.com/actas"
+    }
+    else if (event == 'Tareas') {
+        reminderMessage = "No te olvides de revisar tus tareas pendientes y ponerte al día con ellas para seguir avanzando."
+        url = "https://diacta.herokuapp.com/tareas"
+    }
+    else if (event == 'Personalizado' && message) {
+        reminderMessage = message
+    }
 
-    schedule.scheduleJob(reminderDate, this.sendMail)
+    vias.forEach(via => {
+        if (via == 'Email') {
+            const locals = {
+                name,
+                message: reminderMessage,
+                url
+            }
+            schedule.scheduleJob(when, function () {
+                sendMail('reminder', email, locals)
+            })
+        }
+        else if (via = "SMS" && cellphone) {
+            const smsText = `Hola ${name}. ${reminderMessage} ${url.length ? "Link: " + url : ""}`
+            schedule.scheduleJob(when, function () {
+                sendSMS(cellphone, smsText)
+            })
+        }
+    })
 }
 
-exports.createReminder = (req, res) => {
+exports.createReminder = async (req, res) => {
     const {
         body: {
             reminder,
@@ -24,7 +64,7 @@ exports.createReminder = (req, res) => {
         }
     } = req
     
-    const user = User.findById(sanitize(userId)).exec()
+    const user = await User.findById(sanitize(userId)).exec()
     const reminderData = sanitize(reminder)
     const newReminder = new Reminder(reminderData)
 
@@ -39,7 +79,20 @@ exports.createReminder = (req, res) => {
             if (err) {
                 return res.status(500).send({ message: err.message });
             }
+            scheduleReminder(reminderData, user)
             return res.send({ message: "Recordatorio creado exitosamente", reminder: newReminder.toJSON() });
         })
     })
+}
+
+exports.getUserReminders = async (req, res) => {
+    const {
+        params: {
+            userId
+        }
+    } = req;
+
+    const user = await User.findById(sanitize(userId)).populate('reminders').select('reminders').exec()
+
+    return res.send({ message: "Recordatorios obtenidos exitosamente", reminders: user.reminders });
 }
