@@ -12,34 +12,15 @@ const reminderSchema = new Schema({
         required: [true, 'El tipo de evento de un recordatorio es obligatorio']
     },
     when: {
-        second: {
-            type: Number,
-            default: 0
-        },
         minute: {
             type: Number,
             default: 0
         },
-        hour: {
-            type: Number,
-            default: 0
-        },
-        date: {
-            type: Number,
-            default: 0
-        },
-        month: {
-            type: Number,
-            default: 0
-        },
-        year: {
-            type: Number,
-            default: 0
-        },
-        dayOfWeek: {
-            type: Number,
-            default: 0
-        },
+        hour: Number,
+        date: Number,
+        month: Number,
+        year: Number,
+        dayOfWeek: Number,
         tz: {
             type: String,
             default: 'America/Santiago'
