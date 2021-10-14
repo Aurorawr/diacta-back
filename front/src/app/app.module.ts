@@ -53,6 +53,7 @@ import { AddAnnexDialog } from './dialogs/add-annex/index.component';
 import { AddNoteDialog } from './dialogs/add-note/index.component';
 import { AddTopicDialog } from './dialogs/add-topic/index.component';
 import { TaskDialog } from './dialogs/task/index.component';
+import { ReminderDialog } from './dialogs/reminder/index.component';
 
 @NgModule({
   declarations: [
@@ -71,7 +72,8 @@ import { TaskDialog } from './dialogs/task/index.component';
     AddNoteDialog,
     AddTopicDialog,
     MinuteCollabEditionComponent,
-    TaskDialog
+    TaskDialog,
+    ReminderDialog
   ],
   imports: [
     BrowserModule,
@@ -124,7 +126,8 @@ import { TaskDialog } from './dialogs/task/index.component';
     AddAnnexDialog,
     AddNoteDialog,
     AddTopicDialog,
-    TaskDialog
+    TaskDialog,
+    ReminderDialog
   ]
 })
 export class AppModule { }

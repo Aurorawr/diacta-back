@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 
 import { Reminder, When, Vias } from 'src/app/models/reminder.model';
+import { ReminderDialog } from 'src/app/dialogs/reminder/index.component'
 
 const monthNames : {[key: number]: string}= {
   0: 'enero',
@@ -35,6 +37,21 @@ const dayNames : {[key: number]: string}= {
 export class NotificationsComponent {
 
   reminders: Reminder[] = []
+
+  constructor(private dialog: MatDialog) { }
+
+  openReminderDialog() {
+    const dialogRef = this.dialog.open(ReminderDialog, {
+      width: '50vw',
+      data: {}
+    })
+
+    dialogRef.afterClosed().subscribe( (reminder: Reminder) => {
+      if (reminder) {
+        this.reminders.push(reminder)
+      }
+    })
+  }
 
   getWhenString(when: When) {
     const {
