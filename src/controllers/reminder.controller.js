@@ -24,27 +24,30 @@ const scheduleReminder = (reminderData, user) => {
 
     let reminderMessage = ""
     let url = ""
+    let emailTemplate = ""
     if (event == 'Reunión') {
         reminderMessage = "Se aproximan nuevas reuniones. Recuerda revisar las fechas de estas y revisar las actas preparadas."
         url = "https://diacta.herokuapp.com/actas"
+        emailTemplate = "meets"
     }
     else if (event == 'Tareas') {
         reminderMessage = "No te olvides de revisar tus tareas pendientes y ponerte al día con ellas para seguir avanzando."
         url = "https://diacta.herokuapp.com/tareas"
+        emailTemplate = "tasks"
     }
     else if (event == 'Personalizado' && message) {
         reminderMessage = message
+        emailTemplate = "custom"
     }
 
     vias.forEach(via => {
         if (via == 'Email') {
             const locals = {
                 name,
-                message: reminderMessage,
-                url
+                message: reminderMessage
             }
             schedule.scheduleJob(when, function () {
-                sendMail('reminder', email, locals)
+                sendMail(emailTemplate, email, locals)
             })
         }
         else if (via = "SMS" && cellphone) {
@@ -61,13 +64,12 @@ exports.createReminder = async (req, res) => {
         params: {
             userId
         },
-        body: {
-            reminder
-        }
+        body: reminder
     } = req
     
     const user = await User.findById(sanitize(userId)).exec()
     const reminderData = sanitize(reminder)
+    console.log(reminderData)
     const newReminder = new Reminder(reminderData)
 
     newReminder.save(function(err) {

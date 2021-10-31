@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { Reminder, When, Vias } from 'src/app/models/reminder.model';
 import { ReminderDialog } from 'src/app/dialogs/reminder/index.component'
+import { ReminderService } from 'src/app/services/reminder/reminder.service'
 
 const monthNames : {[key: number]: string}= {
   0: 'enero',
@@ -38,7 +39,7 @@ export class NotificationsComponent {
 
   reminders: Reminder[] = []
 
-  constructor(private dialog: MatDialog) { }
+  constructor(private dialog: MatDialog, private reminderService: ReminderService) { }
 
   openReminderDialog() {
     const dialogRef = this.dialog.open(ReminderDialog, {
@@ -48,7 +49,12 @@ export class NotificationsComponent {
 
     dialogRef.afterClosed().subscribe( (reminder: Reminder) => {
       if (reminder) {
-        this.reminders.push(reminder)
+        this.reminderService.createReminder(reminder).subscribe(response => {
+          const reminder = response.reminder
+          this.reminders.push(reminder)
+        }, error => {
+          console.error(error)
+        })
       }
     })
   }
@@ -63,15 +69,15 @@ export class NotificationsComponent {
       hour
     } = when
 
-    if (year && month && date && hour) {
+    if (year != undefined && month != undefined && date != undefined && hour != undefined) {
       const formatedHour = `${this.formatDateElement(hour)}:${this.formatDateElement(minute)}`
       return `El ${date} de ${monthNames[month]} del ${year}  a las ${formatedHour}`
     }
-    if (date && hour) {
+    if (date != undefined && hour != undefined) {
       const formatedHour = `${this.formatDateElement(hour)}:${this.formatDateElement(minute)}`
       return `Los ${date} de cada mes a las ${formatedHour}`
     }
-    if (dayOfWeek && hour) {
+    if (dayOfWeek != undefined && hour != undefined) {
       const formatedHour = `${this.formatDateElement(hour)}:${this.formatDateElement(minute)}`
       return `Cada ${dayNames[dayOfWeek]} a las ${formatedHour}`
     }

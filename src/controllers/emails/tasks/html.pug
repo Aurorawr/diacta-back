@@ -53,7 +53,5 @@ html
                 h2.title-header Actas Banco de Tiempo de San Miguel
             h1 Hola #{name}
             p.message #{message}
-            - const actionUrl = #{url}
-            if actionUrl
-                a(href=actionUrl)
-                    button.check-button Revisar
+            a(href="https://diacta.herokuapp.com/tareas")
+                button.check-button Revisar

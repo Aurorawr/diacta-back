@@ -42,7 +42,7 @@ export class ReminderDialog  {
   ]
   dayOfMonth = range(30, 1)
   dayOfWeek = daysOfWeek
-  hours = range(21, 9)
+  hours = range(22, 9)
   minutes = minutes
 
   reminderTypeSelected: number = 1
@@ -89,6 +89,7 @@ export class ReminderDialog  {
     }
     reminder.when.hour = this.selectedHour
     reminder.when.minute = this.selectedMinute
+    console.log(reminder)
     this.dialogRef.close(reminder)
   }
 

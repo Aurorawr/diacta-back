@@ -4,10 +4,11 @@ import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
 import { Reminder } from 'src/app/models/reminder.model';
+import { AuthService } from '../auth/auth.service';
 
 interface ReminderResponse {
   message: string;
-  reminders: Reminder
+  reminder: Reminder
 }
 
 interface RemindersResponse {
@@ -20,9 +21,15 @@ interface RemindersResponse {
 })
 export class ReminderService {
 
-  reminderUrl = environment + "reminders"
+  reminderUrl = environment.baseUrl + "reminders"
+  userId = ''
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private auth: AuthService) {
+    const loggedUser = auth.getLoggedUser()
+    if (loggedUser) {
+      this.userId = loggedUser._id
+    }
+  }
 
   getUserReminders(userId: string) {
     const url = `${this.reminderUrl}/${userId}`
@@ -30,8 +37,8 @@ export class ReminderService {
     return this.http.get<RemindersResponse>(url)
   }
 
-  createReminder(userId: string, reminderData: Reminder) {
-    const url = `${this.reminderUrl}/${userId}`
+  createReminder(reminderData: Reminder) {
+    const url = `${this.reminderUrl}/${this.userId}`
 
     return this.http.post<ReminderResponse>(url, reminderData)
   }
