@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -123,7 +123,7 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
           const actualTopics = this.minute.topics
           this.minute.topics = actualTopics.map(topic => {
             if(topic._id == topicId) {
-              return {...topic, topicData} as TopicType
+              return {...topic, ...topicData} as TopicType
             }
             return topic
           })
@@ -333,9 +333,11 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(AddAnnexDialog, {
       width: '50vw',
       data: {
-        url: '',
-        name: '',
-        description: ''
+        annex: {
+          url: '',
+          name: '',
+          description: ''
+        }
       }
     })
 
@@ -359,43 +361,62 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     } = params
     const target = event.target as HTMLTextAreaElement;
     const value = target.value;
-    if (topicId) {
-      if (elementId) {
-        switch(elementType) {
-          case 'dialogueElements':
-            this.collabService.editDialogueElement(
-              topicId,
-              elementId,
-              {
-                content: value
-              }
-            );
-            break
-          case 'notes':
-            this.collabService.editNote(
-              topicId,
-              elementId,
-              {
-                content: value
-              }
-            )
-            break
-          default:
-            
-        }
-      }
-      else {
-        const topicData: any = {}
-        switch(elementType) {
-          case 'topicName':
-            topicData.name = value
-            break
-          case 'topicDescription':
-            topicData.description = value
-        }
-        this.collabService.editTopic(topicId, topicData)
+    if (topicId && elementId) {
+      switch(elementType) {
+        case 'dialogueElements':
+          this.collabService.editDialogueElement(
+            topicId,
+            elementId,
+            {
+              content: value
+            }
+          );
+          break
+        case 'notes':
+          this.collabService.editNote(
+            topicId,
+            elementId,
+            {
+              content: value
+            }
+          )
+          break
+        default:
+          
       }
     }
+    else if (elementId) {
+      const topicData: any = {}
+      switch(elementType) {
+        case 'topicName':
+          topicData.name = value
+          break
+        case 'topicDescription':
+          topicData.description = value
+          break
+        default:
+      }
+      this.collabService.editTopic(elementId, topicData)
+    }
+  }
+
+  editAnnex(annex: AnnexType) {
+    this.collabService.switchEdition('annexes', annex._id)
+    const onEditAnnex = new EventEmitter();
+    onEditAnnex.subscribe(annexData => {
+      this.collabService.editAnnex(annex._id, annexData)
+    })
+    const dialogRef = this.dialog.open(AddAnnexDialog, {
+      width: '50vw',
+      data: {
+        annex,
+        onEdit: onEditAnnex
+      }
+    })
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.collabService.switchEdition('annexes', annex._id)
+    })
   }
 
   removeEdit(attribute: EditionAttribute, cancel = false, topicId='') {
@@ -451,6 +472,22 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
       return topic.dialogueElements.length + 1
     }
     return 0
+  }
+
+  getDialogueElementSuffix(el: DialogueElementType) {
+    return `${el.elementType} ${this.minute.enum}.${el.enum}: `
+  }
+
+  getAnnexExtEdition(annexId: string) : Edition {
+    const externalAnnexEdit = this.externalEditions.annexes[annexId]
+    if (externalAnnexEdit) {
+      return externalAnnexEdit
+    }
+    return {
+      editing: false,
+      editorId: '',
+      editorName: ''
+    }
   }
 
 }

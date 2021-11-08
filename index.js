@@ -25,6 +25,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 require('./src/routes/auth.routes') (app);
 require('./src/routes/user.routes') (app);
 require('./src/routes/minute.routes') (app);
+require('./src/routes/reminder.routes') (app);
 
 app.use(express.static(__dirname + '/public'));
 

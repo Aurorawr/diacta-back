@@ -179,7 +179,7 @@ module.exports = (io, socket) => {
 
   socket.on("addDialogueElement", async (topicId, element) => {
     const topic = minute.topics.id(topicId)
-    const elementsQuantity = topic.dialogueElements.length
+    const elementsQuantity = Object.keys(dialogueElements).length
     element.enum = elementsQuantity+1
     element.references = {
       minuteEnum: minute.enum,
@@ -193,6 +193,7 @@ module.exports = (io, socket) => {
     });
     const savedElement = await newElement.save();
     if (savedElement == newElement) {
+      await minute.save()
       dialogueElements[savedElement._id] = savedElement
       io.emit('dataSaved', new Date())
       if(savedElement.elementType == 'Compromiso') {

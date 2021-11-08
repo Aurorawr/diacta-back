@@ -29,7 +29,7 @@ export interface TopicType {
 }
 
 export interface AnnexType {
-    _id?: string;
+    _id: string;
     url: string;
     name: string;
     description?: string;

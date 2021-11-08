@@ -89,7 +89,7 @@
                         matTooltipPosition="above">note_add</mat-icon>
                     </button>
                     <minute-collab-edition *ngIf='topic.description' [value]='topic.description' type='topicDescription'
-                            [topicId]='topic._id' [externalEditing]="externalEditions.topicDescription[topic._id]"
+                            [attributeId]='topic._id' [externalEditing]="externalEditions.topicDescription[topic._id]"
                             (switchEdit)='switchEdit($event)' (onEdit)='editTopicAttribute($event)'
                     ></minute-collab-edition>
                     <div *ngFor='let note of topic.notes'>
@@ -101,7 +101,7 @@
                     <div *ngFor='let diaEl of topic.dialogueElements'>
                         <minute-collab-edition [value]='diaEl.content' type='dialogueElements' [attributeId]='diaEl._id'
                             [topicId]='topic._id' [externalEditing]="externalEditions.dialogueElements[diaEl._id]"
-                            (switchEdit)='switchEdit($event)' (onEdit)='editTopicAttribute($event)'
+                            [suffix]='getDialogueElementSuffix(diaEl)' (switchEdit)='switchEdit($event)' (onEdit)='editTopicAttribute($event)'
                         ></minute-collab-edition>
                     </div>
                     <mat-chip-list class='inline-block' aria-label="Agregadores">
@@ -120,11 +120,14 @@
                 </button>
                 <mat-list>
                     <mat-list-item *ngFor='let annex of minute.annexes' class="full-width">
+                        <mat-card *ngIf="getAnnexExtEdition(annex._id).editing" class="editing-annex-card">
+                            {{getAnnexExtEdition(annex._id).editorName}} está editando...
+                        </mat-card>
                         <mat-icon matListIcon>assignment</mat-icon>
                         <p matLine>{{ annex.name }}</p>
                         <p matLine><a href="{{annex.url}}" target="_blank" rel="noopener">Link</a></p>
-                        <button mat-icon-button>
-                            <mat-icon>close</mat-icon>
+                        <button mat-icon-button (click)="editAnnex(annex)" [disabled]='getAnnexExtEdition(annex._id).editing'>
+                            <mat-icon>edit</mat-icon>
                         </button>
                     </mat-list-item>
                 </mat-list>
