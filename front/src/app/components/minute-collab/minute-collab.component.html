@@ -1,5 +1,6 @@
 <div>
-    <mat-card>
+    <app-meeting-phase [phase]="1"></app-meeting-phase>
+    <mat-card class="meeting-data">
         <h2 *ngIf="lastChangesDate">Últimos cambios realizados a las {{lastChangesDate.toLocaleString()}}</h2>
     </mat-card>
     <mat-card class="minute-collab-card">

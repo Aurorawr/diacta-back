@@ -1,0 +1,12 @@
+<mat-stepper class="meeting-phases" labelPosition="bottom" #stepper [selectedIndex]="phase" [linear]="true">
+    <mat-step [editable]="false" [stepControl]="firstFormGroup">
+        <ng-template matStepLabel>Pre-Reunión</ng-template>
+    </mat-step>
+    <mat-step [editable]="false">
+        <ng-template matStepLabel>Reunión</ng-template>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Post-Reunión</ng-template>
+    </mat-step>
+  </mat-stepper>
+  

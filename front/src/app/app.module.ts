@@ -24,6 +24,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select'; 
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatStepperModule } from '@angular/material/stepper';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -54,6 +55,7 @@ import { AddNoteDialog } from './dialogs/add-note/index.component';
 import { AddTopicDialog } from './dialogs/add-topic/index.component';
 import { TaskDialog } from './dialogs/task/index.component';
 import { ReminderDialog } from './dialogs/reminder/index.component';
+import { MeetingPhaseComponent } from './components/shared/meeting-phase/meeting-phase.component';
 
 @NgModule({
   declarations: [
@@ -73,7 +75,8 @@ import { ReminderDialog } from './dialogs/reminder/index.component';
     AddTopicDialog,
     MinuteCollabEditionComponent,
     TaskDialog,
-    ReminderDialog
+    ReminderDialog,
+    MeetingPhaseComponent
   ],
   imports: [
     BrowserModule,
@@ -98,6 +101,7 @@ import { ReminderDialog } from './dialogs/reminder/index.component';
     MatSelectModule,
     MatSlideToggleModule,
     MatSnackBarModule,
+    MatStepperModule,
     MatTableModule,
     MatTabsModule,
     MatToolbarModule,
