@@ -6,6 +6,7 @@ interface UserCreateData {
   lastname?: string;
   email: string;
   password: string;
+  cellphone: string;
   isAdmin: false
 }
 
