@@ -51,6 +51,17 @@ export class MinutesService {
     return http.post(minutesUrl, preminute);
   }
 
+  updateMinute(newData: Minute) : Observable<any> {
+    const {
+      minutesUrl,
+      http
+    } = this;
+
+    const url = minutesUrl +  newData._id
+
+    return http.put(url, newData);
+  }
+
   getPreviousCompromises() {
     const url = this.minutesUrl + 'previousCompromises';
 

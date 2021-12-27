@@ -10,6 +10,7 @@ export interface DialogueElementType {
     elementType: 'Duda' | 'Compromiso' | 'Acuerdo' | 'Desacuerdo';
     enum: number;
     content: string;
+    references?: CompromiseReferences
 }
 
 interface ParticipantType {
@@ -50,4 +51,9 @@ export interface Minute {
     topics: Array<TopicType>;
     annexes: Array<AnnexType>;
     phase: number;
+}
+
+interface CompromiseReferences {
+    minuteEnum: number;
+    topicEnum: number;
 }

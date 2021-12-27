@@ -1,0 +1,162 @@
+<div *ngIf="minute">
+    <app-meeting-phase [phase]="minute.phase"></app-meeting-phase>
+    <mat-card class='preminute-card'>
+        <mat-card-title>
+            <h1 class='inline-block title'><strong>Editando acta de reunión {{minute.enum}}</strong></h1>
+        </mat-card-title>
+        <mat-card-content>
+            <div fxFlexFill fxLayout='row wrap' fxLayoutGap="1rem 1rem grid">
+                <div fxFlex='100'>
+                    <h3>Encabezado de la reunión   
+                        <mat-icon matTooltip="Indique hechos importantes que han ocurrido desde la reunión anterior (opcional)"
+                        matTooltipPosition="right">info</mat-icon></h3>
+                    <mat-form-field appearance="outline" class='full-width'>
+                        <textarea matInput cdkTextareaAutosize [(ngModel)]='minute.header'></textarea>
+                    </mat-form-field>
+                </div>
+                <div fxFlex='100'>
+                    <h3>Descripción*   
+                        <mat-icon matTooltip="Describa brevemente lo que se quiere tratar en la reunión y/o su objetivo principal"
+                        matTooltipPosition="right">info</mat-icon></h3>
+                    <mat-form-field appearance="outline" class='full-width'>
+                        <textarea matInput cdkTextareaAutosize [(ngModel)]='minute.description'></textarea>
+                        <mat-error *ngIf="errors.description ">
+                            La descripción no puede estar vacía
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div fxFlex='33'>
+                    <h3>Lugar*</h3>
+                    <mat-form-field appearance="outline" class='full-width'>
+                        <input type='text' matInput [(ngModel)]='minute.place' />
+                        <mat-error *ngIf="errors.place ">
+                            El lugar no puede estar vacío
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div fxFlex='33'>
+                    <h3>Fecha*</h3>  
+                    <mat-form-field appearance="outline" class='full-width'>
+                        <mat-label>Ingrese el día</mat-label>
+                        <input matInput [matDatepicker]="dp" [(ngModel)]='date'>
+                        <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                        <mat-datepicker #dp></mat-datepicker>
+                        <mat-error *ngIf="errors.date ">
+                            La fecha no puede estar vacía
+                        </mat-error>
+                    </mat-form-field>  
+                </div>
+                <div fxFlex='33'>
+                    <h3>Hora*</h3>  
+                    <mat-form-field appearance="outline" class='full-width'>
+                        <input type='time' matInput [(ngModel)]='time' (change)='changeTime()'/>
+                        <mat-error *ngIf="errors.time ">
+                            La hora no puede estar vacía
+                        </mat-error>
+                    </mat-form-field> 
+                </div>           
+                <div fxFlex='100'>
+                    <h3>Participantes</h3>
+                    <mat-list>
+                        <mat-list-item *ngFor="let participant of participants">
+                            <mat-icon matListIcon>person</mat-icon>
+                            <p matLine>{{participant.name}} {{participant.lastname}}</p>
+                            <p matLine>{{participant.email}}</p>
+                        </mat-list-item>
+                    </mat-list>
+                </div>
+                <div fxFlex='100'>
+                    <h3>Compromisos previos</h3>
+                    <mat-list *ngIf="previousCompromises.length > 0; else noCompromises">
+                        <mat-list-item *ngFor="let compromise of previousCompromises">
+                            <p matLine>{{compromise.references.minuteEnum}}.{{compromise.enum}}.- {{compromise.content}}</p>
+                        </mat-list-item>
+                    </mat-list>
+                    <ng-template #noCompromises>
+                        <h4>No existen compromisos previos</h4>
+                    </ng-template>
+                </div>
+                <div fxFlex='100'>
+                    <h2>Tabla de la reunión
+                        <mat-icon matTooltip="Agregue los temas a tratar en la reunión"
+                        matTooltipPosition="right">info</mat-icon></h2>
+                    <div fxLayout='col'>
+                        <div fxFlex='60'>
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Agregar tema a la tabla</mat-label>
+                                <input matInput [(ngModel)]='newTopic.name' />
+                            </mat-form-field>
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Descripción (opcional)</mat-label>
+                                <textarea matInput cdkTextareaAutosize [(ngModel)]='newTopic.description' rows="2"></textarea>
+                            </mat-form-field>
+                            <button mat-raised-button color="primary" class='float-r' (click)="addTopic()">
+                                Agregar tema
+                                <mat-icon>add_circle_outline</mat-icon>
+                            </button>
+                        </div>
+                        <div fxFlex>
+                            <mat-list>
+                                <div mat-subheader>Temas hasta el momento</div>
+                                <mat-list-item *ngFor='let topic of minute.topics' class="full-width">
+                                    <mat-icon matListIcon>assignment</mat-icon>
+                                    <p matLine>Tema {{topic.enum}}</p>
+                                    <p matLine>{{ topic.name }}</p>
+                                    <button mat-icon-button (click)="removeTopic(topic.enum)">
+                                        <mat-icon>close</mat-icon>
+                                    </button>
+                                </mat-list-item>
+                            </mat-list>
+                        </div>
+                    </div>
+                </div>
+                <div fxFlex='100'>
+                    <h2>Anexos
+                        <mat-icon matTooltip="Agregue los anexos necesarios para entender lo que se tratará en la reunión"
+                        matTooltipPosition="right">info</mat-icon></h2>
+                    <div fxLayout='col'>
+                        <div fxFlex='60'>
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Url</mat-label>
+                                <input matInput [(ngModel)]='newAnnex.url' />
+                            </mat-form-field>
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Nombre</mat-label>
+                                <input matInput [(ngModel)]='newAnnex.name' />
+                            </mat-form-field>
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Descripción (opcional)</mat-label>
+                                <textarea matInput cdkTextareaAutosize [(ngModel)]='newAnnex.description' rows="2"></textarea>
+                            </mat-form-field>
+                            <button mat-raised-button color="primary" class='float-r' (click)="addAnnex()">
+                                Agregar anexo
+                                <mat-icon>add_circle_outline</mat-icon>
+                            </button>
+                        </div>
+                        <div fxFlex>
+                            <mat-list>
+                                <div mat-subheader>Anexos hasta el momento</div>
+                                <mat-list-item *ngFor='let annex of minute.annexes' class="full-width">
+                                    <mat-icon matListIcon>attachment</mat-icon>
+                                    <p matLine>{{ annex.name }}</p>
+                                    <p matLine><a href="{{annex.url}}" target="_blank" rel="noopener">Link</a></p>
+                                    <button mat-icon-button (click)="removeAnnex(annex.name)">
+                                        <mat-icon>close</mat-icon>
+                                    </button>
+                                </mat-list-item>
+                            </mat-list>
+                        </div>
+                    </div>
+                </div>
+                <div fxFlex='100'>
+                    <mat-checkbox [(ngModel)]="adviseParticipants">
+                        Avisar por correo a los participantes
+                    </mat-checkbox>
+                    <button mat-raised-button color="primary" class='float-r' (click)='createPreminute()'>
+                        Editar
+                    </button>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

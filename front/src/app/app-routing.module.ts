@@ -11,6 +11,7 @@ import { UserNotLoggedGuard } from 'src/app/guards/user-not-logged.guard'
 import { UserIsAdminGuard } from 'src/app/guards/user-is-admin.guard'
 import { UsersComponent } from './components/users/users.component';
 import { NotificationsComponent } from './components/notifications/notifications.component';
+import { EditMinuteComponent } from './components/edit-minute/edit-minute.component';
 
 const routes: Routes = [
   {
@@ -45,7 +46,7 @@ const routes: Routes = [
   },
   {
     path: 'acta/editar/:id',
-    component: CreatePreminuteComponent,
+    component: EditMinuteComponent,
     canActivate: [UserLoggedInGuard, UserIsAdminGuard]
   },
   {
