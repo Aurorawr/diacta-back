@@ -11,7 +11,7 @@
                         <mat-icon matTooltip="Indique hechos importantes que han ocurrido desde la reunión anterior (opcional)"
                         matTooltipPosition="right">info</mat-icon></h3>
                     <mat-form-field appearance="outline" class='full-width'>
-                        <textarea matInput [(ngModel)]='preminute.header'></textarea>
+                        <textarea matInput cdkTextareaAutosize [(ngModel)]='preminute.header'></textarea>
                     </mat-form-field>
                 </div>
                 <div fxFlex='100'>
@@ -19,7 +19,7 @@
                         <mat-icon matTooltip="Describa brevemente lo que se quiere tratar en la reunión y/o su objetivo principal"
                         matTooltipPosition="right">info</mat-icon></h3>
                     <mat-form-field appearance="outline" class='full-width'>
-                        <textarea matInput [(ngModel)]='preminute.description'></textarea>
+                        <textarea matInput cdkTextareaAutosize [(ngModel)]='preminute.description'></textarea>
                         <mat-error *ngIf="errors.description ">
                             La descripción no puede estar vacía
                         </mat-error>
@@ -66,6 +66,17 @@
                     </mat-list>
                 </div>
                 <div fxFlex='100'>
+                    <h3>Compromisos previos</h3>
+                    <mat-list *ngIf="previousCompromises.length > 0; else noCompromises">
+                        <mat-list-item *ngFor="let compromise of previousCompromises">
+                            <p matLine>{{compromise.references.minuteEnum}}.{{compromise.enum}}.- {{compromise.content}}</p>
+                        </mat-list-item>
+                    </mat-list>
+                    <ng-template #noCompromises>
+                        <h4>No existen compromisos previos</h4>
+                    </ng-template>
+                </div>
+                <div fxFlex='100'>
                     <h2>Tabla de la reunión
                         <mat-icon matTooltip="Agregue los temas a tratar en la reunión"
                         matTooltipPosition="right">info</mat-icon></h2>
@@ -77,7 +88,7 @@
                             </mat-form-field>
                             <mat-form-field appearance="outline" class="full-width">
                                 <mat-label>Descripción (opcional)</mat-label>
-                                <textarea matInput [(ngModel)]='newTopic.description' rows="2"></textarea>
+                                <textarea matInput cdkTextareaAutosize [(ngModel)]='newTopic.description' rows="2"></textarea>
                             </mat-form-field>
                             <button mat-raised-button color="primary" class='float-r' (click)="addTopic()">
                                 Agregar tema
@@ -91,7 +102,7 @@
                                     <mat-icon matListIcon>assignment</mat-icon>
                                     <p matLine>Tema {{topic.enum}}</p>
                                     <p matLine>{{ topic.name }}</p>
-                                    <button mat-icon-button>
+                                    <button mat-icon-button (click)="removeTopic(topic.enum)">
                                         <mat-icon>close</mat-icon>
                                     </button>
                                 </mat-list-item>
@@ -115,7 +126,7 @@
                             </mat-form-field>
                             <mat-form-field appearance="outline" class="full-width">
                                 <mat-label>Descripción (opcional)</mat-label>
-                                <textarea matInput [(ngModel)]='newAnnex.description' rows="2"></textarea>
+                                <textarea matInput cdkTextareaAutosize [(ngModel)]='newAnnex.description' rows="2"></textarea>
                             </mat-form-field>
                             <button mat-raised-button color="primary" class='float-r' (click)="addAnnex()">
                                 Agregar anexo
@@ -129,7 +140,7 @@
                                     <mat-icon matListIcon>assignment</mat-icon>
                                     <p matLine>{{ annex.name }}</p>
                                     <p matLine><a href="{{annex.url}}" target="_blank" rel="noopener">Link</a></p>
-                                    <button mat-icon-button>
+                                    <button mat-icon-button (click)="removeAnnex(annex.name)">
                                         <mat-icon>close</mat-icon>
                                     </button>
                                 </mat-list-item>

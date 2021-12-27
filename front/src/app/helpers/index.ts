@@ -1,3 +1,5 @@
+import { Compromise } from "src/app/models/compromises.model";
+
 export const minutes = [
     {
         id: 0,
@@ -56,4 +58,17 @@ export const range = (end: number, start = 0) => {
     }
 
     return rangeList
+}
+
+export const orderCompromises = (compromises: Compromise[]) : Compromise[] => {
+  const orderedCompromises = compromises.sort((a: Compromise, b: Compromise) : number => {
+    if (a.references.minuteEnum > b.references.minuteEnum) {
+      return 1;
+    } if (a.references.minuteEnum < b.references.minuteEnum) {
+      return -1;
+    }
+    return a.enum - b.enum
+  })
+
+  return orderedCompromises
 }

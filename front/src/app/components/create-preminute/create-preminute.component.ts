@@ -7,6 +7,8 @@ import { User } from 'src/app/models/user.model';
 import { Preminute, Annex, Topic } from 'src/app/models/preminute.model';
 import { UsersService } from 'src/app/services/users/users.service';
 import { MinutesService } from 'src/app/services/minutes/minutes.service';
+import { Compromise } from '../../models/compromises.model';
+import { orderCompromises } from '../../helpers/index';
 
 @Component({
   selector: 'app-create-preminute',
@@ -42,6 +44,8 @@ export class CreatePreminuteComponent implements OnInit {
   }
 
   participants: Array<User> = []
+
+  previousCompromises: Compromise[] = []
 
   date: moment.Moment = moment()
 
@@ -92,6 +96,10 @@ export class CreatePreminuteComponent implements OnInit {
     error => {
       console.error(error)
     })
+
+    this.minutesService.getPreviousCompromises().subscribe(response => {
+      this.previousCompromises = orderCompromises(response);
+    })
   }
 
   addTopic() {
@@ -106,6 +114,10 @@ export class CreatePreminuteComponent implements OnInit {
     }
   }
 
+  removeTopic(topicEnum: number) {
+    this.preminute.topics = this.preminute.topics.filter(topic => topic.enum !== topicEnum)
+  }
+
   addAnnex() {
     const newAnnex = this.newAnnex;
     if (!newAnnex.description) {
@@ -117,6 +129,10 @@ export class CreatePreminuteComponent implements OnInit {
       name: '',
       description: ''
     }
+  }
+
+  removeAnnex(name: string) {
+    this.preminute.annexes = this.preminute.annexes.filter(annex => annex.name !== name)
   }
 
   changeTime() {
@@ -170,13 +186,17 @@ export class CreatePreminuteComponent implements OnInit {
   }
 
   createPreminute() {
+    console.log("create")
     if (!this.validatePreminute()) {
+      console.log("error")
+      console.log(this.errors)
       return
     }
     const preminuteDate = this.date.toDate()
     this.preminute.date = preminuteDate;
 
     this.minutesService.createPreminute(this.preminute).subscribe(response => {
+      console.log(response)
       this.router.navigate(['/actas'])
     },
     error => {
