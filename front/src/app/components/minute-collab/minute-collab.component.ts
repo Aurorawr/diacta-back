@@ -113,7 +113,8 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
           this.router.navigate(['/actas'])
         })
         this.dialog.open(ConfirmationDialogComponent, {
-          width: '50vw',
+          width: '30vw',
+          disableClose: true,
           data: {
             confirmationMessage: "Tienes abierta esta acta en otra ventana. Debes volver a ella.",
             callback: dialogCallback,
@@ -250,6 +251,21 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
       this.collabService.participants.subscribe(response => {
         console.log(response)
         this.actualParticipants = response
+      })
+      this.collabService.minuteClosed.subscribe(() => {
+        const dialogCallback = new EventEmitter();
+        dialogCallback.subscribe(() => {
+          this.router.navigate(['/actas'])
+        })
+        this.dialog.open(ConfirmationDialogComponent, {
+          width: '30vw',
+          disableClose: true,
+          data: {
+            confirmationMessage: "Se ha cerrado el acta por un coordinador. ¡Muchas gracias por participar!",
+            callback: dialogCallback,
+            noCancel: true
+          }
+        })
       })
       if (!this.minute) {
         this.collabService.initMinute(minuteId)
@@ -470,6 +486,20 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
       return editions.filter(edition => edition.topicId == topicId)
     }
     return []
+  }
+
+  confirmCloseMinute() {
+    const dialogCallback = new EventEmitter();
+    dialogCallback.subscribe(() => {
+      this.collabService.closeMinute()
+    })
+    this.dialog.open(ConfirmationDialogComponent, {
+      width: '30vw',
+      data: {
+        confirmationMessage: "Asegúrate que ningún usuario esté editando. ¿Estás seguro que deseas cerrar el acta?",
+        callback: dialogCallback
+      }
+    })
   }
 
   get getMinuteDatePlaceData() : string {

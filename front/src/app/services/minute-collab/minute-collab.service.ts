@@ -30,6 +30,7 @@ export class MinuteCollabService {
   dataSavedDate = this.socket.fromEvent<string>('dataSaved');
   participants = this.socket.fromEvent<SimpleUser[]>('participants');
   userAlreadyConnected = this.socket.fromEvent("userAlreadyConnected")
+  minuteClosed = this.socket.fromEvent("minuteClosed")
   errorMessage = this.socket.fromEvent<any>('errorMessage');
 
   constructor(
@@ -105,6 +106,10 @@ export class MinuteCollabService {
 
   editNote(topicId: string, noteId: string, elementData: any) {
     this.socket.emit('editNote', topicId, noteId, elementData)
+  }
+
+  closeMinute() {
+    this.socket.emit("closeMinute")
   }
 
   disconnect() {

@@ -118,7 +118,8 @@ module.exports = (io, socket) => {
       /*minute.annexes.forEach(annex => {
         editions.annexes[annex._id] = DEFAULT_EDITION
       })*/
-
+      minute.phase = 2
+      await minute.save()
     }
     socket.emit("minute", minute);
   });
@@ -328,9 +329,10 @@ module.exports = (io, socket) => {
     socket.broadcast.emit('editions', editions)
   })
 
-  socket.on('joinMeet', user => {
-    participants.push(user)
-    io.emit('participants', participants)
+  socket.on('closeMinute', async () => {
+    minute.phase = 3
+    await minute.save()
+    io.emit('minuteClosed')
   })
 
   socket.on("disconnect", (reason) => {

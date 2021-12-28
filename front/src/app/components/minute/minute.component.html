@@ -2,7 +2,7 @@
     <mat-card-title>
         <h1 class='inline-block title'><strong>Acta reunión {{ minute.enum }}</strong></h1>
         <a *ngIf="isAdmin && minute.phase != 3" mat-raised-button color="primary" class="float-r start-minute-btn" routerLink="/acta/{{minute._id}}">
-            Empezar acta
+            {{minute.phase === 1 ? "Empezar acta" : "Unirse a acta"}}
             <mat-icon>play_circle_outline</mat-icon>
         </a>
         <a *ngIf="isAdmin" mat-raised-button color="primary" class="float-r" routerLink="/acta/editar/{{minute._id}}">
