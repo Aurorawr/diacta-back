@@ -5,7 +5,6 @@ const path = require('path');
 
 
 exports.sendMail = (templateName, to, locals) => {
-    console.log(locals)
     const email = new Email({
         message: {
             from: 'BdT San Miguel <no-responder@bdt.cl>'

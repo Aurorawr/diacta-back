@@ -69,7 +69,6 @@ exports.createReminder = async (req, res) => {
     
     const user = await User.findById(sanitize(userId)).exec()
     const reminderData = sanitize(reminder)
-    console.log(reminderData)
     const newReminder = new Reminder(reminderData)
 
     newReminder.save(function(err) {

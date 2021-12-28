@@ -186,7 +186,6 @@ export class CreatePreminuteComponent implements OnInit {
   }
 
   createPreminute() {
-    console.log("create")
     if (!this.validatePreminute()) {
       console.log("error")
       console.log(this.errors)
@@ -196,7 +195,6 @@ export class CreatePreminuteComponent implements OnInit {
     this.preminute.date = preminuteDate;
 
     this.minutesService.createPreminute(this.preminute).subscribe(response => {
-      console.log(response)
       this.router.navigate(['/actas'])
     },
     error => {

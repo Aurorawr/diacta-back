@@ -132,7 +132,6 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
         }
       })
       this.collabService.editions.subscribe(response => {
-        console.log(response)
         const externalEditions = response as Editions
         this.externalEditions = externalEditions
       })
@@ -163,7 +162,6 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
         }
       })
       this.collabService.dialogueElementEdited.subscribe(response => {
-        console.log(response)
         const topicId = response.topicId as string;
         const elementId = response.elementId as string;
         const elementData = response.data as DialogueElementType;
@@ -230,7 +228,6 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
         }
       })
       this.collabService.newNote.subscribe(response => {
-        console.log(response)
         const topicId = response.topicId as string;
         const newNote = response.newNote as NoteType
         if (this.minute && newNote._id) {
@@ -249,7 +246,6 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
         console.log(response)
       })
       this.collabService.participants.subscribe(response => {
-        console.log(response)
         this.actualParticipants = response
       })
       this.collabService.minuteClosed.subscribe(() => {
@@ -274,7 +270,7 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.collabService.disconnect()
+    //this.collabService.disconnect()
   }
 
   editBasicData(name: string, event: KeyboardEvent) {
@@ -335,7 +331,6 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
 
       dialogRef.afterClosed().subscribe(noteData => {
         if (noteData) {
-          console.log(noteData)
           this.newNote = noteData
           this.removeEdit('addingNotes', false, topicId)
         }
@@ -473,8 +468,6 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
           this.collabService.addDialogueElement(topicId, this.newDialogueElement)
           break
         case 'addingNotes':
-          console.log('hola')
-          console.log(this.newNote)
           this.collabService.addNote(topicId, this.newNote)
           break;
       }

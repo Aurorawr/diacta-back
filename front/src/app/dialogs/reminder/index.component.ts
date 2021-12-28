@@ -89,7 +89,6 @@ export class ReminderDialog  {
     }
     reminder.when.hour = this.selectedHour
     reminder.when.minute = this.selectedMinute
-    console.log(reminder)
     this.dialogRef.close(reminder)
   }
 

@@ -67,7 +67,6 @@ export class EditMinuteComponent implements OnInit {
     const minuteId = this.route.snapshot.paramMap.get('id');
     if (minuteId) {
       this.minutesService.getMinute(minuteId).subscribe(data => {
-        console.log(data.minute.date)
         this.minute = data.minute
         this.previousCompromises = data.minute.previousCompromises as Compromise[]
         const minuteDate = new Date(data.minute.date)
@@ -182,7 +181,6 @@ export class EditMinuteComponent implements OnInit {
   }
 
   createPreminute() {
-    console.log("create")
     if (!this.validatePreminute()) {
       console.log("error")
       console.log(this.errors)
@@ -192,7 +190,6 @@ export class EditMinuteComponent implements OnInit {
     this.minute.date = preminuteDate;
 
     this.minutesService.updateMinute(this.minute).subscribe(response => {
-      console.log(response)
       this.router.navigate(['/actas'])
     },
     error => {
