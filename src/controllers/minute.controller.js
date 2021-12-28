@@ -2,7 +2,8 @@ const Minute = require('../models/minute.model');
 const User = require('../models/user.model');
 const DialogueElement = require('../models/dialogueElement.model');
 const Task = require('../models/task.model');
-const sanitize = require('mongo-sanitize')
+const sanitize = require('mongo-sanitize');
+const { sendMail } = require('./notification.controller');
 
 exports.createPreMinute = async (req, res) => {
     const {
@@ -32,6 +33,19 @@ exports.createPreMinute = async (req, res) => {
         if (err) {
             return res.status(500).send({ message: err.message });
         }
+
+        users.forEach(user => {
+            sendMail(
+                "minute",
+                user.email,
+                {
+                    name: user.name,
+                    subjectMessage: "se ha preparado un acta",
+                    message: "Se ha preparado una nueva acta. Recomendamos leerla antes de la reunión.",
+                    minuteId: minute._id
+                }
+            )
+        })
 
         return res.send({ message: 'Acta inicializada', minute });
     });
