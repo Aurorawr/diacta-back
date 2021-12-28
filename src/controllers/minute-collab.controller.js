@@ -13,7 +13,7 @@ let dialogueElements = {};
 
 let participants = []
 
-const editions = {};
+let editions = {};
 
 const joinParticipant = (query) => {
   const {
@@ -332,6 +332,10 @@ module.exports = (io, socket) => {
   socket.on('closeMinute', async () => {
     minute.phase = 3
     await minute.save()
+    minute = undefined;
+    dialogueElements = {};
+    participants = []
+    editions = {};
     io.emit('minuteClosed')
   })
 
