@@ -137,7 +137,7 @@
                             <mat-list>
                                 <div mat-subheader>Anexos hasta el momento</div>
                                 <mat-list-item *ngFor='let annex of preminute.annexes' class="full-width">
-                                    <mat-icon matListIcon>assignment</mat-icon>
+                                    <mat-icon matListIcon>attachment</mat-icon>
                                     <p matLine>{{ annex.name }}</p>
                                     <p matLine><a href="{{annex.url}}" target="_blank" rel="noopener">Link</a></p>
                                     <button mat-icon-button (click)="removeAnnex(annex.name)">

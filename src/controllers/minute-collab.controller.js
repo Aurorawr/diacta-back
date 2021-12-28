@@ -11,10 +11,49 @@ const DEFAULT_EDITION = {
 let minute = undefined;
 let dialogueElements = {};
 
+let participants = []
+
 const editions = {};
+
+const joinParticipant = (query) => {
+  const {
+    _id,
+    name,
+    lastname
+  } = query
+
+  if (participants.find(p => p.id === _id) === undefined) {
+    participants.push({
+      id: _id,
+      name: `${name} ${lastname}`
+    })
+  }
+}
+
+const removeParticipant = (query) => {
+  const {
+    _id
+  } = query
+
+  participants = participants.filter(p => p.id !== _id)
+}
+
+const userAlreadyConnected = (query) => {
+  const {
+    _id
+  } = query
+
+  const userConnected = participants.find(p => p.id === _id)
+  return userConnected !== undefined
+}
 
 module.exports = (io, socket) => {
   
+  if (userAlreadyConnected(socket.handshake.query)) {
+    socket.emit("userAlreadyConnected")
+    return
+  }
+
   let currentId;
 
   const safeJoin = newId => {
@@ -81,7 +120,7 @@ module.exports = (io, socket) => {
       })*/
 
     }
-    io.emit("minute", minute);
+    socket.emit("minute", minute);
   });
 
   socket.on("editBasicData", (name, value) => {
@@ -289,9 +328,17 @@ module.exports = (io, socket) => {
     socket.broadcast.emit('editions', editions)
   })
 
+  socket.on('joinMeet', user => {
+    participants.push(user)
+    io.emit('participants', participants)
+  })
+
   socket.on("disconnect", (reason) => {
+    removeParticipant(socket.handshake.query)
     console.log(`Socket ${socket.id} has disconnected by ${reason}`)
   });
 
   console.log(`Socket ${socket.id} has connected`);
+  joinParticipant(socket.handshake.query)
+  io.emit("participants", participants)
 }

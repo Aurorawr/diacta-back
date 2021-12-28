@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ElementRef, ViewChild, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 
 import { MinuteCollabService } from 'src/app/services/minute-collab/minute-collab.service';
@@ -13,6 +13,8 @@ import { AddDialogueElementDialog } from 'src/app/dialogs/add-dialogue-element/i
 import { AddAnnexDialog } from 'src/app/dialogs/add-annex/index.component'
 import { AddNoteDialog } from 'src/app/dialogs/add-note/index.component'
 import { AddTopicDialog } from 'src/app/dialogs/add-topic/index.component'
+import { SimpleUser } from '../../models/user.model';
+import { ConfirmationDialogComponent } from '../../dialogs/confirmation/index.component';
 
 const monthNames : {[key: number]: string}= {
   0: 'enero',
@@ -91,17 +93,34 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
 
   lastChangesDate = new Date()
 
+  actualParticipants: SimpleUser[] = []
+
   @ViewChild('headerInput') headerInput!:ElementRef;
 
   constructor(
     private collabService: MinuteCollabService,
     private route: ActivatedRoute,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router: Router
   ) { }
 
   ngOnInit() {
     const minuteId = this.route.snapshot.paramMap.get('minuteId');
     if (minuteId) {
+      this.collabService.userAlreadyConnected.subscribe(() => {
+        const dialogCallback = new EventEmitter();
+        dialogCallback.subscribe(() => {
+          this.router.navigate(['/actas'])
+        })
+        this.dialog.open(ConfirmationDialogComponent, {
+          width: '50vw',
+          data: {
+            confirmationMessage: "Tienes abierta esta acta en otra ventana. Debes volver a ella.",
+            callback: dialogCallback,
+            noCancel: true
+          }
+        })
+      })
       this.collabService.minute.subscribe(minuteRespone => {
         const minute = minuteRespone as Minute
         this.minute = minute
@@ -227,6 +246,10 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
       })
       this.collabService.errorMessage.subscribe(response => {
         console.log(response)
+      })
+      this.collabService.participants.subscribe(response => {
+        console.log(response)
+        this.actualParticipants = response
       })
       if (!this.minute) {
         this.collabService.initMinute(minuteId)
@@ -488,6 +511,13 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
       editorId: '',
       editorName: ''
     }
+  }
+
+  getNameInitials(fullname: string) {
+    const names = fullname.split(" ")
+    let initials = ""
+    names.forEach(n => initials += n[0])
+    return initials
   }
 
 }

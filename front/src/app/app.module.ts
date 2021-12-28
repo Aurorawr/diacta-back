@@ -57,6 +57,7 @@ import { TaskDialog } from './dialogs/task/index.component';
 import { ReminderDialog } from './dialogs/reminder/index.component';
 import { MeetingPhaseComponent } from './components/shared/meeting-phase/meeting-phase.component';
 import { EditMinuteComponent } from './components/edit-minute/edit-minute.component';
+import { ConfirmationDialogComponent } from './dialogs/confirmation/index.component';
 
 @NgModule({
   declarations: [
@@ -78,7 +79,8 @@ import { EditMinuteComponent } from './components/edit-minute/edit-minute.compon
     TaskDialog,
     ReminderDialog,
     MeetingPhaseComponent,
-    EditMinuteComponent
+    EditMinuteComponent,
+    ConfirmationDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -133,7 +135,8 @@ import { EditMinuteComponent } from './components/edit-minute/edit-minute.compon
     AddNoteDialog,
     AddTopicDialog,
     TaskDialog,
-    ReminderDialog
+    ReminderDialog,
+    ConfirmationDialogComponent
   ]
 })
 export class AppModule { }

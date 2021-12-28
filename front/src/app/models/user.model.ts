@@ -9,3 +9,8 @@ export class User {
         public isBanned: boolean
     ) {}
 }
+
+export interface SimpleUser {
+    id: string;
+    name: string;
+}

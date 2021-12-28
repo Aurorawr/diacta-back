@@ -1,7 +1,12 @@
 <div>
     <app-meeting-phase [phase]="1"></app-meeting-phase>
     <mat-card class="meeting-data">
-        <h2 *ngIf="lastChangesDate">Últimos cambios realizados a las {{lastChangesDate.toLocaleString()}}</h2>
+        <h2 class="inline-block" *ngIf="lastChangesDate">Últimos cambios: {{lastChangesDate.toLocaleString()}}</h2>
+        <div class="inline-block float-r">
+            <button mat-mini-fab color="primary" *ngFor="let p of actualParticipants" [title]="p.name">
+                {{getNameInitials(p.name)}}
+            </button>
+        </div> 
     </mat-card>
     <mat-card class="minute-collab-card">
         <mat-card-title>
@@ -54,7 +59,11 @@
                 </div>
                 <h1>Asistentes</h1>
                 <mat-list>
-                    <mat-list-item *ngFor="let participant of minute.participants">{{participant.user.name}} ({{participant.user.email}})</mat-list-item>
+                    <mat-list-item *ngFor="let participant of minute.participants">
+                        <mat-icon matListIcon>person</mat-icon>
+                        <p matLine>{{participant.user.name}} {{participant.user.lastname}}</p>
+                        <p matLine>{{participant.user.email}}</p>
+                    </mat-list-item>
                 </mat-list>
                 <h1>Compromisos previos</h1>
                 <p *ngIf='!minute.previousCompromises.length' class='minute-text'>No hay compromisos previos</p>
@@ -124,7 +133,7 @@
                         <mat-card *ngIf="getAnnexExtEdition(annex._id).editing" class="editing-annex-card">
                             {{getAnnexExtEdition(annex._id).editorName}} está editando...
                         </mat-card>
-                        <mat-icon matListIcon>assignment</mat-icon>
+                        <mat-icon matListIcon>attachment</mat-icon>
                         <p matLine>{{ annex.name }}</p>
                         <p matLine><a href="{{annex.url}}" target="_blank" rel="noopener">Link</a></p>
                         <button mat-icon-button (click)="editAnnex(annex)" [disabled]='getAnnexExtEdition(annex._id).editing'>
