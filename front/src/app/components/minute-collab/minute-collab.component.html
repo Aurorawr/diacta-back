@@ -6,7 +6,7 @@
             <button mat-mini-fab color="primary" class="margin-left1" *ngFor="let p of actualParticipants" [title]="p.name">
                 {{getNameInitials(p.name)}}
             </button>
-            <button mat-raised-button class="margin-left1" color="warn" title="Terminar acta" (click)="confirmCloseMinute()">
+            <button mat-raised-button *ngIf="isAdmin" class="margin-left1" color="warn" title="Terminar acta" (click)="confirmCloseMinute()">
                 Terminar
                 <mat-icon>stop_circle</mat-icon>
             </button>

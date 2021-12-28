@@ -15,6 +15,7 @@ import { AddNoteDialog } from 'src/app/dialogs/add-note/index.component'
 import { AddTopicDialog } from 'src/app/dialogs/add-topic/index.component'
 import { SimpleUser } from '../../models/user.model';
 import { ConfirmationDialogComponent } from '../../dialogs/confirmation/index.component';
+import { AuthService } from '../../services/auth/auth.service';
 
 const monthNames : {[key: number]: string}= {
   0: 'enero',
@@ -95,14 +96,21 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
 
   actualParticipants: SimpleUser[] = []
 
+  isAdmin = false
+
   @ViewChild('headerInput') headerInput!:ElementRef;
 
   constructor(
     private collabService: MinuteCollabService,
     private route: ActivatedRoute,
     private dialog: MatDialog,
-    private router: Router
-  ) { }
+    private router: Router,
+    private auth: AuthService
+  ) {
+    if (auth.isAdmin()) {
+      this.isAdmin = true
+    }
+  }
 
   ngOnInit() {
     const minuteId = this.route.snapshot.paramMap.get('minuteId');
