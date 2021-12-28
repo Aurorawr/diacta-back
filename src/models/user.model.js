@@ -17,6 +17,7 @@ const userSchema = new Schema({
     type: String,
     required: [true, "La contraseña del usuario es requerida"],
   },
+  cellphone: String,
   isAdmin: {
     type: Boolean,
     default: false
@@ -24,7 +25,8 @@ const userSchema = new Schema({
   isBanned: {
     type: Boolean,
     default: false
-  }
+  },
+  reminders: [{ type: Schema.Types.ObjectId, ref: 'Reminder' }]
 },{
   timestamps: true,
 });
@@ -36,6 +38,7 @@ userSchema.statics.findByEmail = function(email) {
 userSchema.method('toJSON', function() {
   const user = this.toObject();
   delete user.password;
+  delete user.reminders;
   delete user.createdAt;
   delete user.updatedAt;
   delete user.__v;

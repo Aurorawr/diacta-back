@@ -7,7 +7,8 @@ const {
     addNote,
     addTopic,
     updateMinuteData,
-    addAnnexe
+    addAnnexe,
+    getPreviousCompromises
 } =  require('../controllers/minute.controller');
 
 module.exports = (app) => {
@@ -23,6 +24,16 @@ module.exports = (app) => {
         "/api/minutes",
         [verifyToken],
         createPreMinute
+    );
+
+    app.get(
+        "/api/minutes/previousCompromises",
+        [],
+        async function(req, res) {
+            const test = await getPreviousCompromises()
+
+            return res.send(test)
+        }
     );
 
     app.get(

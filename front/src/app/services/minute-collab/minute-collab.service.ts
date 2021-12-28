@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { MinuteCollabSocket } from 'src/app/sockets/minute-collab.socket'
 
 import { AuthService } from '../auth/auth.service';
+import { SimpleUser } from '../../models/user.model';
 
 interface BasicDataEdition {
   name: 'header' | 'description' | 'startTime' | 'endTime';
@@ -13,7 +14,7 @@ interface BasicDataEdition {
 })
 export class MinuteCollabService {
 
-  user!: {id: string, name: string}
+  user!: SimpleUser
 
   minute = this.socket.fromEvent<any>('minute');
   editions = this.socket.fromEvent('editions')
@@ -26,7 +27,10 @@ export class MinuteCollabService {
   newAnnex = this.socket.fromEvent('newAnnex')
   newDialogueElement = this.socket.fromEvent<any>('newDialogueElement')
   newNote = this.socket.fromEvent<any>('newNote')
-  dataSavedDate = this.socket.fromEvent<string>('dataSaved')
+  dataSavedDate = this.socket.fromEvent<string>('dataSaved');
+  participants = this.socket.fromEvent<SimpleUser[]>('participants');
+  userAlreadyConnected = this.socket.fromEvent("userAlreadyConnected")
+  minuteClosed = this.socket.fromEvent("minuteClosed")
   errorMessage = this.socket.fromEvent<any>('errorMessage');
 
   constructor(
@@ -56,8 +60,8 @@ export class MinuteCollabService {
     this.socket.emit('editBasicData', name, value);
   }
 
-  switchEdition(attributeName: string) {
-    this.socket.emit('swithEdit', attributeName, this.user);
+  switchEdition(attributeName: string, attributeId: null | string = null) {
+    this.socket.emit('swithEdit', attributeName, this.user, attributeId);
   }
 
   addEdition(attribute: string, topicId = '') {
@@ -86,6 +90,26 @@ export class MinuteCollabService {
 
   addNote(topicId: string, note: any) {
     this.socket.emit('addNote', topicId, note)
+  }
+
+  editTopic(topicId: string, topicData: any) {
+    this.socket.emit('editTopic', topicId, topicData)
+  }
+
+  editAnnex(annexId: string, annexData: any) {
+    this.socket.emit('editAnnex', annexId, annexData)
+  }
+
+  editDialogueElement(topicId: string, elementId: string, elementData: any) {
+    this.socket.emit('editDialogueElement', topicId, elementId, elementData)
+  }
+
+  editNote(topicId: string, noteId: string, elementData: any) {
+    this.socket.emit('editNote', topicId, noteId, elementData)
+  }
+
+  closeMinute() {
+    this.socket.emit("closeMinute")
   }
 
   disconnect() {

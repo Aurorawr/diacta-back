@@ -36,7 +36,7 @@ export class TokenInjectorService implements HttpInterceptor {
 
         if (err.status === 401) {
           this.auth.logOut()
-          this.snackBar.open('Su sesión a caducado', '', {
+          this.snackBar.open('Su sesión ha caducado', '', {
             horizontalPosition: 'center',
             verticalPosition: 'top',
             panelClass: 'error-notification',

@@ -1,0 +1,76 @@
+<h2 mat-dialog-title>Agregar Recordatorio</h2>
+<mat-dialog-content>
+    <div fxFlexFill fxLayout='row wrap' fxLayoutGap="1rem 1rem grid">
+        <div fxFlex='50'>
+            <mat-form-field appearance="outline" class='full-width'>
+                <mat-label>Tipo de evento</mat-label>
+                <mat-select [(value)]="reminder.event">
+                    <mat-option *ngFor="let event of eventTypes" [value]="event">{{ event }}</mat-option>
+                </mat-select>
+            </mat-form-field>  
+        </div>
+        <div fxFlex='50'>
+            <mat-form-field appearance="outline" class='full-width'>
+                <mat-label>Tipo de recordatorio</mat-label>
+                <mat-select [(value)]="reminderTypeSelected">
+                    <mat-option *ngFor="let type of reminderTypes" [value]="type.id">{{ type.name }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div fxFlex='50' *ngIf="reminderTypeSelected == 1">
+            <mat-form-field appearance="outline" class='full-width'>
+                <mat-label>Día de la semana</mat-label>
+                <mat-select [(value)]="selectedDayOfWeek">
+                    <mat-option *ngFor="let day of dayOfWeek" [value]="day.id">{{ day.name }}</mat-option>
+                </mat-select>
+            </mat-form-field> 
+        </div>
+        <div fxFlex='50' *ngIf="reminderTypeSelected == 2">
+            <mat-form-field appearance="outline" class='full-width'>
+                <mat-label>Día del mes</mat-label>
+                <mat-select [(value)]="selectedDayOfMonth">
+                    <mat-option *ngFor="let day of dayOfMonth" [value]="day">{{ day }}</mat-option>
+                </mat-select>
+            </mat-form-field> 
+        </div>
+        <div fxFlex='50' *ngIf="reminderTypeSelected == 3">
+            <mat-form-field appearance="outline" class='full-width'>
+                <mat-label>Fecha</mat-label>
+                <input matInput [matDatepicker]="dp" [(ngModel)]='selectedDate'>
+                <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                <mat-datepicker #dp></mat-datepicker>
+            </mat-form-field> 
+        </div>
+        <div fxFlex='25'>
+            <mat-form-field appearance="outline" class='full-width'>
+                <mat-label>Hora</mat-label>
+                <mat-select [(value)]="selectedHour">
+                    <mat-option *ngFor="let hour of hours" [value]="hour">{{ hour }}</mat-option>
+                </mat-select>
+            </mat-form-field> 
+        </div>
+        <div fxFlex='25'>
+            <mat-form-field appearance="outline" class='full-width'>
+                <mat-label>Minuto</mat-label>
+                <mat-select [(value)]="selectedMinute">
+                    <mat-option *ngFor="let minute of minutes" [value]="minute.id">{{ minute.value }}</mat-option>
+                </mat-select>
+            </mat-form-field> 
+        </div>
+        <div fxFlex='100'>
+            <label class="margin-1r">Formas de envío: </label>
+            <mat-checkbox class="margin-1r" (change)="checkVia('Email', $event)">Correo Electrónico</mat-checkbox>
+            <mat-checkbox class="margin-1r" (change)="checkVia('SMS', $event)">SMS</mat-checkbox>
+        </div>
+        <div fxFlex='100' *ngIf="reminder.event == 'Personalizado'">
+            <mat-form-field appearance="outline" class='full-width'>
+                <mat-label>Mensaje</mat-label>
+                <textarea matInput cdkTextareaAutosize [(ngModel)]='reminder.message'></textarea>
+            </mat-form-field> 
+        </div>
+    </div>   
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-button (click)="closeModal()" cdkFocusInitial>Agregar</button>
+</mat-dialog-actions>

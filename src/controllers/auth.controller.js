@@ -15,7 +15,7 @@ exports.signIn = (req, res) => {
 
     const sanitizedEmail = sanitize(email)
     const sanitizedPassword = sanitize(password)
-    User.findOne({sanitizedEmail}, (err, user) => {
+    User.findOne({email: sanitizedEmail}, (err, user) => {
         if (err) {
             return res.status(500).send({ message: err.message });
         }

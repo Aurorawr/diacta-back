@@ -7,6 +7,8 @@ import { User } from 'src/app/models/user.model';
 import { Preminute, Annex, Topic } from 'src/app/models/preminute.model';
 import { UsersService } from 'src/app/services/users/users.service';
 import { MinutesService } from 'src/app/services/minutes/minutes.service';
+import { Compromise } from '../../models/compromises.model';
+import { orderCompromises } from '../../helpers/index';
 
 @Component({
   selector: 'app-create-preminute',
@@ -43,6 +45,8 @@ export class CreatePreminuteComponent implements OnInit {
 
   participants: Array<User> = []
 
+  previousCompromises: Compromise[] = []
+
   date: moment.Moment = moment()
 
   time: string = ''
@@ -50,6 +54,15 @@ export class CreatePreminuteComponent implements OnInit {
   adviseParticipants: boolean = true
 
   isEdition = false
+
+  errors = {
+    description: false,
+    place: false,
+    date: false,
+    time: false,
+    notSavedTopic: false,
+    notSavedAnnex: false
+  }
 
   constructor(
     private usersService: UsersService,
@@ -83,6 +96,10 @@ export class CreatePreminuteComponent implements OnInit {
     error => {
       console.error(error)
     })
+
+    this.minutesService.getPreviousCompromises().subscribe(response => {
+      this.previousCompromises = orderCompromises(response);
+    })
   }
 
   addTopic() {
@@ -95,6 +112,10 @@ export class CreatePreminuteComponent implements OnInit {
       name: '',
       description: ''
     }
+  }
+
+  removeTopic(topicEnum: number) {
+    this.preminute.topics = this.preminute.topics.filter(topic => topic.enum !== topicEnum)
   }
 
   addAnnex() {
@@ -110,6 +131,10 @@ export class CreatePreminuteComponent implements OnInit {
     }
   }
 
+  removeAnnex(name: string) {
+    this.preminute.annexes = this.preminute.annexes.filter(annex => annex.name !== name)
+  }
+
   changeTime() {
     const timeArray = this.time.split(':');
     const hours = parseInt(timeArray[0], 10);
@@ -120,7 +145,52 @@ export class CreatePreminuteComponent implements OnInit {
     this.date = dateWithTime;
   }
 
+  validatePreminute() {
+    const errors = {
+      description: false,
+      place: false,
+      date: false,
+      time: false,
+      notSavedTopic: false,
+      notSavedAnnex: false
+    }
+    let errorDetected = false;
+    if (!this.preminute.description) {
+      errors.description = true;
+      errorDetected = true;
+    }
+    if (!this.preminute.place) {
+      errors.place = true;
+      errorDetected = true;
+    }
+    if (!this.preminute.date) {
+      errors.date = true;
+      errorDetected = true;
+    }
+    if (!this.time) {
+      errors.time = true;
+      errorDetected = true;
+    }
+    if(this.newTopic.name || this.newTopic.description) {
+      errors.notSavedTopic = true;
+      errorDetected = true;
+    }
+    if(this.newAnnex.name || this.newAnnex.description || this.newAnnex.description) {
+      errors.notSavedAnnex = true;
+      errorDetected = true;
+    }
+
+    this.errors = errors;
+
+    return !errorDetected;
+  }
+
   createPreminute() {
+    if (!this.validatePreminute()) {
+      console.log("error")
+      console.log(this.errors)
+      return
+    }
     const preminuteDate = this.date.toDate()
     this.preminute.date = preminuteDate;
 

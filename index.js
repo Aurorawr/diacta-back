@@ -25,6 +25,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 require('./src/routes/auth.routes') (app);
 require('./src/routes/user.routes') (app);
 require('./src/routes/minute.routes') (app);
+require('./src/routes/reminder.routes') (app);
 
 app.use(express.static(__dirname + '/public'));
 
@@ -40,9 +41,14 @@ const io = require('socket.io')(server, {
 })
 
 const registerMinuteCollabHandlers = require('./src/controllers/minute-collab.controller')
+const registerTasksHandlers = require('./src/controllers/task.controller')
 const minuteCollab = io.of('/minute-collab')
+const tasks = io.of('/tasks')
 minuteCollab.on('connection', (socket) => {
   registerMinuteCollabHandlers(minuteCollab, socket)
+})
+tasks.on('connection', (socket) => {
+  registerTasksHandlers(tasks, socket)
 })
 
 const PORT = process.env.PORT || 8080;

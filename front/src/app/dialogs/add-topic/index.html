@@ -1,0 +1,21 @@
+<h2 mat-dialog-title>Agregar tema para la reunión</h2>
+<mat-dialog-content>
+    <div fxFlexFill fxLayout='row wrap' fxLayoutGap="1rem 1rem grid">
+        <div fxFlex='100'>
+            <mat-form-field appearance="outline" class='full-width'>
+                <mat-label>Nombre del tema</mat-label>
+                <input matInput [(ngModel)]='data.name' />
+            </mat-form-field>  
+        </div>
+        <div fxFlex='100'>
+            <mat-form-field appearance="outline" class='full-width'>
+                <mat-label>Descripción (opcional)</mat-label>
+                <textarea matInput cdkTextareaAutosize [(ngModel)]='data.description' rows="2"></textarea>
+            </mat-form-field>
+        </div>
+    </div>   
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Agregar</button>
+</mat-dialog-actions>

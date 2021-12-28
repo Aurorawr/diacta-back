@@ -1,7 +1,9 @@
 const Minute = require('../models/minute.model');
 const User = require('../models/user.model');
 const DialogueElement = require('../models/dialogueElement.model');
-const sanitize = require('mongo-sanitize')
+const Task = require('../models/task.model');
+const sanitize = require('mongo-sanitize');
+const { sendMail } = require('./notification.controller');
 
 exports.createPreMinute = async (req, res) => {
     const {
@@ -18,14 +20,10 @@ exports.createPreMinute = async (req, res) => {
         }
     });
 
-    const previousCompromises = await DialogueElement.find({
-        'elementType': "Compromiso",
-        'references.minuteEnum': 1
-    }).select('_id').exec();
+    const previousCompromises = await this.getPreviousCompromises()
 
-    const previousCompromisesIds = previousCompromises.map(compromise => {
-        return compromise._id
-    })
+    const previousCompromisesIds = previousCompromises.map(compromise => compromise._id)
+
 
     preMinuteData.enum = minuteEnum;
     preMinuteData.participants = participants;
@@ -35,6 +33,19 @@ exports.createPreMinute = async (req, res) => {
         if (err) {
             return res.status(500).send({ message: err.message });
         }
+
+        users.forEach(user => {
+            sendMail(
+                "minute",
+                user.email,
+                {
+                    name: user.name,
+                    subjectMessage: "se ha preparado un acta",
+                    message: "Se ha preparado una nueva acta. Recomendamos leerla antes de la reunión.",
+                    minuteId: minute._id
+                }
+            )
+        })
 
         return res.send({ message: 'Acta inicializada', minute });
     });
@@ -208,4 +219,22 @@ exports.addNote = async (req, res) => {
 
         return res.send({ message: 'Nota agregada', note: topic.notes[newNotesQuantity - 1] });
     });
+}
+
+exports.getPreviousCompromises = async () => {
+
+    const incompleteTasks = await Task.find({
+        state: { $ne: 4}
+    }).populate({
+        path: 'compromise',
+        select: '_id enum content references'
+    })
+    .exec();
+
+    const previuosCompromises = incompleteTasks.map(task => {
+        const compromise = task.compromise
+        return compromise.toJSON()
+    })
+
+    return previuosCompromises
 }

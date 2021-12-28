@@ -1,29 +1,36 @@
 <mat-card *ngIf="minute && !loading" class='minute-card'>
     <mat-card-title>
         <h1 class='inline-block title'><strong>Acta reunión {{ minute.enum }}</strong></h1>
-        <a *ngIf="isAdmin && minute.phase != 3" mat-raised-button color="primary" class="float-r start-minute-btn" routerLink="/acta/{{minute._id}}">
-            Empezar acta
+        <a *ngIf="isAdmin && minute.phase !== 3" mat-raised-button color="primary" class="float-r start-minute-btn" routerLink="/acta/{{minute._id}}">
+            {{minute.phase === 1 ? "Empezar acta" : "Unirse a acta"}}
             <mat-icon>play_circle_outline</mat-icon>
         </a>
-        <a *ngIf="isAdmin" mat-raised-button color="primary" class="float-r" routerLink="/acta/editar/{{minute._id}}">
+        <a *ngIf="isAdmin && minute.phase !== 2" mat-raised-button color="primary" class="float-r" routerLink="/acta/editar/{{minute._id}}">
             Editar acta
             <mat-icon>edit</mat-icon>
         </a>
         <mat-divider></mat-divider>
     </mat-card-title>
     <mat-card-content>
+        <app-meeting-phase [phase]="minute.phase"></app-meeting-phase>
         <p *ngIf='minute.header' class='minute-text'>{{ minute.header }}</p>
         <h3 class="info-text">{{getMinuteDatePlaceData}}</h3>
         <p *ngIf='minute.description' class='minute-text'>{{ minute.description }}</p>
         <h1>Asistentes</h1>
         <mat-list>
-            <mat-list-item *ngFor="let participant of minute.participants">{{participant.user.name}} ({{participant.user.email}})</mat-list-item>
+            <mat-list-item *ngFor="let participant of minute.participants">
+                <mat-icon matListIcon>person</mat-icon>
+                <p matLine>{{participant.user.name}} {{participant.user.lastname}}</p>
+                <p matLine>{{participant.user.email}}</p>
+            </mat-list-item>
         </mat-list>
         <h1>Compromisos previos</h1>
         <p *ngIf='!minute.previousCompromises.length' class='minute-text'>No hay compromisos previos</p>
-        <div *ngIf='minute.previousCompromises.length'>
-            <h4 *ngFor="let compromise of minute.previousCompromises; let i = index">{{i+1}}. {{compromise.content}}</h4>
-        </div>
+        <mat-list *ngIf="minute.previousCompromises.length > 0">
+            <mat-list-item *ngFor="let compromise of minute.previousCompromises">
+                <p>{{compromise.references?.minuteEnum}}.{{compromise.enum}}.- {{compromise.content}}</p>
+            </mat-list-item>
+        </mat-list>
         <h1>Tabla de la reunión</h1>
         <mat-list>
             <mat-list-item *ngFor="let topic of minute.topics">{{topic.enum}}. {{topic.name}}</mat-list-item>
@@ -38,7 +45,7 @@
         <h1>Adjuntos</h1>
         <mat-list>
             <mat-list-item *ngFor='let annex of minute.annexes' class="full-width">
-                <mat-icon matListIcon>assignment</mat-icon>
+                <mat-icon matListIcon>attachment</mat-icon>
                 <p matLine>{{ annex.name }}</p>
                 <p matLine><a href="{{annex.url}}" target="_blank" rel="noopener">Link</a></p>
                 <button mat-icon-button>

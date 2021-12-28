@@ -30,4 +30,13 @@ const dialogueElementSchema = new Schema({
     timestamps: true,
 });
 
+dialogueElementSchema.method('toJSON', function() {
+    const element = this.toObject();
+    delete element.createdAt;
+    delete element.updatedAt;
+    delete element.__v;
+  
+    return element;
+  })
+
 module.exports = model('DialogueElement', dialogueElementSchema);

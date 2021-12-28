@@ -1,9 +1,20 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 
 import { MinuteCollabService } from 'src/app/services/minute-collab/minute-collab.service';
 import { Minute, TopicType, AnnexType, NoteType, DialogueElementType } from 'src/app/models/minute.model';
+import { Editions, Edition } from 'src/app/models/edition.model';
+import { EditionParams, SwitchEditionParams } from 'src/app/models/edition-params.model';
+import { EditionAttribute } from 'src/app/models/types.model'
+
+import { AddDialogueElementDialog } from 'src/app/dialogs/add-dialogue-element/index.component'
+import { AddAnnexDialog } from 'src/app/dialogs/add-annex/index.component'
+import { AddNoteDialog } from 'src/app/dialogs/add-note/index.component'
+import { AddTopicDialog } from 'src/app/dialogs/add-topic/index.component'
+import { SimpleUser } from '../../models/user.model';
+import { ConfirmationDialogComponent } from '../../dialogs/confirmation/index.component';
 
 const monthNames : {[key: number]: string}= {
   0: 'enero',
@@ -20,39 +31,6 @@ const monthNames : {[key: number]: string}= {
   11: 'diciembre'
 }
 
-type Attribute = 'header' | 'description' | 'addingTopic' | 'addingAnnexes' | 'addingNotes' | 'addingDialogueElements'
-
-interface Edition {
-  editing: boolean;
-  edtitorId: string;
-  editorName: string;
-  topicId?: string;
-}
-
-interface Editions {
-  header: Edition;
-  description: Edition;
-  topics: {
-    [key: string] : {
-      name: Edition;
-      description: Edition;
-      notes: {
-        [key: string] : Edition
-      },
-      dialogueElements: {
-        [key: string] : Edition
-      }
-    }
-  };
-  annexes: {
-    [key: string]: Edition
-  };
-  addingTopic: Edition[];
-  addingAnnexes: Edition[];
-  addingNotes: Edition[];
-  addingDialogueElements: Edition[];
-}
-
 @Component({
   selector: 'app-minute-collab',
   templateUrl: './minute-collab.component.html',
@@ -61,7 +39,7 @@ interface Editions {
 export class MinuteCollabComponent implements OnInit, OnDestroy {
 
   minuteId: string = '';
-  minute: Minute | null= null;
+  minute!: Minute;
   documents: Observable<string[]> = new Observable();
   currentDoc: string = '';
 
@@ -74,7 +52,8 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     content: ''
   }
 
-  newDialogueElement: {elementType: string, content: string} = {
+  newDialogueElement = {
+    enum: 1,
     elementType: 'Acuerdo',
     content: ''
   }
@@ -85,31 +64,26 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     description: ''
   }
 
-  dialogueElementTypes  = ['Acuerdo', 'Compromiso', 'Duda', 'Desacuerdo']
-
   localEditions = {
     header: false,
-    description: false,
-    topics: {},
-    annexes: {},
-    addingTopic: false,
-    addingAnnexes: false,
-    addingNotes: false,
-    addingDialogueElements: false
+    description: false
   }
 
   externalEditions: Editions = {
     header: {
       editing: false,
-      edtitorId: '',
+      editorId: '',
       editorName: ''
     },
     description: {
       editing: false,
-      edtitorId: '',
+      editorId: '',
       editorName: ''
     },
-    topics: {},
+    topicName: {},
+    topicDescription: {},
+    dialogueElements: {},
+    notes: {},
     annexes: {},
     addingTopic: [],
     addingAnnexes: [],
@@ -119,21 +93,37 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
 
   lastChangesDate = new Date()
 
+  actualParticipants: SimpleUser[] = []
+
   @ViewChild('headerInput') headerInput!:ElementRef;
 
   constructor(
     private collabService: MinuteCollabService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private dialog: MatDialog,
+    private router: Router
   ) { }
 
   ngOnInit() {
     const minuteId = this.route.snapshot.paramMap.get('minuteId');
     if (minuteId) {
-      this.collabService.minute.subscribe(response => {
-        const minute = response.minute as Minute
-        const editions = response.editions  as Editions
-        this.setLocalEdition(minute)
-        this.externalEditions = editions
+      this.collabService.userAlreadyConnected.subscribe(() => {
+        const dialogCallback = new EventEmitter();
+        dialogCallback.subscribe(() => {
+          this.router.navigate(['/actas'])
+        })
+        this.dialog.open(ConfirmationDialogComponent, {
+          width: '30vw',
+          disableClose: true,
+          data: {
+            confirmationMessage: "Tienes abierta esta acta en otra ventana. Debes volver a ella.",
+            callback: dialogCallback,
+            noCancel: true
+          }
+        })
+      })
+      this.collabService.minute.subscribe(minuteRespone => {
+        const minute = minuteRespone as Minute
         this.minute = minute
       });
       this.collabService.editedData.subscribe(response => {
@@ -152,7 +142,7 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
           const actualTopics = this.minute.topics
           this.minute.topics = actualTopics.map(topic => {
             if(topic._id == topicId) {
-              return {...topic, topicData} as TopicType
+              return {...topic, ...topicData} as TopicType
             }
             return topic
           })
@@ -240,7 +230,7 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
       this.collabService.newNote.subscribe(response => {
         const topicId = response.topicId as string;
         const newNote = response.newNote as NoteType
-        if (this.minute) {
+        if (this.minute && newNote._id) {
           this.minute.topics = this.minute.topics.map(topic => {
             if(topic._id == topicId) {
               topic.notes.push(newNote)
@@ -252,57 +242,35 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
       this.collabService.dataSavedDate.subscribe(response => {
         this.lastChangesDate = new Date(response)
       })
+      this.collabService.errorMessage.subscribe(response => {
+        console.log(response)
+      })
+      this.collabService.participants.subscribe(response => {
+        this.actualParticipants = response
+      })
+      this.collabService.minuteClosed.subscribe(() => {
+        const dialogCallback = new EventEmitter();
+        dialogCallback.subscribe(() => {
+          this.router.navigate(['/actas'])
+        })
+        this.dialog.open(ConfirmationDialogComponent, {
+          width: '30vw',
+          disableClose: true,
+          data: {
+            confirmationMessage: "Se ha cerrado el acta por un coordinador. ¡Muchas gracias por participar!",
+            callback: dialogCallback,
+            noCancel: true
+          }
+        })
+      })
       if (!this.minute) {
         this.collabService.initMinute(minuteId)
       }
     }
   }
 
-  setLocalEdition(minute: Minute) {
-    const localEditions: any = {
-      header: false,
-      description: false,
-      topics: {},
-      annexes: {},
-      addingTopic: false,
-      addingAnnexes: false,
-      addingNotes: false,
-      addingDialogueElements: false
-    }
-    minute.topics.forEach(topic => {
-      const notes: any = {}
-      const dialogueElements: any = {}
-      topic.dialogueElements.forEach(element => {
-        dialogueElements[element._id] = false
-      })
-      topic.notes.forEach(note => {
-        notes[note._id] = false
-      })
-      if (topic._id) {
-        localEditions.topics[topic._id] = {
-          name: false,
-          description: false,
-          notes,
-          dialogueElements
-        }
-      }
-    })
-    minute.annexes.forEach(annex => {
-      localEditions.annexes[annex._id] = false
-    })
-    this.localEditions = localEditions
-  }
-  
-  switchPendingEditions() {
-    Object.entries(this.localEditions).forEach(([attribute, value]) => {
-      if(value) {
-        this.collabService.switchEdition(attribute)
-      }
-    })
-  }
-
   ngOnDestroy() {
-    this.collabService.disconnect()
+    //this.collabService.disconnect()
   }
 
   editBasicData(name: string, event: KeyboardEvent) {
@@ -312,23 +280,186 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     this.collabService.editBasicData(name, value);
   }
 
-  switchEdit(attribute: Attribute) {
-    this.localEditions[attribute]= !this.localEditions[attribute]
-    this.collabService.switchEdition(attribute)
+  switchEdit(params: SwitchEditionParams) {
+    const {
+      attribute,
+      attributeId
+    } = params
+    this.collabService.switchEdition(attribute, attributeId)
+    if (attribute == 'header' || attribute == 'description') {
+      this.localEditions[attribute] = !this.localEditions[attribute]
+    }
   }
 
-  addEdit(attribute: Attribute, topicId='') {
-    this.localEditions[attribute]= true
+  addEdit(attribute: EditionAttribute, topicId='') {
     this.collabService.addEdition(attribute, topicId)
   }
 
-  removeEdit(attribute: Attribute, cancel = false, topicId='') {
-    this.localEditions[attribute]= false
+  addDialogueElement(topicId: string | undefined) {
+    if (topicId) {
+      this.collabService.addEdition('addingDialogueElements', topicId)
+      const dialogRef = this.dialog.open(AddDialogueElementDialog, {
+        width: '50vw',
+        data: {
+          enum: this.getNewDialogueElementEnum(topicId),
+          elementType: 'Acuerdo',
+          content: ''
+        }
+      })
+
+      dialogRef.afterClosed().subscribe(dialogueElementData => {
+        if (dialogueElementData) {
+          this.newDialogueElement = dialogueElementData
+          this.removeEdit('addingDialogueElements', false, topicId)
+        }
+        else {
+          this.removeEdit('addingDialogueElements', true, topicId)
+        }
+      })
+    }
+  }
+
+  addNote(topicId: string | undefined) {
+    if (topicId) {
+      this.collabService.addEdition('addingNotes', topicId)
+      const dialogRef = this.dialog.open(AddNoteDialog, {
+        width: '50vw',
+        data: {
+          content: ''
+        }
+      })
+
+      dialogRef.afterClosed().subscribe(noteData => {
+        if (noteData) {
+          this.newNote = noteData
+          this.removeEdit('addingNotes', false, topicId)
+        }
+        else {
+          this.removeEdit('addingNotes', true, topicId)
+        }
+      })
+    }
+  }
+
+  addTopic() {
+    this.collabService.addEdition('addingTopic')
+    const dialogRef = this.dialog.open(AddTopicDialog, {
+      width: '50vw',
+      data: {
+        name: '',
+        description: ''
+      }
+    })
+
+    dialogRef.afterClosed().subscribe(topicData => {
+      if (topicData) {
+        this.newTopic = topicData
+        this.removeEdit('addingTopic', false)
+      }
+      else {
+        this.removeEdit('addingTopic', true)
+      }
+    })
+  }
+
+  addAnnex() {
+    this.collabService.addEdition('addingAnnexes')
+    const dialogRef = this.dialog.open(AddAnnexDialog, {
+      width: '50vw',
+      data: {
+        annex: {
+          url: '',
+          name: '',
+          description: ''
+        }
+      }
+    })
+
+    dialogRef.afterClosed().subscribe(annexData => {
+      if (annexData) {
+        this.newAnnex = annexData
+        this.removeEdit('addingAnnexes', false)
+      }
+      else {
+        this.removeEdit('addingAnnexes', true)
+      }
+    })
+  }
+
+  editTopicAttribute(params: EditionParams) {
+    const {
+      topicId,
+      elementType,
+      elementId,
+      event
+    } = params
+    const target = event.target as HTMLTextAreaElement;
+    const value = target.value;
+    if (topicId && elementId) {
+      switch(elementType) {
+        case 'dialogueElements':
+          this.collabService.editDialogueElement(
+            topicId,
+            elementId,
+            {
+              content: value
+            }
+          );
+          break
+        case 'notes':
+          this.collabService.editNote(
+            topicId,
+            elementId,
+            {
+              content: value
+            }
+          )
+          break
+        default:
+          
+      }
+    }
+    else if (elementId) {
+      const topicData: any = {}
+      switch(elementType) {
+        case 'topicName':
+          topicData.name = value
+          break
+        case 'topicDescription':
+          topicData.description = value
+          break
+        default:
+      }
+      this.collabService.editTopic(elementId, topicData)
+    }
+  }
+
+  editAnnex(annex: AnnexType) {
+    this.collabService.switchEdition('annexes', annex._id)
+    const onEditAnnex = new EventEmitter();
+    onEditAnnex.subscribe(annexData => {
+      this.collabService.editAnnex(annex._id, annexData)
+    })
+    const dialogRef = this.dialog.open(AddAnnexDialog, {
+      width: '50vw',
+      data: {
+        annex,
+        onEdit: onEditAnnex
+      }
+    })
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.collabService.switchEdition('annexes', annex._id)
+    })
+  }
+
+  removeEdit(attribute: EditionAttribute, cancel = false, topicId='') {
     this.collabService.removeEdition(attribute)
     if(!cancel) {
       switch(attribute) {
         case 'addingTopic':
           this.collabService.addTopic(this.newTopic)
+          this
           break
         case 'addingAnnexes':
           this.collabService.addAnnex(this.newAnnex)
@@ -343,9 +474,25 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     }
   }
 
-  addTopic() {
-    this.localEditions.addingTopic= false
-    this.collabService.addTopic(this.newTopic)
+  filterEditions(editions: Edition[] ,topicId: string | undefined) {
+    if (topicId) {
+      return editions.filter(edition => edition.topicId == topicId)
+    }
+    return []
+  }
+
+  confirmCloseMinute() {
+    const dialogCallback = new EventEmitter();
+    dialogCallback.subscribe(() => {
+      this.collabService.closeMinute()
+    })
+    this.dialog.open(ConfirmationDialogComponent, {
+      width: '30vw',
+      data: {
+        confirmationMessage: "Asegúrate que ningún usuario esté editando. ¿Estás seguro que deseas cerrar el acta?",
+        callback: dialogCallback
+      }
+    })
   }
 
   get getMinuteDatePlaceData() : string {
@@ -363,6 +510,37 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
       return `${minute.place}, ${dateStr}. ${convokedTimeStr}.${startTimeStr}`;
     }
     return ''
+  }
+
+  getNewDialogueElementEnum(topicId: string) {
+    const topic = this.minute.topics.find(topic => topic._id == topicId)
+    if (topic) {
+      return topic.dialogueElements.length + 1
+    }
+    return 0
+  }
+
+  getDialogueElementSuffix(el: DialogueElementType) {
+    return `${el.elementType} ${this.minute.enum}.${el.enum}: `
+  }
+
+  getAnnexExtEdition(annexId: string) : Edition {
+    const externalAnnexEdit = this.externalEditions.annexes[annexId]
+    if (externalAnnexEdit) {
+      return externalAnnexEdit
+    }
+    return {
+      editing: false,
+      editorId: '',
+      editorName: ''
+    }
+  }
+
+  getNameInitials(fullname: string) {
+    const names = fullname.split(" ")
+    let initials = ""
+    names.forEach(n => initials += n[0])
+    return initials
   }
 
 }

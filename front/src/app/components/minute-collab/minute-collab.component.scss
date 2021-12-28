@@ -5,3 +5,16 @@
 .edit-button {
     margin-left: 1rem;
 }
+
+.editing-annex-card {
+    position: absolute;
+    width: 10vw;
+    right: -12vw;
+    
+}
+
+.meeting-data {
+    position: sticky;
+    top: 160px;
+    z-index: 1;
+}

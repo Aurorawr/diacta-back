@@ -4,6 +4,11 @@ const {
     signIn
 } =  require('../controllers/auth.controller');
 
+const {
+    sendMail,
+    sendSMS
+} =  require('../controllers/notification.controller');
+
 module.exports = (app) => {
     app.use(function(req, res, next) {
         res.header(
@@ -20,4 +25,9 @@ module.exports = (app) => {
         [validateRequest],
         signIn
     );
+
+    app.get('/api/test', function(req, res) {
+        sendMail()
+        res.send({message: "Mail"})
+    })
 }

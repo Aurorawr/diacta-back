@@ -45,6 +45,7 @@ export class UsersComponent implements OnInit {
         lastname: '',
         email: '',
         password: '',
+        cellphone: '',
         isAdmin: false,
       }
     })
