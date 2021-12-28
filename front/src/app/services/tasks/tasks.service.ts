@@ -22,4 +22,12 @@ export class TasksService {
   assignDueDate(taskId: string, dueDate: Date) {
     this.socket.emit("assignDueDate", taskId, dueDate)
   }
+
+  getTasks() {
+    this.socket.emit("getTasks");
+  }
+
+  getMembers() {
+    this.socket.emit("getMembers");
+  }
 }

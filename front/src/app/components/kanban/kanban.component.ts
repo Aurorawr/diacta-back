@@ -60,6 +60,8 @@ export class KanbanComponent implements OnInit {
     this.tasksService.members.subscribe(response => {
       this.members = response
     })
+    this.tasksService.getTasks();
+    this.tasksService.getMembers();
   }
 
   drop(event: CdkDragDrop<Task[]>): void {

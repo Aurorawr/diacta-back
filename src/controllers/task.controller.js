@@ -58,13 +58,15 @@ const getAllMembers = async () => {
 
 module.exports = async (io, socket) => {
 
-    const tasks = await getTasks()
+    socket.on('getTasks', async () => {
+        const tasks = await getTasks()
+        socket.emit('tasks', tasks)
+    })
 
-    socket.emit('tasks', tasks)
-
-    const members = await getAllMembers()
-
-    socket.emit('members', members)
+    socket.on('getMembers', async () => {
+        const members = await getAllMembers()
+        socket.emit('members', members)
+    })
 
     socket.on('assignUser', async (taskId, userId) => {
         await Task.findByIdAndUpdate(taskId, {user: userId}).exec()
