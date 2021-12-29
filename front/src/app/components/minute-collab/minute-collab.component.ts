@@ -303,14 +303,14 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     this.collabService.addEdition(attribute, topicId)
   }
 
-  addDialogueElement(topicId: string | undefined) {
+  addDialogueElement(topicId: string | undefined, elementType: 'Duda' | 'Compromiso' | 'Acuerdo' | 'Desacuerdo') {
     if (topicId) {
       this.collabService.addEdition('addingDialogueElements', topicId)
       const dialogRef = this.dialog.open(AddDialogueElementDialog, {
         width: '50vw',
         data: {
           enum: this.getNewDialogueElementEnum(topicId),
-          elementType: 'Acuerdo',
+          elementType: elementType,
           content: ''
         }
       })
