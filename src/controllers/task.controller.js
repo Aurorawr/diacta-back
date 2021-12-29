@@ -16,7 +16,7 @@ const getTasks = async (userId=null) => {
 
     tasksQuery.populate({
         path: 'compromise',
-        select: 'content'
+        select: 'content references enum'
     })
 
     const tasks = await tasksQuery.exec()

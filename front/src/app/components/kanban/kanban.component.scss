@@ -16,26 +16,33 @@
 }
 
 .list {
-  border: solid 1px #ccc;
-  min-height: 60px;
+  border: none;
+  height: 100%;
   background: white;
   border-radius: 4px;
   display: block;
-  overflow: hidden;
+  overflow: auto;
+  max-height: 70vh;
 }
 
 .list-item {
   padding: 20px 10px;
-  border-bottom: solid 1px #ccc;
+  border: double 3px #cccccc;
   box-sizing: border-box;
-  cursor: move;
+  cursor: pointer;
   background: white;
   color: black;
   font-size: 14px;
 }
 
-.list-item:last-child {
-  border: none;
+.list-item-empty {
+  padding: 20px 10px;
+  border: solid 1px #cccccc;
+  box-sizing: border-box;
+  cursor: default;
+  background: white;
+  color: black;
+  font-size: 14px;
 }
 
 /* Highlight the list item that is being dragged. */
@@ -44,6 +51,15 @@
   box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
               0 8px 10px 1px rgba(0, 0, 0, 0.14),
               0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  cursor: grabbing;
+}
+
+.cdk-drop-list-receiving {
+  border: dashed 1px #3f51b5;
+}
+
+.cdk-drop-list-dragging {
+  border: solid 2px #3f51b5;
 }
 
 /* Animate items as they're being sorted. */

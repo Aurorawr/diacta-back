@@ -124,6 +124,27 @@ margin-right: 0;
     color: black;
 }
 
+.max-height-60 {
+    max-height: 60px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.clickeable {
+    cursor: pointer;
+}
+
+.no_border {
+    border: none !important;
+}
+
+.sticky-to-nav {
+    position: sticky;
+    top: 64px;
+    z-index: 1;
+}
+
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {

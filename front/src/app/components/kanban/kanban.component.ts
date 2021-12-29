@@ -1,10 +1,11 @@
 import { Component, OnInit, EventEmitter } from '@angular/core';
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, CdkDragEnter, CdkDragExit, CdkDragStart, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { MatDialog } from '@angular/material/dialog';
 
 import { TasksService } from 'src/app/services/tasks/tasks.service'
 import { Task, GroupedTasks, TaskUser } from 'src/app/models/task.model'
 import { TaskDialog } from 'src/app/dialogs/task/index.component'
+import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-kanban',
   templateUrl: './kanban.component.html',
@@ -33,9 +34,13 @@ export class KanbanComponent implements OnInit {
   assignUserEmmiter = new EventEmitter<{taskId: string, userId: string}>()
   assignDueDateEmmiter = new EventEmitter<{taskId: string, dueDate: Date}>()
 
+  noBorderLists: string[] = []
+
   constructor(
     private tasksService: TasksService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     this.assignUserEmmiter.subscribe((response) => {
       const {
@@ -56,6 +61,18 @@ export class KanbanComponent implements OnInit {
   ngOnInit() {
     this.tasksService.tasks.subscribe(response => {
       this.tasks = response
+      const compromiseId = this.route.snapshot.queryParamMap.get("compromiseId")
+      if (compromiseId) {
+        const task = this.searchTask(compromiseId, response)
+        if (task) {
+          this.openTask(task)
+          this.router.navigate([], {
+            queryParams: {},
+            replaceUrl: true,
+            relativeTo: this.route
+          });
+        }
+      }
     })
     this.tasksService.members.subscribe(response => {
       this.members = response
@@ -78,6 +95,17 @@ export class KanbanComponent implements OnInit {
           event.previousIndex,
           event.currentIndex);
     }
+    this.noBorderLists = []
+  }
+
+  startDrop(event: CdkDragStart<Task[]>) {
+    console.log(event)
+    const allClasses = ["newList", "doingList", "pausedList", "testingList", "endedList"]
+    const connectedClasses = this.getConnectedList(event.source.dropContainer.id)
+    const noBorderClasses = allClasses.filter(classType => !connectedClasses.includes(classType))
+    if (this.noBorderLists !== noBorderClasses) {
+      this.noBorderLists = noBorderClasses
+    }
   }
 
   getInitials(user: TaskUser | undefined) {
@@ -89,6 +117,10 @@ export class KanbanComponent implements OnInit {
       return initials
     }
     return ""
+  }
+
+  getCompromiseFullEnum(task: Task) {
+    return `${task.compromise.references.minuteEnum}.${task.compromise.enum}`
   }
 
   openTask(task: Task) {
@@ -110,5 +142,52 @@ export class KanbanComponent implements OnInit {
 
   assignDueDateToTask(taskId: string, dueDate: Date) {
     this.tasksService.assignDueDate(taskId, dueDate)
+  }
+
+  searchTask(compromiseId: string, tasks: GroupedTasks) {
+    let taskFinded: Task | undefined = this.searchTaskInList(compromiseId, tasks.new)
+    if (taskFinded) {
+      return taskFinded
+    }
+    taskFinded = this.searchTaskInList(compromiseId, tasks.doing)
+    if (taskFinded) {
+      return taskFinded
+    }
+    taskFinded = this.searchTaskInList(compromiseId, tasks.paused)
+    if (taskFinded) {
+      return taskFinded
+    }
+    taskFinded = this.searchTaskInList(compromiseId, tasks.testing)
+    if (taskFinded) {
+      return taskFinded
+    }
+    taskFinded = this.searchTaskInList(compromiseId, tasks.ended)
+    if (taskFinded) {
+      return taskFinded
+    }
+    return taskFinded
+  }
+
+  searchTaskInList(compromiseId: string, tasks: Task[]) {
+    return tasks.find(task => task.compromise._id === compromiseId)
+  }
+
+  checkNoBorder(classType: string) {
+    return this.noBorderLists.includes(classType)
+  }
+
+  getConnectedList(listId: string) {
+    switch(listId) {
+      case "newList":
+        return this.newConnected
+      case "doingList":
+        return this.doingConnected
+      case "pausedList":
+        return this.pausedConnected
+      case "testingList":
+        return this.testingConnected
+      default:
+        return []
+    }
   }
 }
