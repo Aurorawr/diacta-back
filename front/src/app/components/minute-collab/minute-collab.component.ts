@@ -308,6 +308,7 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
       this.collabService.addEdition('addingDialogueElements', topicId)
       const dialogRef = this.dialog.open(AddDialogueElementDialog, {
         width: '50vw',
+        disableClose: true,
         data: {
           enum: this.getNewDialogueElementEnum(topicId),
           elementType: elementType,
@@ -332,6 +333,7 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
       this.collabService.addEdition('addingNotes', topicId)
       const dialogRef = this.dialog.open(AddNoteDialog, {
         width: '50vw',
+        disableClose: true,
         data: {
           content: ''
         }
@@ -353,6 +355,7 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     this.collabService.addEdition('addingTopic')
     const dialogRef = this.dialog.open(AddTopicDialog, {
       width: '50vw',
+      disableClose: true,
       data: {
         name: '',
         description: ''
@@ -374,6 +377,7 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     this.collabService.addEdition('addingAnnexes')
     const dialogRef = this.dialog.open(AddAnnexDialog, {
       width: '50vw',
+      disableClose: true,
       data: {
         annex: {
           url: '',
@@ -450,6 +454,7 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     })
     const dialogRef = this.dialog.open(AddAnnexDialog, {
       width: '50vw',
+      disableClose: true,
       data: {
         annex,
         onEdit: onEditAnnex
@@ -496,6 +501,7 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     })
     this.dialog.open(ConfirmationDialogComponent, {
       width: '30vw',
+      disableClose: true,
       data: {
         confirmationMessage: "Asegúrate que ningún usuario esté editando. ¿Estás seguro que deseas cerrar el acta?",
         callback: dialogCallback

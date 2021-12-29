@@ -94,6 +94,7 @@ export class KanbanComponent implements OnInit {
   openTask(task: Task) {
     this.dialog.open(TaskDialog, {
       width: '50vw',
+      disableClose: true,
       data: {
         task,
         members: this.members,
