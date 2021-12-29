@@ -68,7 +68,7 @@
                 <div fxFlex='100'>
                     <h3>Compromisos previos</h3>
                     <mat-list *ngIf="previousCompromises.length > 0; else noCompromises">
-                        <mat-list-item *ngFor="let compromise of previousCompromises">
+                        <mat-list-item class="clickeable" *ngFor="let compromise of previousCompromises" (click)="goToTask(compromise._id)">
                             <p matLine>{{compromise.references.minuteEnum}}.{{compromise.enum}}.- {{compromise.content}}</p>
                         </mat-list-item>
                     </mat-list>

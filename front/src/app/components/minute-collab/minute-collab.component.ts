@@ -16,6 +16,7 @@ import { AddTopicDialog } from 'src/app/dialogs/add-topic/index.component'
 import { SimpleUser } from '../../models/user.model';
 import { ConfirmationDialogComponent } from '../../dialogs/confirmation/index.component';
 import { AuthService } from '../../services/auth/auth.service';
+import { redirectToTask } from 'src/app/helpers';
 
 const monthNames : {[key: number]: string}= {
   0: 'enero',
@@ -555,6 +556,10 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     let initials = ""
     names.forEach(n => initials += n[0])
     return initials
+  }
+
+  goToTask(compromiseId: string) {
+    redirectToTask(compromiseId)
   }
 
 }

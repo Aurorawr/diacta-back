@@ -1,3 +1,4 @@
+import { ActivatedRoute, Params, Router } from "@angular/router";
 import { Compromise } from "src/app/models/compromises.model";
 
 export const minutes = [
@@ -71,4 +72,9 @@ export const orderCompromises = (compromises: Compromise[]) : Compromise[] => {
   })
 
   return orderedCompromises
+}
+
+export const redirectToTask = (compromiseId: string) => {
+  const taskUrl = `${window.location.origin}/tablero?compromiseId=${compromiseId}`
+  window.open(taskUrl, "_blank")
 }

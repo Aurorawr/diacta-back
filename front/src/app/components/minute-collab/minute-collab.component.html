@@ -72,8 +72,8 @@
                 <h1>Compromisos previos</h1>
                 <p *ngIf='!minute.previousCompromises.length' class='minute-text'>No hay compromisos previos</p>
                 <mat-list *ngIf="minute.previousCompromises.length > 0">
-                    <mat-list-item *ngFor="let compromise of minute.previousCompromises">
-                        <p>{{compromise.references?.minuteEnum}}.{{compromise.enum}}.- {{compromise.content}}</p>
+                    <mat-list-item class="clickeable" *ngFor="let compromise of minute.previousCompromises" (click)="goToTask(compromise._id)">
+                        <p matLine>{{compromise.references?.minuteEnum}}.{{compromise.enum}}.- {{compromise.content}}</p>
                     </mat-list-item>
                 </mat-list>
                 <div>
