@@ -94,6 +94,9 @@ export class KanbanComponent implements OnInit {
           event.container.data,
           event.previousIndex,
           event.currentIndex);
+      const updatedTask = event.container.data[event.currentIndex]
+      const newState = this.getTaskStateRels(event.container.id)
+      this.tasksService.updateTaskState(updatedTask._id, newState)
     }
     this.noBorderLists = []
   }
@@ -188,6 +191,21 @@ export class KanbanComponent implements OnInit {
         return this.testingConnected
       default:
         return []
+    }
+  }
+
+  getTaskStateRels(listId: string) {
+    switch(listId) {
+      case "newList":
+        return 0
+      case "doingList":
+        return 1
+      case "pausedList":
+        return 2
+      case "testingList":
+        return 3
+      default:
+        return 4
     }
   }
 }
