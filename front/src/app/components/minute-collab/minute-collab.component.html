@@ -17,8 +17,8 @@
             <h1 class='inline-block title'><strong>Acta en desarrollo</strong></h1>
         </mat-card-title>
         <mat-card-content>
-            <div *ngIf="minute" class='padding-2r'>
-                <div *ngIf='minute.header'>
+            <div *ngIf="minute" class='padding-v-2r'>
+                <div *ngIf='minute.header' class='padding-h-2r'>
                     <div>
                         <h2 class='inline-block'>Encabezado</h2>
                         <button class='edit-button' mat-icon-button color="primary" (click)='switchEdit({attribute: "header"})' [disabled]='externalEditions.header.editing'>
@@ -39,8 +39,8 @@
                         </button>
                     </div>
                 </div>
-                <h3 class="info-text">{{getMinuteDatePlaceData}}</h3>
-                <div *ngIf='minute.description'>
+                <h3 class="info-text padding-h-2r bright-blue">{{getMinuteDatePlaceData}}</h3>
+                <div *ngIf='minute.description' class="padding-h-2r">
                     <div>
                         <h2 class='inline-block'>Descripción</h2>
                         <button class='edit-button' mat-icon-button color="primary" (click)='switchEdit({attribute: "description"})' [disabled]='externalEditions.description.editing'>
@@ -61,22 +61,26 @@
                         </button>
                     </div>
                 </div>
-                <h1>Asistentes</h1>
-                <mat-list>
-                    <mat-list-item *ngFor="let participant of minute.participants">
-                        <mat-icon matListIcon>person</mat-icon>
-                        <p matLine>{{participant.user.name}} {{participant.user.lastname}}</p>
-                        <p matLine>{{participant.user.email}}</p>
-                    </mat-list-item>
-                </mat-list>
-                <h1>Compromisos previos</h1>
-                <p *ngIf='!minute.previousCompromises.length' class='minute-text'>No hay compromisos previos</p>
-                <mat-list *ngIf="minute.previousCompromises.length > 0">
-                    <mat-list-item class="clickeable" *ngFor="let compromise of minute.previousCompromises" (click)="goToTask(compromise._id)">
-                        <p matLine>{{compromise.references?.minuteEnum}}.{{compromise.enum}}.- {{compromise.content}}</p>
-                    </mat-list-item>
-                </mat-list>
-                <div>
+                <div class="padding-h-2r bright-blue">
+                    <h1>Asistentes</h1>
+                    <mat-list>
+                        <mat-list-item *ngFor="let participant of minute.participants">
+                            <mat-icon matListIcon>person</mat-icon>
+                            <p matLine>{{participant.user.name}} {{participant.user.lastname}}</p>
+                            <p matLine>{{participant.user.email}}</p>
+                        </mat-list-item>
+                    </mat-list>
+                </div>
+                <div class="padding-h-2r">
+                    <h1>Compromisos previos</h1>
+                    <p *ngIf='!minute.previousCompromises.length' class='minute-text'>No hay compromisos previos</p>
+                    <mat-list *ngIf="minute.previousCompromises.length > 0">
+                        <mat-list-item class="clickeable" *ngFor="let compromise of minute.previousCompromises" (click)="goToTask(compromise._id)">
+                            <p matLine>{{compromise.references?.minuteEnum}}.{{compromise.enum}}.- {{compromise.content}}</p>
+                        </mat-list-item>
+                    </mat-list>
+                </div>
+                <div class="padding-h-2r bright-blue">
                     <div>
                         <h1 class='inline-block'>Tabla de la reunión</h1>
                         <button class='edit-button' mat-icon-button color="primary" (click)='addTopic()'>
@@ -93,78 +97,84 @@
                         </mat-chip>
                     </mat-chip-list>
                 </div>
-                <h1>Desarrollo</h1>
-                <div *ngFor="let topic of minute.topics">
-                    <h2 class='inline-block'>{{topic.enum}}. {{topic.name}}</h2>
-                    <button mat-mini-fab class="icon-btn" (click)='addDialogueElement(topic._id, "Compromiso")'>
-                        <img class='icon-image-btn' src="assets/img/icons/promise.png" alt="Icono de compromiso"
-                        matTooltip="Agregue un compromiso para el tema" matTooltipPosition="above">
-                    </button>
-                    <button mat-mini-fab class="icon-btn" (click)='addDialogueElement(topic._id, "Acuerdo")'>
-                        <img class='icon-image-btn' src="assets/img/icons/agreement.png" alt="Icono de acuerdo"
-                        matTooltip="Agregue un acuerdo para el tema" matTooltipPosition="above">
-                    </button>
-                    <button mat-mini-fab class="icon-btn" (click)='addDialogueElement(topic._id, "Duda")'>
-                        <img class='icon-image-btn' src="assets/img/icons/duda.png" alt="Icono de duda"
-                        matTooltip="Agregue una duda para el tema" matTooltipPosition="above">
-                    </button>
-                    <button mat-mini-fab class="icon-btn" (click)='addDialogueElement(topic._id, "Desacuerdo")'>
-                        <img class='icon-image-btn' src="assets/img/icons/discord.png" alt="Icono de desacuerdo"
-                        matTooltip="Agregue un desacuerdo para el tema" matTooltipPosition="above">
-                    </button>
-                    <button mat-mini-fab class="icon-btn" (click)='addNote(topic._id)'>
-                        <mat-icon class="black" matTooltip="Agregue una nota para el tema"
-                        matTooltipPosition="above">note_add</mat-icon>
-                    </button>
-                    <minute-collab-edition *ngIf='topic.description' [value]='topic.description' type='topicDescription'
-                            [attributeId]='topic._id' [externalEditing]="externalEditions.topicDescription[topic._id]"
-                            (switchEdit)='switchEdit($event)' (onEdit)='editTopicAttribute($event)'
-                    ></minute-collab-edition>
-                    <div *ngFor='let note of topic.notes'>
-                        <minute-collab-edition [value]='note.content' type='notes' [attributeId]='note._id'
-                            [topicId]='topic._id' [externalEditing]="externalEditions.notes[note._id]"
-                            (switchEdit)='switchEdit($event)' (onEdit)='editTopicAttribute($event)'
+                <div class="padding-h-2r">
+                    <h1>Desarrollo</h1>
+                    <div *ngFor="let topic of minute.topics">
+                        <h2 class='inline-block'>{{topic.enum}}. {{topic.name}}</h2>
+                        <button mat-mini-fab class="icon-btn" (click)='addDialogueElement(topic._id, "Compromiso")'>
+                            <img class='icon-image-btn' src="assets/img/icons/promise.png" alt="Icono de compromiso"
+                            matTooltip="Agregue un compromiso para el tema" matTooltipPosition="above">
+                        </button>
+                        <button mat-mini-fab class="icon-btn" (click)='addDialogueElement(topic._id, "Acuerdo")'>
+                            <img class='icon-image-btn' src="assets/img/icons/agreement.png" alt="Icono de acuerdo"
+                            matTooltip="Agregue un acuerdo para el tema" matTooltipPosition="above">
+                        </button>
+                        <button mat-mini-fab class="icon-btn" (click)='addDialogueElement(topic._id, "Duda")'>
+                            <img class='icon-image-btn' src="assets/img/icons/duda.png" alt="Icono de duda"
+                            matTooltip="Agregue una duda para el tema" matTooltipPosition="above">
+                        </button>
+                        <button mat-mini-fab class="icon-btn" (click)='addDialogueElement(topic._id, "Desacuerdo")'>
+                            <img class='icon-image-btn' src="assets/img/icons/discord.png" alt="Icono de desacuerdo"
+                            matTooltip="Agregue un desacuerdo para el tema" matTooltipPosition="above">
+                        </button>
+                        <button mat-mini-fab class="icon-btn" (click)='addNote(topic._id)'>
+                            <mat-icon class="black" matTooltip="Agregue una nota para el tema"
+                            matTooltipPosition="above">note_add</mat-icon>
+                        </button>
+                        <minute-collab-edition *ngIf='topic.description' [value]='topic.description' type='topicDescription'
+                                [attributeId]='topic._id' [externalEditing]="externalEditions.topicDescription[topic._id]"
+                                (switchEdit)='switchEdit($event)' (onEdit)='editTopicAttribute($event)'
                         ></minute-collab-edition>
+                        <div *ngFor='let note of topic.notes'>
+                            <minute-collab-edition [value]='note.content' type='notes' [attributeId]='note._id'
+                                [topicId]='topic._id' [externalEditing]="externalEditions.notes[note._id]"
+                                (switchEdit)='switchEdit($event)' (onEdit)='editTopicAttribute($event)'
+                            ></minute-collab-edition>
+                        </div>
+                        <div *ngFor='let diaEl of topic.dialogueElements'>
+                            <minute-collab-edition [value]='diaEl.content' type='dialogueElements' [attributeId]='diaEl._id'
+                                [topicId]='topic._id' [externalEditing]="externalEditions.dialogueElements[diaEl._id]"
+                                [suffix]='getDialogueElementSuffix(diaEl)' (switchEdit)='switchEdit($event)' (onEdit)='editTopicAttribute($event)'
+                            ></minute-collab-edition>
+                        </div>
+                        <mat-chip-list class='inline-block' aria-label="Agregadores">
+                            <mat-chip *ngFor='let edition of filterEditions(externalEditions.addingDialogueElements, topic._id)' color='primary' selected>
+                                El usuario {{edition.editorName}} está agregando un nuevo elemento del diálogo...
+                            </mat-chip>
+                            <mat-chip *ngFor='let edition of filterEditions(externalEditions.addingNotes, topic._id)' color='primary' selected>
+                                El usuario {{edition.editorName}} está agregando una nueva nota...
+                            </mat-chip>
+                        </mat-chip-list>
                     </div>
-                    <div *ngFor='let diaEl of topic.dialogueElements'>
-                        <minute-collab-edition [value]='diaEl.content' type='dialogueElements' [attributeId]='diaEl._id'
-                            [topicId]='topic._id' [externalEditing]="externalEditions.dialogueElements[diaEl._id]"
-                            [suffix]='getDialogueElementSuffix(diaEl)' (switchEdit)='switchEdit($event)' (onEdit)='editTopicAttribute($event)'
-                        ></minute-collab-edition>
-                    </div>
+                </div>
+                <div class="padding-h-2r bright-blue">
+                    <h1 class='inline-block'>Anexos</h1>
+                    <button class='edit-button' mat-icon-button color="primary" (click)='addAnnex()'>
+                        <mat-icon matTooltip="Agregue un nuevo anexo a la reunión"
+                        matTooltipPosition="above">add_circle_outline</mat-icon>
+                    </button>
+                    <mat-list>
+                        <mat-list-item *ngFor='let annex of minute.annexes' class="full-width">
+                            <mat-card *ngIf="getAnnexExtEdition(annex._id).editing" class="editing-annex-card">
+                                {{getAnnexExtEdition(annex._id).editorName}} está editando...
+                            </mat-card>
+                            <mat-icon matListIcon>attachment</mat-icon>
+                            <p matLine>{{ annex.name }}</p>
+                            <p matLine><a href="{{annex.url}}" target="_blank" rel="noopener">Link</a></p>
+                            <button mat-icon-button (click)="editAnnex(annex)" [disabled]='getAnnexExtEdition(annex._id).editing'>
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                        </mat-list-item>
+                    </mat-list>
                     <mat-chip-list class='inline-block' aria-label="Agregadores">
-                        <mat-chip *ngFor='let edition of filterEditions(externalEditions.addingDialogueElements, topic._id)' color='primary' selected>
-                            El usuario {{edition.editorName}} está agregando un nuevo elemento del diálogo...
-                        </mat-chip>
-                        <mat-chip *ngFor='let edition of filterEditions(externalEditions.addingNotes, topic._id)' color='primary' selected>
-                            El usuario {{edition.editorName}} está agregando una nueva nota...
+                        <mat-chip *ngFor='let edition of externalEditions.addingAnnexes' color='primary' selected>
+                            El usuario {{edition.editorName}} está agregando un nuevo anexo...
                         </mat-chip>
                     </mat-chip-list>
                 </div>
-                <h1 class='inline-block'>Anexos</h1>
-                <button class='edit-button' mat-icon-button color="primary" (click)='addAnnex()'>
-                    <mat-icon matTooltip="Agregue un nuevo anexo a la reunión"
-                    matTooltipPosition="above">add_circle_outline</mat-icon>
-                </button>
-                <mat-list>
-                    <mat-list-item *ngFor='let annex of minute.annexes' class="full-width">
-                        <mat-card *ngIf="getAnnexExtEdition(annex._id).editing" class="editing-annex-card">
-                            {{getAnnexExtEdition(annex._id).editorName}} está editando...
-                        </mat-card>
-                        <mat-icon matListIcon>attachment</mat-icon>
-                        <p matLine>{{ annex.name }}</p>
-                        <p matLine><a href="{{annex.url}}" target="_blank" rel="noopener">Link</a></p>
-                        <button mat-icon-button (click)="editAnnex(annex)" [disabled]='getAnnexExtEdition(annex._id).editing'>
-                            <mat-icon>edit</mat-icon>
-                        </button>
-                    </mat-list-item>
-                </mat-list>
-                <mat-chip-list class='inline-block' aria-label="Agregadores">
-                    <mat-chip *ngFor='let edition of externalEditions.addingAnnexes' color='primary' selected>
-                        El usuario {{edition.editorName}} está agregando un nuevo anexo...
-                    </mat-chip>
-                </mat-chip-list>
-                <h3 *ngIf="minute.endTime" class="info-text"><strong>Hora de término:</strong> {{minute.endTime}}</h3>
+                <div class="padding-h-2r">
+                    <h3 *ngIf="minute.endTime" class="info-text"><strong>Hora de término:</strong> {{minute.endTime}}</h3>
+                </div>
             </div>
         </mat-card-content>
     </mat-card>
