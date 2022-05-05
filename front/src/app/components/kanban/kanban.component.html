@@ -6,17 +6,21 @@
                 <div fxFlex='20' class="list-container">
                     <h2>Nuevas</h2>
                 
-                    <div id="newList" cdkDropList #newList="cdkDropList" [cdkDropListData]="tasks.new"
-                        [cdkDropListConnectedTo]='newConnected' class="list" (cdkDropListDropped)="drop($event)">
-                        <div class="list-item" *ngFor="let task of tasks.new" cdkDrag (click)="openTask(task)">
-                            {{ task.compromise.content }}
+                    <div id="newList" cdkDropList #newList="cdkDropList" [cdkDropListData]="tasks.new" 
+                        [cdkDropListConnectedTo]='newConnected' class="list" (cdkDropListDropped)="drop($event)"
+                        [class.no_border]="checkNoBorder('newList')">
+                        <div class="list-item" *ngFor="let task of tasks.new" cdkDrag (cdkDragStarted)="startDrop($event)" (click)="openTask(task)">
+                            <h3>Compromiso {{ getCompromiseFullEnum(task) }}:</h3>
+                            <div class="max-height-60" [title]="task.compromise.content">
+                                {{ task.compromise.content }}
+                            </div>
                             <div *ngIf="task.user" class='full-width align-right'>
                                 <button mat-mini-fab color="primary" aria-label="Example icon button with a menu icon">
                                     {{getInitials(task.user)}}
                                   </button>
                             </div>
                         </div>
-                        <div *ngIf="!tasks.new.length" class="list-item" cdkDrag>
+                        <div *ngIf="!tasks.new.length" class="list-item-empty">
                             No hay tareas nuevas
                         </div>
                     </div>
@@ -25,16 +29,20 @@
                     <h2>Desarrollándose</h2>
                 
                     <div id="doingList" cdkDropList #doingList="cdkDropList" [cdkDropListData]="tasks.doing"
-                        [cdkDropListConnectedTo]='doingConnected'class="list" (cdkDropListDropped)="drop($event)">
-                        <div class="list-item align" *ngFor="let task of tasks.doing" cdkDrag (click)="openTask(task)">
-                            {{ task.compromise.content }}
+                        [cdkDropListConnectedTo]='doingConnected'class="list" (cdkDropListDropped)="drop($event)"
+                        [class.no_border]="checkNoBorder('doingList')">
+                        <div class="list-item align" *ngFor="let task of tasks.doing" cdkDrag (cdkDragStarted)="startDrop($event)" (click)="openTask(task)">
+                            <h3>Compromiso {{ getCompromiseFullEnum(task) }}:</h3>
+                            <div class="max-height-60" [title]="task.compromise.content">
+                                {{ task.compromise.content }}
+                            </div>
                             <div *ngIf="task.user" class='full-width align-right'>
                                 <button mat-mini-fab color="primary" aria-label="Example icon button with a menu icon">
                                     {{getInitials(task.user)}}
                                   </button>
                             </div>
                         </div>
-                        <div *ngIf="!tasks.doing.length" class="list-item" cdkDrag>
+                        <div *ngIf="!tasks.doing.length" class="list-item-empty">
                             No hay tareas desarrollándose
                         </div>
                     </div>
@@ -43,16 +51,20 @@
                     <h2>Pausadas</h2>
                 
                     <div id="pausedList" cdkDropList #pausedList="cdkDropList" [cdkDropListData]="tasks.paused"
-                    [cdkDropListConnectedTo]='pausedConnected' class="list" (cdkDropListDropped)="drop($event)">
-                        <div class="list-item" *ngFor="let task of tasks.paused" cdkDrag (click)="openTask(task)">
-                            {{ task.compromise.content }}
+                    [cdkDropListConnectedTo]='pausedConnected' class="list" (cdkDropListDropped)="drop($event)"
+                    [class.no_border]="checkNoBorder('pausedList')">
+                        <div class="list-item" *ngFor="let task of tasks.paused" cdkDrag (cdkDragStarted)="startDrop($event)" (click)="openTask(task)">
+                            <h3>Compromiso {{ getCompromiseFullEnum(task) }}:</h3>
+                            <div class="max-height-60" [title]="task.compromise.content">
+                                {{ task.compromise.content }}
+                            </div>
                             <div *ngIf="task.user" class='full-width align-right'>
                                 <button mat-mini-fab color="primary" aria-label="Example icon button with a menu icon">
                                     {{getInitials(task.user)}}
                                   </button>
                             </div>
                         </div>
-                        <div *ngIf="!tasks.paused.length" class="list-item" cdkDrag>
+                        <div *ngIf="!tasks.paused.length" class="list-item-empty">
                             No hay tareas pausadas
                         </div>
                     </div>
@@ -61,16 +73,20 @@
                     <h2>Evaluando</h2>
                 
                     <div id="testingList" cdkDropList #testingList="cdkDropList" [cdkDropListData]="tasks.testing"
-                    [cdkDropListConnectedTo]='testingConnected' class="list" (cdkDropListDropped)="drop($event)">
-                        <div class="list-item" *ngFor="let task of tasks.testing" cdkDrag (click)="openTask(task)">
-                            {{ task.compromise.content }}
+                    [cdkDropListConnectedTo]='testingConnected' class="list" (cdkDropListDropped)="drop($event)"
+                    [class.no_border]="checkNoBorder('testingList')">
+                        <div class="list-item" *ngFor="let task of tasks.testing" cdkDrag (cdkDragStarted)="startDrop($event)" (click)="openTask(task)">
+                            <h3>Compromiso {{ getCompromiseFullEnum(task) }}:</h3>
+                            <div class="max-height-60" [title]="task.compromise.content">
+                                {{ task.compromise.content }}
+                            </div>
                             <div *ngIf="task.user" class='full-width align-right'>
                                 <button mat-mini-fab color="primary" aria-label="Example icon button with a menu icon">
                                     {{getInitials(task.user)}}
                                   </button>
                             </div>
                         </div>
-                        <div *ngIf="!tasks.testing.length" class="list-item" cdkDrag>
+                        <div *ngIf="!tasks.testing.length" class="list-item-empty">
                             No hay tareas evaluándose
                         </div>
                     </div>
@@ -79,16 +95,20 @@
                     <h2>Finalizadas</h2>
                 
                     <div id="endedList" cdkDropList #endedList="cdkDropList" [cdkDropListData]="tasks.ended"
-                    [cdkDropListConnectedTo]='endedConnected' class="list" (cdkDropListDropped)="drop($event)">
-                        <div class="list-item" *ngFor="let task of tasks.ended" cdkDrag (click)="openTask(task)">
-                            {{ task.compromise.content }}
+                    [cdkDropListConnectedTo]='endedConnected' class="list" (cdkDropListDropped)="drop($event)"
+                    [class.no_border]="checkNoBorder('endedList')">
+                        <div class="list-item" *ngFor="let task of tasks.ended" cdkDrag (cdkDragStarted)="startDrop($event)" (click)="openTask(task)">
+                            <h3>Compromiso {{ getCompromiseFullEnum(task) }}:</h3>
+                            <div class="max-height-60" [title]="task.compromise.content">
+                                {{ task.compromise.content }}
+                            </div>
                             <div *ngIf="task.user" class='full-width align-right'>
                                 <button mat-mini-fab color="primary" aria-label="Example icon button with a menu icon">
                                     {{getInitials(task.user)}}
                                 </button>
                             </div>
                         </div>
-                        <div *ngIf="!tasks.ended.length" class="list-item" cdkDrag>
+                        <div *ngIf="!tasks.ended.length" class="list-item-empty">
                             No hay tareas finalizadas
                         </div>
                     </div>

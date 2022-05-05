@@ -40,6 +40,7 @@ export class UsersComponent implements OnInit {
   openAddMemberDialog() {
     const dialogRef = this.dialog.open(AddMemberDialogComponent, {
       width: '50vw',
+      disableClose: true,
       data: {
         name: '',
         lastname: '',

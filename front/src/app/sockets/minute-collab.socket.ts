@@ -11,17 +11,4 @@ export class MinuteCollabSocket extends Socket {
       query: auth.getLoggedUser()
     }})
   }
-
-  setQuery(): {
-    [key: string]: string | null;
-} {
-    const user = this.auth.getLoggedUser()
-    if (user) {
-      return {
-        userId: user._id,
-        username: user._name
-      }
-    }
-    return {}
-  }
 }

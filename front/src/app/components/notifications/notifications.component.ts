@@ -44,6 +44,7 @@ export class NotificationsComponent {
   openReminderDialog() {
     const dialogRef = this.dialog.open(ReminderDialog, {
       width: '50vw',
+      disableClose: true,
       data: {}
     })
 

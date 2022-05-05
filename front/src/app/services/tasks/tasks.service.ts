@@ -30,4 +30,8 @@ export class TasksService {
   getMembers() {
     this.socket.emit("getMembers");
   }
+
+  updateTaskState(taskId: string, newState: number) {
+    this.socket.emit("updateTaskState", taskId, newState)
+  }
 }

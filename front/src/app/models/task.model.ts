@@ -3,6 +3,11 @@ export interface Task {
     compromise: {
         _id: string;
         content: string;
+        references: {
+            minuteEnum: number;
+            topicEnum: number;
+        };
+        enum: number;
     }
     state: 0 | 1 | 2 | 3 | 4;
     user?: TaskUser

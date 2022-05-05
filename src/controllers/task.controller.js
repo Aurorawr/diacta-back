@@ -16,7 +16,7 @@ const getTasks = async (userId=null) => {
 
     tasksQuery.populate({
         path: 'compromise',
-        select: 'content'
+        select: 'content references enum'
     })
 
     const tasks = await tasksQuery.exec()
@@ -50,6 +50,12 @@ const getTasks = async (userId=null) => {
     return grupedTasks
 }
 
+const updateTaskState = async (taskId, newState) => {
+    await Task.findByIdAndUpdate(taskId, {
+        state: newState
+    }).exec()
+}
+
 const getAllMembers = async () => {
     const users = User.find({password: {$exists: true}}).select("name lastname").exec()
 
@@ -61,6 +67,12 @@ module.exports = async (io, socket) => {
     socket.on('getTasks', async () => {
         const tasks = await getTasks()
         socket.emit('tasks', tasks)
+    })
+
+    socket.on('updateTaskState', async (taskId, newState) => {
+        await updateTaskState(taskId, newState)
+        const tasks = await getTasks()
+        socket.broadcast.emit('tasks', tasks)
     })
 
     socket.on('getMembers', async () => {

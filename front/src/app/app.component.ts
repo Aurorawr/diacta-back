@@ -18,7 +18,7 @@ export class AppComponent {
   ) {
     router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
-        if (event.url == '/login') {
+        if (event.url == '/login' || event.url == '/') {
           this.logged = false
         }
         else {

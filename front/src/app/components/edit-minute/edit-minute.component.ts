@@ -7,7 +7,7 @@ import { User } from 'src/app/models/user.model';
 import { UsersService } from 'src/app/services/users/users.service';
 import { MinutesService } from 'src/app/services/minutes/minutes.service';
 import { Compromise } from '../../models/compromises.model';
-import { orderCompromises, minutes } from '../../helpers/index';
+import { orderCompromises, minutes, redirectToTask } from '../../helpers/index';
 import { Minute, TopicType, AnnexType } from '../../models/minute.model';
 
 @Component({
@@ -178,6 +178,10 @@ export class EditMinuteComponent implements OnInit {
     this.errors = errors;
 
     return !errorDetected;
+  }
+
+  goToTask(compromiseId: string) {
+    redirectToTask(compromiseId)
   }
 
   createPreminute() {

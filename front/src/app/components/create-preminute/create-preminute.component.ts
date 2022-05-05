@@ -8,7 +8,7 @@ import { Preminute, Annex, Topic } from 'src/app/models/preminute.model';
 import { UsersService } from 'src/app/services/users/users.service';
 import { MinutesService } from 'src/app/services/minutes/minutes.service';
 import { Compromise } from '../../models/compromises.model';
-import { orderCompromises } from '../../helpers/index';
+import { orderCompromises, redirectToTask } from '../../helpers/index';
 
 @Component({
   selector: 'app-create-preminute',
@@ -183,6 +183,10 @@ export class CreatePreminuteComponent implements OnInit {
     this.errors = errors;
 
     return !errorDetected;
+  }
+
+  goToTask(compromiseId: string) {
+    redirectToTask(compromiseId)
   }
 
   createPreminute() {

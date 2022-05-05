@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { Minute } from 'src/app/models/minute.model';
 import { MinutesService } from 'src/app/services/minutes/minutes.service';
+import { redirectToTask } from '../../helpers/index';
 
 const monthNames : {[key: number]: string}= {
   0: 'enero',
@@ -76,6 +77,10 @@ export class MinuteComponent implements OnChanges {
       return `${minute.place}, ${dateStr}. ${convokedTimeStr}.${startTimeStr}`;
     }
     return ''
+  }
+
+  goToTask(compromiseId: string) {
+    redirectToTask(compromiseId)
   }
 
 }

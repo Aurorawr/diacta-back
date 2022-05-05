@@ -15,6 +15,8 @@ import { AddNoteDialog } from 'src/app/dialogs/add-note/index.component'
 import { AddTopicDialog } from 'src/app/dialogs/add-topic/index.component'
 import { SimpleUser } from '../../models/user.model';
 import { ConfirmationDialogComponent } from '../../dialogs/confirmation/index.component';
+import { AuthService } from '../../services/auth/auth.service';
+import { redirectToTask } from 'src/app/helpers';
 
 const monthNames : {[key: number]: string}= {
   0: 'enero',
@@ -95,14 +97,21 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
 
   actualParticipants: SimpleUser[] = []
 
+  isAdmin = false
+
   @ViewChild('headerInput') headerInput!:ElementRef;
 
   constructor(
     private collabService: MinuteCollabService,
     private route: ActivatedRoute,
     private dialog: MatDialog,
-    private router: Router
-  ) { }
+    private router: Router,
+    private auth: AuthService
+  ) {
+    if (auth.isAdmin()) {
+      this.isAdmin = true
+    }
+  }
 
   ngOnInit() {
     const minuteId = this.route.snapshot.paramMap.get('minuteId');
@@ -295,14 +304,15 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     this.collabService.addEdition(attribute, topicId)
   }
 
-  addDialogueElement(topicId: string | undefined) {
+  addDialogueElement(topicId: string | undefined, elementType: 'Duda' | 'Compromiso' | 'Acuerdo' | 'Desacuerdo') {
     if (topicId) {
       this.collabService.addEdition('addingDialogueElements', topicId)
       const dialogRef = this.dialog.open(AddDialogueElementDialog, {
         width: '50vw',
+        disableClose: true,
         data: {
           enum: this.getNewDialogueElementEnum(topicId),
-          elementType: 'Acuerdo',
+          elementType: elementType,
           content: ''
         }
       })
@@ -324,6 +334,7 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
       this.collabService.addEdition('addingNotes', topicId)
       const dialogRef = this.dialog.open(AddNoteDialog, {
         width: '50vw',
+        disableClose: true,
         data: {
           content: ''
         }
@@ -345,6 +356,7 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     this.collabService.addEdition('addingTopic')
     const dialogRef = this.dialog.open(AddTopicDialog, {
       width: '50vw',
+      disableClose: true,
       data: {
         name: '',
         description: ''
@@ -366,6 +378,7 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     this.collabService.addEdition('addingAnnexes')
     const dialogRef = this.dialog.open(AddAnnexDialog, {
       width: '50vw',
+      disableClose: true,
       data: {
         annex: {
           url: '',
@@ -442,6 +455,7 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     })
     const dialogRef = this.dialog.open(AddAnnexDialog, {
       width: '50vw',
+      disableClose: true,
       data: {
         annex,
         onEdit: onEditAnnex
@@ -488,6 +502,7 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     })
     this.dialog.open(ConfirmationDialogComponent, {
       width: '30vw',
+      disableClose: true,
       data: {
         confirmationMessage: "Asegúrate que ningún usuario esté editando. ¿Estás seguro que deseas cerrar el acta?",
         callback: dialogCallback
@@ -541,6 +556,10 @@ export class MinuteCollabComponent implements OnInit, OnDestroy {
     let initials = ""
     names.forEach(n => initials += n[0])
     return initials
+  }
+
+  goToTask(compromiseId: string) {
+    redirectToTask(compromiseId)
   }
 
 }

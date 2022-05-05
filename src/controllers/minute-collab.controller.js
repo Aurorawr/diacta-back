@@ -121,6 +121,8 @@ module.exports = (io, socket) => {
       minute.phase = 2
       await minute.save()
     }
+    joinParticipant(socket.handshake.query)
+    io.emit("participants", participants)
     socket.emit("minute", minute);
   });
 
@@ -345,6 +347,4 @@ module.exports = (io, socket) => {
   });
 
   console.log(`Socket ${socket.id} has connected`);
-  joinParticipant(socket.handshake.query)
-  io.emit("participants", participants)
 }
